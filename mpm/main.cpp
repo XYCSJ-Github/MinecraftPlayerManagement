@@ -4,7 +4,10 @@
 
 int main()
 {
-	//LOG_DEBUG_OUT
+#if _DEBUG
+LOG_DEBUG_OUT
+#endif
+	
 	LOG_CREATE_MODEL_NAME(model_name, "Main");
 
 	std::string world_path = {};
