@@ -21,6 +21,12 @@ struct UserInfo
 	std::string expiresOn;
 };
 
+struct PlayerInfo_ADS
+{
+	std::string path;
+	std::string uuid;
+};
+
 struct UnknownPath : public std::exception
 {
 	const char* what() const throw()
@@ -48,3 +54,6 @@ struct ReadError : public std::exception
 WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path);
 std::string ProcessingInputPath(const std::string input_path);
 std::vector<UserInfo> GetUserInfo(const std::string base_path);
+std::vector<PlayerInfo_ADS> GetWorldPlayerAdvancements(const std::string base_path);
+std::vector<PlayerInfo_ADS> GetWorldPlayerData(const std::string base_path);
+std::vector<PlayerInfo_ADS> GetWorldPlayerStats(const std::string base_path);
