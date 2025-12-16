@@ -21,9 +21,17 @@ struct UserInfo
 	std::string expiresOn;
 };
 
-struct PlayerInfo_ADS
+struct PlayerInfo_AS
 {
 	std::string path;
+	std::string uuid;
+};
+
+struct PlayerInfo_Data
+{
+	std::string dat_path;
+	std::string dat_old_path;
+	std::string cosarmor_path;
 	std::string uuid;
 };
 
@@ -54,6 +62,6 @@ struct ReadError : public std::exception
 WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path);
 std::string ProcessingInputPath(const std::string input_path);
 std::vector<UserInfo> GetUserInfo(const std::string base_path);
-std::vector<PlayerInfo_ADS> GetWorldPlayerAdvancements(const std::string base_path);
-std::vector<PlayerInfo_ADS> GetWorldPlayerData(const std::string base_path);
-std::vector<PlayerInfo_ADS> GetWorldPlayerStats(const std::string base_path);
+std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_path);
+std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path);
+std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path);

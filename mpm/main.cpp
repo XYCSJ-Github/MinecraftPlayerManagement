@@ -1,3 +1,5 @@
+#pragma warning(disable:26819)
+
 #include <vector>
 #include "Logout.h"
 #include "func.h"
@@ -28,6 +30,8 @@ LOG_DEBUG_OUT
 			LOG_ERROR(e.what(), model_name);
 			break;
 		}
+
+		LOG_INFO("打开客户端中...", model_name);
 
 		WorldDirectoriesNameList world_name_list = GetWorldDirectoriesList(pip);
 		std::vector<UserInfo> user_info_list;
@@ -65,20 +69,20 @@ LOG_DEBUG_OUT
 
 			if (comm == "exit")
 			{
-				LOG_DEBUG("执行退出", model_name);
+				LOG_DEBUG("识别命令：" + comm, model_name);
 				mRun = false;
 				break;
 			}
-			else if(comm == "break")
+
+			if(comm == "break")
 			{
-				LOG_DEBUG("执行返回", model_name);
+				LOG_DEBUG("识别命令：" + comm, model_name);
 				break;
 			}
 
 			std::string pc = comm.substr(0, 9);
 			if (pc == "OpenWorld"|| pc == "openworld")
 			{
-				LOG_DEBUG("执行打开存档命令", model_name);
 				LOG_DEBUG("识别命令：" + pc, model_name);
 
 
@@ -91,9 +95,9 @@ LOG_DEBUG_OUT
 						std::string open_path = world_name_list.world_directory_list[i];
 						LOG_INFO("正在打开存档：" + open_path, model_name);
 
-						std::vector<PlayerInfo_ADS> advancements_list;
-						std::vector<PlayerInfo_ADS> playerdata_list;
-						std::vector<PlayerInfo_ADS> stats_list;
+						std::vector<PlayerInfo_AS> advancements_list;
+						std::vector<PlayerInfo_Data> playerdata_list;
+						std::vector<PlayerInfo_AS> stats_list;
 
 						try
 						{
@@ -108,50 +112,68 @@ LOG_DEBUG_OUT
 
 						LOG_INFO("存档打开完成！", model_name);
 
-						for (int i = 0; i < advancements_list.size(); i++)
+						for (int i = 0; i < user_info_list.size(); i++)
 						{
-							for (int j = 0; j < user_info_list.size(); j++)
+							std::string adv_path = {}, pd_path = {}, pd_old_path = {}, cosarmor_path = {}, st_path = {};
+							for (int j = 0; j < advancements_list.size(); j++)
 							{
-								if (user_info_list[j].uuid == advancements_list[i].uuid)
+								if (user_info_list[i].uuid == advancements_list[j].uuid)
 								{
-									LOG_INFO("进度信息：\n玩家：" + user_info_list[j].user_name + "\nUUID：" + user_info_list[j].uuid + "\n文件路径：" + advancements_list[i].path + "\n", model_name);
+									adv_path = advancements_list[j].path;
 								}
 							}
-						}
 
-						for (int i = 0; i < playerdata_list.size(); i++)
-						{
-							for (int j = 0; j < user_info_list.size(); j++)
+							for (int j = 0; j < playerdata_list.size(); j++)
 							{
-								if (user_info_list[j].uuid == playerdata_list[i].uuid)
+								if (user_info_list[i].uuid == playerdata_list[j].uuid)
 								{
-									LOG_INFO("玩家数据信息：\n玩家：" + user_info_list[j].user_name + "\nUUID：" + user_info_list[j].uuid + "\n文件路径：" + playerdata_list[i].path + "\n", model_name);
+									pd_path = playerdata_list[j].dat_path;
+									pd_old_path = playerdata_list[j].dat_old_path;
+									cosarmor_path = playerdata_list[j].cosarmor_path;
 								}
 							}
-						}
 
-						for (int i = 0; i < stats_list.size(); i++)
-						{
-							for (int j = 0; j < user_info_list.size(); j++)
+							for (int j = 0; j < stats_list.size(); j++)
 							{
-								if (user_info_list[j].uuid == stats_list[i].uuid)
+								if (user_info_list[i].uuid == stats_list[j].uuid)
 								{
-									LOG_INFO("统计数据信息：\n玩家：" + user_info_list[j].user_name + "\nUUID：" + user_info_list[j].uuid + "\n文件路径：" + stats_list[i].path + "\n", model_name);
+									st_path = stats_list[j].path;
 								}
 							}
-						}
 
-						break;
+							if(adv_path.length() != 0 || pd_path.length() != 0 || pd_old_path.length() != 0 || cosarmor_path.length() != 0 || st_path.length() != 0)
+							{
+								LOG_INFO("\n玩家 " + user_info_list[i].user_name + "\nUUID：" + user_info_list[i].uuid + "\n成就：" + adv_path + "\n玩家数据：" + pd_path + "\n旧玩家数据：" + pd_old_path + "\n装饰盔甲数据：" + cosarmor_path + "\n玩家统计：" + st_path + "\n", model_name);
+							}
+						}
 					}
 				}
 			}
-			else
+
+			std::string ps = comm.substr(0, 9);
+			if (ps == "WorldList" || ps == "worldlist")
 			{
-				std::cout << "输入错误，请重新输入！(exit-退出 or break-返回)" << std::endl;
+				LOG_DEBUG("识别命令：" + ps, model_name);
+				for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+				{
+					LOG_INFO("\n存档名称：" + world_name_list.world_name_list[i] + "\n存档路径" + world_name_list.world_directory_list[i] + "\n", model_name);
+				}
+			}
+
+			std::string pu = comm.substr(0, 10);
+			if (pu == "PlayerList" || pu == "playerlist")
+			{
+				LOG_DEBUG("识别命令：" + pu, model_name);
+
+				for (const auto& user_info : user_info_list)
+				{
+					LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
+				}
 			}
 		}
 	}
 
 	system("pause");
 	return 0;
+
 }
