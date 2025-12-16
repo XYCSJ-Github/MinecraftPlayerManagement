@@ -42,17 +42,19 @@ std::string ProcessingInputPath(const std::string input_path)
 
 	if (!std::filesystem::exists(input_path_copy))
 	{
-		LOG_WARNING("路径不存在，请检查后重新输入！", "PathInput");
+		LOG_DEBUG("路径不存在，请检查后重新输入！", model_name);
+		throw UnknownPath();
 	}
 
 	return input_path_copy;
 }
 
-void GetUserInfo(const std::string base_path)
+std::vector<UserInfo> GetUserInfo(const std::string base_path)
 {
 	LOG_CREATE_MODEL_NAME(model_name, "GetUserInfo");
 
 	std::string base_path_copy = base_path;
+	std::vector<UserInfo> userslist;
 
 	base_path_copy += "\\usercache.json";
 
@@ -68,21 +70,44 @@ void GetUserInfo(const std::string base_path)
 	}
 	else
 	{
-		LOG_ERROR("无法打开用户信息文件！", model_name);
-		return;
+		LOG_DEBUG("无法打开用户信息文件！", model_name);
+		throw NotOpen();
 	}
 
-	try
+	if (user_info.is_array())
 	{
-		LOG_DEBUG(user_info["name"], model_name);
-		LOG_DEBUG(user_info["uuid"], model_name);
+		std::string op = "JSON格式为数组，包含元素" + std::to_string(user_info.size());
+		LOG_DEBUG(op, model_name);
+
+		try
+		{
+			for (size_t i = 0; i < user_info.size(); i++)
+			{
+				json tmp_data = user_info[i];
+
+				std::string name = tmp_data.at("name").get<std::string>();
+				std::string uuid = tmp_data.at("uuid").get<std::string>();
+				std::string expiresOn = tmp_data.at("expiresOn").get<std::string>();
+
+				UserInfo users;
+				users.user_name = name;
+				users.uuid = uuid;
+				users.expiresOn = expiresOn;
+
+				userslist.push_back(users);
+
+				LOG_DEBUG("用户 " + std::to_string(i) + ": ", model_name);
+				LOG_DEBUG("  name: " + name, model_name);
+				LOG_DEBUG("  uuid: " + uuid, model_name);
+				LOG_DEBUG("  expiresOn: " + expiresOn, model_name);
+			}
+		}
+		catch (const std::exception& e)
+		{
+			LOG_ERROR(e.what(), model_name);
+			throw ReadError();
+		}
 	}
-	catch (const std::exception& e)
-	{
-		LOG_ERROR(e.what(), model_name);
-	}
 
-
-
-	return;
+	return userslist;
 }
