@@ -47,7 +47,7 @@ LOG_DEBUG_OUT
 			{
 				for (const auto& user_info : user_info_list)
 				{
-					LOG_INFO("用户名：" + user_info.user_name + "，UUID：" + user_info.uuid + "，过期时间：" + user_info.expiresOn, model_name);
+					LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
 				}
 			}
 		}
