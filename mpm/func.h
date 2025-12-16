@@ -33,7 +33,7 @@ struct NotOpen : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "无法打开用户信息文件！";
+		return "无法打开文件！";
 	}
 };
 
@@ -41,7 +41,7 @@ struct ReadError : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "读取用户信息文件失败！";
+		return "读取用文件失败！";
 	}
 };
 
