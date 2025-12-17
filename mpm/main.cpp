@@ -63,6 +63,7 @@ LOG_DEBUG_OUT
 
 		while (true)
 		{
+OpenWorldWhile:
 			std::string comm;
 			std::getline(std::cin, comm);
 			LOG_CREATE_MODEL_NAME(model_name, "CommandProcessing");
@@ -84,9 +85,17 @@ LOG_DEBUG_OUT
 			if (pc == "OpenWorld"|| pc == "openworld")
 			{
 				LOG_DEBUG("识别命令：" + pc, model_name);
+				std::string ow;
+				try
+				{
+					ow = comm.substr(10);
+				}
+				catch (const std::exception&)
+				{
+					LOG_ERROR(pc + "<-[HERE]", model_name);
+					goto OpenWorldWhile;
+				}
 
-
-				std::string ow = comm.substr(10);
 				LOG_DEBUG("打开存档：" + ow, model_name);
 				for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
 				{
