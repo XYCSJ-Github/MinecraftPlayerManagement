@@ -306,87 +306,10 @@ int main(int argc, char* argv[])
 						goto OpenWorldWhile;
 					}
 
-					std::vector<PlayerInfo_AS> pc_advancements_list;
-					std::vector<PlayerInfo_Data> pc_playerdata_list;
-					std::vector<PlayerInfo_AS> pc_stats_list;
-					std::vector<playerinworldinfo> ppiw_list;
 
-					for (const auto& user_info : user_info_list)
-					{
-						if (ow == user_info.user_name)
-						{
-							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
-							{
-								playerinworldinfo piw = { "否", "否", "否", "否", "否", "否", "否" };
-								piw.uuid = user_info.uuid;
-								piw.worldname = world_name_list.world_name_list[i];
-								std::string open_path = world_name_list.world_directory_list[i];
-								try
-								{
-									pc_advancements_list = GetWorldPlayerAdvancements(open_path);
-									pc_playerdata_list = GetWorldPlayerData(open_path);
-									pc_stats_list = GetWorldPlayerStats(open_path);
-								}
-								catch (const std::exception& e)
-								{
-									LOG_ERROR(e.what(), model_name);
-								}
+					std::string show_str = "\n玩家：" + ow + "\nUUID：" + piw_list[0].uuid + "\n世界：\n";
 
-								for (int j = 0; j < pc_advancements_list.size(); j++)
-								{
-									if (piw.uuid == pc_advancements_list[j].uuid)
-									{
-										if (pc_advancements_list[j].path.length() != 0)
-										{
-											piw.adv_path = "有";
-										}
-									}
-								}
-
-								for (int j = 0; j < pc_playerdata_list.size(); j++)
-								{
-									if (piw.uuid == pc_playerdata_list[j].uuid)
-									{
-										if (pc_playerdata_list[j].dat_path.length() != 0)
-										{
-											piw.pd_path = "有";
-										}
-										if (pc_playerdata_list[j].dat_old_path.length() != 0)
-										{
-											piw.pd_old_path = "有";
-										}
-										if (pc_playerdata_list[j].cosarmor_path.length() != 0)
-										{
-											piw.cosarmor_path = "有";
-										}
-									}
-								}
-
-								for (int j = 0; j < c_stats_list.size(); j++)
-								{
-									if (piw.uuid == pc_stats_list[j].uuid)
-									{
-										if (pc_stats_list[j].path.length() != 0)
-										{
-											piw.st_path = "有";
-										}
-									}
-								}
-
-								ppiw_list.push_back(piw);
-							}
-						}
-					}
-
-					if (ppiw_list.size() == 0)
-					{
-						LOG_WARNING("未找到该玩家!", model_name);
-						goto OpenWorldWhile;
-					}
-
-					std::string show_str = "\n玩家：" + ow + "\nUUID：" + ppiw_list[1].uuid + "\n世界：\n";
-
-					for (const auto& show : ppiw_list)
+					for (const auto& show : piw_list)
 					{
 						if (show.adv_path == "有" || show.pd_path == "有" || show.pd_old_path == "有" || show.cosarmor_path == "有" || show.st_path == "有")
 						{
