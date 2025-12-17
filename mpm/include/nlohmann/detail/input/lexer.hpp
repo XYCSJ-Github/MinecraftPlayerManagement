@@ -8,6 +8,8 @@
 
 #pragma once
 
+#pragma warning(disable:26819)
+
 #include <array> // array
 #include <clocale> // localeconv
 #include <cstddef> // size_t

@@ -156,39 +156,49 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 		throw UnknownPath();
 	}
 
+	PlayerInfo_Data playerdata_list;
+
 	for (const auto d : std::filesystem::directory_iterator(playerdata_path))
 	{
-		PlayerInfo_Data playerdata_list;
-
-		for (int j = 0; j < 3; ++j)
+		std::string datorold = d.path().string();
+		datorold.erase(0, d.path().string().length() - 4);
+		if (datorold.find(".dat") != std::string::npos)
 		{
-			if (d.path().string().find(".dat") != std::string::npos)
-			{
-				playerdata_list.dat_path = d.path().string();
-				std::string uuid = d.path().string();
-				playerdata_list.uuid = uuid.substr(playerdata_path.length() + 1);
-				playerdata_list.uuid.erase(playerdata_list.uuid.length() - 4, 4);
-				LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_path + "\nuuid：" + playerdata_list.uuid, model_name);
-			}
-			if (d.path().string().find(".dat_old") != std::string::npos)
-			{
-				playerdata_list.dat_old_path = d.path().string();
-				std::string uuid = d.path().string();
-				playerdata_list.uuid = uuid.substr(playerdata_path.length() + 1);
-				playerdata_list.uuid.erase(playerdata_list.uuid.length() - 8, 8);
-				LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_old_path + "\nuuid：" + playerdata_list.uuid, model_name);
-			}
-			if (d.path().string().find(".cosarmor") != std::string::npos)
-			{
-				playerdata_list.cosarmor_path = d.path().string();
-				std::string uuid = d.path().string();
-				playerdata_list.uuid = uuid.substr(playerdata_path.length() + 1);
-				playerdata_list.uuid.erase(playerdata_list.uuid.length() - 9, 9);
-				LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.cosarmor_path + "\nuuid：" + playerdata_list.uuid, model_name);
-			}
+			playerdata_list.dat_path = d.path().string();
+			std::string uuid = d.path().string();
+			playerdata_list.uuid = uuid.substr(playerdata_path.length() + 1);
+			playerdata_list.uuid.erase(playerdata_list.uuid.length() - 4, 4);
+			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_path + "\nuuid：" + playerdata_list.uuid, model_name);
 		}
-
-		pd_list.push_back(playerdata_list);
+		if (datorold.find("_old") != std::string::npos)
+		{
+			playerdata_list.dat_old_path = d.path().string();
+			std::string uuid = d.path().string();
+			playerdata_list.old_uuid = uuid.substr(playerdata_path.length() + 1);
+			playerdata_list.old_uuid.erase(playerdata_list.old_uuid.length() - 8, 8);
+			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_old_path + "\nuuid：" + playerdata_list.old_uuid, model_name);
+		}
+		if (d.path().string().find(".cosa") != std::string::npos)
+		{
+			playerdata_list.cosarmor_path = d.path().string();
+			std::string uuid = d.path().string();
+			playerdata_list.cosarmor_uuid = uuid.substr(playerdata_path.length() + 1);
+			playerdata_list.cosarmor_uuid.erase(playerdata_list.cosarmor_uuid.length() - 9, 9);
+			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.cosarmor_path + "\nuuid：" + playerdata_list.cosarmor_uuid, model_name);
+		}
+		if (!playerdata_list.dat_path.empty() && !playerdata_list.dat_old_path.empty() && !playerdata_list.cosarmor_path.empty())
+		{
+			if (playerdata_list.uuid == playerdata_list.old_uuid && playerdata_list.uuid == playerdata_list.cosarmor_uuid)
+			{
+				pd_list.push_back(playerdata_list);
+			}
+			playerdata_list.cosarmor_path = {};
+			playerdata_list.cosarmor_uuid = {};
+			playerdata_list.dat_old_path = {};
+			playerdata_list.old_uuid = {};
+			playerdata_list.dat_path = {};
+			playerdata_list.uuid = {};
+		}
 	}
 
 	return pd_list;

@@ -33,6 +33,8 @@ struct PlayerInfo_Data
 	std::string dat_old_path;
 	std::string cosarmor_path;
 	std::string uuid;
+	std::string old_uuid;
+	std::string cosarmor_uuid;
 };
 
 struct UnknownPath : public std::exception

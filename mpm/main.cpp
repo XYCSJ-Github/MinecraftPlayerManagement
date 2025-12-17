@@ -1,5 +1,3 @@
-#pragma warning(disable:26819)
-
 #include "func.h"
 #include "Logout.h"
 #include <vector>
@@ -104,15 +102,15 @@ int main()
 						std::string open_path = world_name_list.world_directory_list[i];
 						LOG_INFO("正在打开存档：" + open_path, model_name);
 
-						std::vector<PlayerInfo_AS> advancements_list;
-						std::vector<PlayerInfo_Data> playerdata_list;
-						std::vector<PlayerInfo_AS> stats_list;
+						std::vector<PlayerInfo_AS> c_advancements_list;
+						std::vector<PlayerInfo_Data> c_playerdata_list;
+						std::vector<PlayerInfo_AS> c_stats_list;
 
 						try
 						{
-							advancements_list = GetWorldPlayerAdvancements(open_path);
-							playerdata_list = GetWorldPlayerData(open_path);
-							stats_list = GetWorldPlayerStats(open_path);
+							c_advancements_list = GetWorldPlayerAdvancements(open_path);
+							c_playerdata_list = GetWorldPlayerData(open_path);
+							c_stats_list = GetWorldPlayerStats(open_path);
 						}
 						catch (const std::exception& e)
 						{
@@ -124,35 +122,47 @@ int main()
 						for (int i = 0; i < user_info_list.size(); i++)
 						{
 							std::string adv_path = {}, pd_path = {}, pd_old_path = {}, cosarmor_path = {}, st_path = {};
-							for (int j = 0; j < advancements_list.size(); j++)
+							for (int j = 0; j < c_advancements_list.size(); j++)
 							{
-								if (user_info_list[i].uuid == advancements_list[j].uuid)
+								if (user_info_list[i].uuid == c_advancements_list[j].uuid)
 								{
-									adv_path = advancements_list[j].path;
+									adv_path = c_advancements_list[j].path;
 								}
 							}
 
-							for (int j = 0; j < playerdata_list.size(); j++)
+							for (int j = 0; j < c_playerdata_list.size(); j++)
 							{
-								if (user_info_list[i].uuid == playerdata_list[j].uuid)
+								if (user_info_list[i].uuid == c_playerdata_list[j].uuid)
 								{
-									pd_path = playerdata_list[j].dat_path;
-									pd_old_path = playerdata_list[j].dat_old_path;
-									cosarmor_path = playerdata_list[j].cosarmor_path;
+									pd_path = c_playerdata_list[j].dat_path;
+									pd_old_path = c_playerdata_list[j].dat_old_path;
+									cosarmor_path = c_playerdata_list[j].cosarmor_path;
 								}
 							}
 
-							for (int j = 0; j < stats_list.size(); j++)
+							for (int j = 0; j < c_stats_list.size(); j++)
 							{
-								if (user_info_list[i].uuid == stats_list[j].uuid)
+								if (user_info_list[i].uuid == c_stats_list[j].uuid)
 								{
-									st_path = stats_list[j].path;
+									st_path = c_stats_list[j].path;
 								}
 							}
 
-							if (adv_path.length() != 0 || pd_path.length() != 0 || pd_old_path.length() != 0 || cosarmor_path.length() != 0 || st_path.length() != 0)
+							if (adv_path.length() != 0 || pd_path.length() != 0 || st_path.length() != 0)
 							{
-								LOG_INFO("\n玩家 " + user_info_list[i].user_name + "\nUUID：" + user_info_list[i].uuid + "\n成就：" + adv_path + "\n玩家数据：" + pd_path + "\n旧玩家数据：" + pd_old_path + "\n装饰盔甲数据：" + cosarmor_path + "\n玩家统计：" + st_path + "\n", model_name);
+								std::string out = "\n玩家 " + user_info_list[i].user_name + "\nUUID：" + user_info_list[i].uuid + "\n成就：" + adv_path + "\n玩家数据：" + pd_path;
+								if (pd_old_path.length() != 0)
+								{
+									out += "\n旧玩家数据：" + pd_old_path;
+								}
+								if (cosarmor_path.length() != 0)
+								{
+									out += "\n装饰盔甲数据：" + cosarmor_path;
+								}
+
+								out += "\n玩家统计：" + st_path + "\n";
+
+								LOG_INFO(out, model_name);
 							}
 						}
 					}
