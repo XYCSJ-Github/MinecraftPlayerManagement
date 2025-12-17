@@ -8,14 +8,14 @@ int main()
 	LOG_DEBUG_OUT
 #endif
 
-		LOG_CREATE_MODEL_NAME(model_name, "Main");
+	LOG_CREATE_MODEL_NAME(model_name, "Main");
 
 	std::string world_path = {};
 	bool mRun = true;
 
 	while (mRun)
 	{
-		std::cout << "打开客户端文件夹：";
+		std::cout << "打开文件夹：";
 		std::getline(std::cin, world_path);
 
 		std::string pip;
@@ -29,7 +29,8 @@ int main()
 			break;
 		}
 
-		LOG_INFO("打开客户端中...", model_name);
+		
+		LOG_INFO("打开" + getLastComponent(pip), model_name);
 
 		WorldDirectoriesNameList world_name_list = GetWorldDirectoriesList(pip);
 		std::vector<UserInfo> user_info_list;

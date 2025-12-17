@@ -232,3 +232,23 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 
 	return ps_list;
 }
+
+std::string getLastComponent(const std::string& path) 
+{
+	// 处理空路径
+	if (path.empty()) return "";
+
+	// 移除末尾的斜杠
+	std::string clean_path = path;
+	if (!clean_path.empty() && (clean_path.back() == '/' || clean_path.back() == '\\')) {
+		clean_path.pop_back();
+	}
+
+	// 查找最后一个分隔符
+	size_t pos = clean_path.find_last_of("/\\");
+	if (pos == std::string::npos) {
+		return clean_path;  // 没有分隔符，整个字符串就是最后一层
+	}
+
+	return clean_path.substr(pos + 1);
+}

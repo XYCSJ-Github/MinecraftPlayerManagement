@@ -67,3 +67,4 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path);
 std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_path);
 std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path);
 std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path);
+std::string getLastComponent(const std::string& path)
