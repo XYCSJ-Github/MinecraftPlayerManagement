@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 	LOG_DEBUG_OUT
 #endif
 
-	LOG_CREATE_MODEL_NAME(model_name, "Main");
+		LOG_CREATE_MODEL_NAME(model_name, "Main");
 
 	bool StartwithArgv = false;
 	std::string input_path;
@@ -54,13 +54,13 @@ int main(int argc, char* argv[])
 			LOG_INFO("打开(服务端)" + getLastComponent(pip), model_name);
 			world_name_list = GetWorldDirectoriesList(pip, MOD_SERVER);
 		}
-		else 
+		else
 		{
 			LOG_INFO("打开(客户端)" + getLastComponent(pip), model_name);
 			world_name_list = GetWorldDirectoriesList(pip, MOD_CLIENT);
 		}
 
-		
+
 		std::vector<UserInfo> user_info_list;
 
 		for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
@@ -417,10 +417,28 @@ int main(int argc, char* argv[])
 				if (pps == "world")
 				{
 					LOG_DEBUG("识别命令：" + pps, model_name);
+					std::vector<PlayerInfo_AS> is_world_player;
+					std::vector<UserInfo> is_world_user;
 
 					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
 					{
-						LOG_INFO("\n存档名称：" + world_name_list.world_name_list[i] + "\n存档路径" + world_name_list.world_directory_list[i] + "\n", model_name);
+						is_world_player = GetWorldPlayerAdvancements(world_name_list.world_directory_list[i]);
+						is_world_user = GetUserInfo(pip);
+
+						std::string out = "\n存档：" + world_name_list.world_name_list[i] + "\n路径：" + world_name_list.world_directory_list[i];
+
+						for (const auto& wpl : is_world_player)//获取单个世界玩家列表
+						{
+							for (const auto& uwl : is_world_user)//获取全部用户信息
+							{
+								if (wpl.uuid == uwl.uuid)
+								{
+									out += "\n玩家：" + uwl.user_name + " | UUID：" + uwl.uuid;
+								}
+							}
+						}
+
+						LOG_INFO(out + "\n", model_name);
 					}
 				}
 
@@ -430,7 +448,7 @@ int main(int argc, char* argv[])
 					LOG_DEBUG("识别命令：" + pps, model_name);
 
 					for (const auto& user_info : user_info_list)
-					{
+								{
 						LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
 					}
 				}
