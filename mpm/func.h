@@ -65,6 +65,17 @@ struct ReadError : public std::exception
 	}
 };
 
+struct playerinworldinfo
+{
+	std::string worldname;
+	std::string uuid;
+	std::string adv_path;
+	std::string pd_path;
+	std::string pd_old_path;
+	std::string cosarmor_path;
+	std::string st_path;
+};
+
 WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mod);
 std::string ProcessingInputPath(const std::string input_path);
 std::vector<UserInfo> GetUserInfo(const std::string base_path);

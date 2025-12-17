@@ -2,7 +2,7 @@
 #include "Logout.h"
 #include <vector>
 
-int main()
+int main(int argc, char* argv[])
 {
 #if _DEBUG
 	LOG_DEBUG_OUT
@@ -10,13 +10,31 @@ int main()
 
 	LOG_CREATE_MODEL_NAME(model_name, "Main");
 
+	bool StartwithArgv = false;
+	std::string input_path;
+
+	if (argc > 1)
+	{
+		LOG_DEBUG("使用命令行参数作为初始路径输入。", model_name);
+		StartwithArgv = true;
+		input_path = argv[1];
+	}
+
 	std::string world_path = {};
 	bool mRun = true;
 
 	while (mRun)
 	{
-		std::cout << "打开文件夹：";
-		std::getline(std::cin, world_path);
+		if (StartwithArgv == true)
+		{
+			StartwithArgv = false;
+			world_path = input_path;
+		}
+		else
+		{
+			std::cout << "打开文件夹：";
+			std::getline(std::cin, world_path);
+		}
 
 		std::string pip;
 		try
@@ -127,15 +145,15 @@ int main()
 							std::string open_path = world_name_list.world_directory_list[i];
 							LOG_INFO("正在打开存档：" + open_path, model_name);
 
-							std::vector<PlayerInfo_AS> c_advancements_list;
-							std::vector<PlayerInfo_Data> c_playerdata_list;
-							std::vector<PlayerInfo_AS> c_stats_list;
+							std::vector<PlayerInfo_AS> sc_advancements_list;
+							std::vector<PlayerInfo_Data> sc_playerdata_list;
+							std::vector<PlayerInfo_AS> sc_stats_list;
 
 							try
 							{
-								c_advancements_list = GetWorldPlayerAdvancements(open_path);
-								c_playerdata_list = GetWorldPlayerData(open_path);
-								c_stats_list = GetWorldPlayerStats(open_path);
+								sc_advancements_list = GetWorldPlayerAdvancements(open_path);
+								sc_playerdata_list = GetWorldPlayerData(open_path);
+								sc_stats_list = GetWorldPlayerStats(open_path);
 							}
 							catch (const std::exception& e)
 							{
@@ -147,29 +165,29 @@ int main()
 							for (int i = 0; i < user_info_list.size(); i++)
 							{
 								std::string adv_path = {}, pd_path = {}, pd_old_path = {}, cosarmor_path = {}, st_path = {};
-								for (int j = 0; j < c_advancements_list.size(); j++)
+								for (int j = 0; j < sc_advancements_list.size(); j++)
 								{
-									if (user_info_list[i].uuid == c_advancements_list[j].uuid)
+									if (user_info_list[i].uuid == sc_advancements_list[j].uuid)
 									{
-										adv_path = c_advancements_list[j].path;
+										adv_path = sc_advancements_list[j].path;
 									}
 								}
 
-								for (int j = 0; j < c_playerdata_list.size(); j++)
+								for (int j = 0; j < sc_playerdata_list.size(); j++)
 								{
-									if (user_info_list[i].uuid == c_playerdata_list[j].uuid)
+									if (user_info_list[i].uuid == sc_playerdata_list[j].uuid)
 									{
-										pd_path = c_playerdata_list[j].dat_path;
-										pd_old_path = c_playerdata_list[j].dat_old_path;
-										cosarmor_path = c_playerdata_list[j].cosarmor_path;
+										pd_path = sc_playerdata_list[j].dat_path;
+										pd_old_path = sc_playerdata_list[j].dat_old_path;
+										cosarmor_path = sc_playerdata_list[j].cosarmor_path;
 									}
 								}
 
-								for (int j = 0; j < c_stats_list.size(); j++)
+								for (int j = 0; j < sc_stats_list.size(); j++)
 								{
-									if (user_info_list[i].uuid == c_stats_list[j].uuid)
+									if (user_info_list[i].uuid == sc_stats_list[j].uuid)
 									{
-										st_path = c_stats_list[j].path;
+										st_path = sc_stats_list[j].path;
 									}
 								}
 
@@ -213,16 +231,6 @@ int main()
 					std::vector<PlayerInfo_AS> c_advancements_list;
 					std::vector<PlayerInfo_Data> c_playerdata_list;
 					std::vector<PlayerInfo_AS> c_stats_list;
-					struct playerinworldinfo
-					{
-						std::string worldname;
-						std::string uuid;
-						std::string adv_path;
-						std::string pd_path;
-						std::string pd_old_path;
-						std::string cosarmor_path;
-						std::string st_path;
-					};
 					std::vector<playerinworldinfo> piw_list;
 
 					for (const auto& user_info : user_info_list)
@@ -298,20 +306,10 @@ int main()
 						goto OpenWorldWhile;
 					}
 
-					std::vector<PlayerInfo_AS> c_advancements_list;
-					std::vector<PlayerInfo_Data> c_playerdata_list;
-					std::vector<PlayerInfo_AS> c_stats_list;
-					struct playerinworldinfo
-					{
-						std::string worldname;
-						std::string uuid;
-						std::string adv_path;
-						std::string pd_path;
-						std::string pd_old_path;
-						std::string cosarmor_path;
-						std::string st_path;
-					};
-					std::vector<playerinworldinfo> piw_list;
+					std::vector<PlayerInfo_AS> pc_advancements_list;
+					std::vector<PlayerInfo_Data> pc_playerdata_list;
+					std::vector<PlayerInfo_AS> pc_stats_list;
+					std::vector<playerinworldinfo> ppiw_list;
 
 					for (const auto& user_info : user_info_list)
 					{
@@ -325,39 +323,39 @@ int main()
 								std::string open_path = world_name_list.world_directory_list[i];
 								try
 								{
-									c_advancements_list = GetWorldPlayerAdvancements(open_path);
-									c_playerdata_list = GetWorldPlayerData(open_path);
-									c_stats_list = GetWorldPlayerStats(open_path);
+									pc_advancements_list = GetWorldPlayerAdvancements(open_path);
+									pc_playerdata_list = GetWorldPlayerData(open_path);
+									pc_stats_list = GetWorldPlayerStats(open_path);
 								}
 								catch (const std::exception& e)
 								{
 									LOG_ERROR(e.what(), model_name);
 								}
 
-								for (int j = 0; j < c_advancements_list.size(); j++)
+								for (int j = 0; j < pc_advancements_list.size(); j++)
 								{
-									if (piw.uuid == c_advancements_list[j].uuid)
+									if (piw.uuid == pc_advancements_list[j].uuid)
 									{
-										if (c_advancements_list[j].path.length() != 0)
+										if (pc_advancements_list[j].path.length() != 0)
 										{
 											piw.adv_path = "有";
 										}
 									}
 								}
 
-								for (int j = 0; j < c_playerdata_list.size(); j++)
+								for (int j = 0; j < pc_playerdata_list.size(); j++)
 								{
-									if (piw.uuid == c_playerdata_list[j].uuid)
+									if (piw.uuid == pc_playerdata_list[j].uuid)
 									{
-										if (c_playerdata_list[j].dat_path.length() != 0)
+										if (pc_playerdata_list[j].dat_path.length() != 0)
 										{
 											piw.pd_path = "有";
 										}
-										if (c_playerdata_list[j].dat_old_path.length() != 0)
+										if (pc_playerdata_list[j].dat_old_path.length() != 0)
 										{
 											piw.pd_old_path = "有";
 										}
-										if (c_playerdata_list[j].cosarmor_path.length() != 0)
+										if (pc_playerdata_list[j].cosarmor_path.length() != 0)
 										{
 											piw.cosarmor_path = "有";
 										}
@@ -366,29 +364,29 @@ int main()
 
 								for (int j = 0; j < c_stats_list.size(); j++)
 								{
-									if (piw.uuid == c_stats_list[j].uuid)
+									if (piw.uuid == pc_stats_list[j].uuid)
 									{
-										if (c_stats_list[j].path.length() != 0)
+										if (pc_stats_list[j].path.length() != 0)
 										{
 											piw.st_path = "有";
 										}
 									}
 								}
 
-								piw_list.push_back(piw);
+								ppiw_list.push_back(piw);
 							}
 						}
 					}
 
-					if (piw_list.size() == 0)
+					if (ppiw_list.size() == 0)
 					{
 						LOG_WARNING("未找到该玩家!", model_name);
 						goto OpenWorldWhile;
 					}
 
-					std::string show_str = "\n玩家：" + ow + "\nUUID：" + piw_list[1].uuid + "\n世界：\n";
+					std::string show_str = "\n玩家：" + ow + "\nUUID：" + ppiw_list[1].uuid + "\n世界：\n";
 
-					for (const auto& show : piw_list)
+					for (const auto& show : ppiw_list)
 					{
 						if (show.adv_path == "有" || show.pd_path == "有" || show.pd_old_path == "有" || show.cosarmor_path == "有" || show.st_path == "有")
 						{
