@@ -15,22 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClInclude Include="func.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Logout.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="func.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Logout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="func.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Logout.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="func.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
