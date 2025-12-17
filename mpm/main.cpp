@@ -1,16 +1,16 @@
 #pragma warning(disable:26819)
 
-#include <vector>
-#include "Logout.h"
 #include "func.h"
+#include "Logout.h"
+#include <vector>
 
 int main()
 {
 #if _DEBUG
-LOG_DEBUG_OUT
+	LOG_DEBUG_OUT
 #endif
-	
-	LOG_CREATE_MODEL_NAME(model_name, "Main");
+
+		LOG_CREATE_MODEL_NAME(model_name, "Main");
 
 	std::string world_path = {};
 	bool mRun = true;
@@ -63,7 +63,7 @@ LOG_DEBUG_OUT
 
 		while (true)
 		{
-OpenWorldWhile:
+		OpenWorldWhile:
 			std::string comm;
 			std::getline(std::cin, comm);
 			LOG_CREATE_MODEL_NAME(model_name, "CommandProcessing");
@@ -75,14 +75,14 @@ OpenWorldWhile:
 				break;
 			}
 
-			if(comm == "break")
+			if (comm == "break")
 			{
 				LOG_DEBUG("识别命令：" + comm, model_name);
 				break;
 			}
 
 			std::string pc = comm.substr(0, 9);
-			if (pc == "OpenWorld"|| pc == "openworld")
+			if (pc == "OpenWorld" || pc == "openworld")
 			{
 				LOG_DEBUG("识别命令：" + pc, model_name);
 				std::string ow;
@@ -150,7 +150,7 @@ OpenWorldWhile:
 								}
 							}
 
-							if(adv_path.length() != 0 || pd_path.length() != 0 || pd_old_path.length() != 0 || cosarmor_path.length() != 0 || st_path.length() != 0)
+							if (adv_path.length() != 0 || pd_path.length() != 0 || pd_old_path.length() != 0 || cosarmor_path.length() != 0 || st_path.length() != 0)
 							{
 								LOG_INFO("\n玩家 " + user_info_list[i].user_name + "\nUUID：" + user_info_list[i].uuid + "\n成就：" + adv_path + "\n玩家数据：" + pd_path + "\n旧玩家数据：" + pd_old_path + "\n装饰盔甲数据：" + cosarmor_path + "\n玩家统计：" + st_path + "\n", model_name);
 							}
