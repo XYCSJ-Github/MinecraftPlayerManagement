@@ -79,14 +79,14 @@ int main()
 				break;
 			}
 
-			std::string pc = comm.substr(0, 9);
-			if (pc == "OpenWorld" || pc == "openworld")
+			std::string pc = comm.substr(0, 4);
+			if (pc == "open")
 			{
 				LOG_DEBUG("识别命令：" + pc, model_name);
 				std::string ow;
 				try
 				{
-					ow = comm.substr(10);
+					ow = comm.substr(5);
 				}
 				catch (const std::exception&)
 				{
@@ -94,99 +94,151 @@ int main()
 					goto OpenWorldWhile;
 				}
 
-				LOG_DEBUG("打开存档：" + ow, model_name);
-				for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+				std::string ppc = comm.substr(5, 5);
+				if (ppc == "world")
 				{
-					if (ow == world_name_list.world_name_list[i])
+					LOG_DEBUG("识别命令：" + ppc, model_name);
+					try
 					{
-						std::string open_path = world_name_list.world_directory_list[i];
-						LOG_INFO("正在打开存档：" + open_path, model_name);
+						ow = comm.substr(11);
+					}
+					catch (const std::exception&)
+					{
+						LOG_ERROR(ppc + "<-[HERE]", model_name);
+						goto OpenWorldWhile;
+					}
 
-						std::vector<PlayerInfo_AS> c_advancements_list;
-						std::vector<PlayerInfo_Data> c_playerdata_list;
-						std::vector<PlayerInfo_AS> c_stats_list;
-
-						try
+					LOG_DEBUG("打开存档：" + ow, model_name);
+					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+					{
+						if (ow == world_name_list.world_name_list[i])
 						{
-							c_advancements_list = GetWorldPlayerAdvancements(open_path);
-							c_playerdata_list = GetWorldPlayerData(open_path);
-							c_stats_list = GetWorldPlayerStats(open_path);
-						}
-						catch (const std::exception& e)
-						{
-							LOG_ERROR(e.what(), model_name);
-						}
+							std::string open_path = world_name_list.world_directory_list[i];
+							LOG_INFO("正在打开存档：" + open_path, model_name);
 
-						LOG_INFO("存档打开完成！", model_name);
+							std::vector<PlayerInfo_AS> c_advancements_list;
+							std::vector<PlayerInfo_Data> c_playerdata_list;
+							std::vector<PlayerInfo_AS> c_stats_list;
 
-						for (int i = 0; i < user_info_list.size(); i++)
-						{
-							std::string adv_path = {}, pd_path = {}, pd_old_path = {}, cosarmor_path = {}, st_path = {};
-							for (int j = 0; j < c_advancements_list.size(); j++)
+							try
 							{
-								if (user_info_list[i].uuid == c_advancements_list[j].uuid)
-								{
-									adv_path = c_advancements_list[j].path;
-								}
+								c_advancements_list = GetWorldPlayerAdvancements(open_path);
+								c_playerdata_list = GetWorldPlayerData(open_path);
+								c_stats_list = GetWorldPlayerStats(open_path);
+							}
+							catch (const std::exception& e)
+							{
+								LOG_ERROR(e.what(), model_name);
 							}
 
-							for (int j = 0; j < c_playerdata_list.size(); j++)
+							LOG_INFO("存档打开完成！", model_name);
+
+							for (int i = 0; i < user_info_list.size(); i++)
 							{
-								if (user_info_list[i].uuid == c_playerdata_list[j].uuid)
+								std::string adv_path = {}, pd_path = {}, pd_old_path = {}, cosarmor_path = {}, st_path = {};
+								for (int j = 0; j < c_advancements_list.size(); j++)
 								{
-									pd_path = c_playerdata_list[j].dat_path;
-									pd_old_path = c_playerdata_list[j].dat_old_path;
-									cosarmor_path = c_playerdata_list[j].cosarmor_path;
-								}
-							}
-
-							for (int j = 0; j < c_stats_list.size(); j++)
-							{
-								if (user_info_list[i].uuid == c_stats_list[j].uuid)
-								{
-									st_path = c_stats_list[j].path;
-								}
-							}
-
-							if (adv_path.length() != 0 || pd_path.length() != 0 || st_path.length() != 0)
-							{
-								std::string out = "\n玩家 " + user_info_list[i].user_name + "\nUUID：" + user_info_list[i].uuid + "\n成就：" + adv_path + "\n玩家数据：" + pd_path;
-								if (pd_old_path.length() != 0)
-								{
-									out += "\n旧玩家数据：" + pd_old_path;
-								}
-								if (cosarmor_path.length() != 0)
-								{
-									out += "\n装饰盔甲数据：" + cosarmor_path;
+									if (user_info_list[i].uuid == c_advancements_list[j].uuid)
+									{
+										adv_path = c_advancements_list[j].path;
+									}
 								}
 
-								out += "\n玩家统计：" + st_path + "\n";
+								for (int j = 0; j < c_playerdata_list.size(); j++)
+								{
+									if (user_info_list[i].uuid == c_playerdata_list[j].uuid)
+									{
+										pd_path = c_playerdata_list[j].dat_path;
+										pd_old_path = c_playerdata_list[j].dat_old_path;
+										cosarmor_path = c_playerdata_list[j].cosarmor_path;
+									}
+								}
 
-								LOG_INFO(out, model_name);
+								for (int j = 0; j < c_stats_list.size(); j++)
+								{
+									if (user_info_list[i].uuid == c_stats_list[j].uuid)
+									{
+										st_path = c_stats_list[j].path;
+									}
+								}
+
+								if (adv_path.length() != 0 || pd_path.length() != 0 || st_path.length() != 0)
+								{
+									std::string out = "\n玩家 " + user_info_list[i].user_name + "\nUUID：" + user_info_list[i].uuid + "\n成就：" + adv_path + "\n玩家数据：" + pd_path;
+									if (pd_old_path.length() != 0)
+									{
+										out += "\n旧玩家数据：" + pd_old_path;
+									}
+									if (cosarmor_path.length() != 0)
+									{
+										out += "\n装饰盔甲数据：" + cosarmor_path;
+									}
+
+									out += "\n玩家统计：" + st_path + "\n";
+
+									LOG_INFO(out, model_name);
+								}
 							}
 						}
 					}
+					
+				}
+
+				ppc = comm.substr(5, 5);
+				if (ppc == "player")
+				{
+					LOG_DEBUG("识别命令：" + ppc, model_name);
+					std::string ow;
+					try
+					{
+						ow = comm.substr(12);
+					}
+					catch (const std::exception&)
+					{
+						LOG_ERROR(ppc + "<-[HERE]", model_name);
+						goto OpenWorldWhile;
+					}
+
+					LOG_DEBUG("打开玩家：" + ow, model_name);
+					//TODO: 打开玩家数据
 				}
 			}
 
-			std::string ps = comm.substr(0, 9);
-			if (ps == "WorldList" || ps == "worldlist")
+			std::string ps = comm.substr(0, 4);
+			if (ps == "list")
 			{
 				LOG_DEBUG("识别命令：" + ps, model_name);
-				for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+				std::string ow;
+				try
 				{
-					LOG_INFO("\n存档名称：" + world_name_list.world_name_list[i] + "\n存档路径" + world_name_list.world_directory_list[i] + "\n", model_name);
+					ow = comm.substr(5);
 				}
-			}
-
-			std::string pu = comm.substr(0, 10);
-			if (pu == "PlayerList" || pu == "playerlist")
-			{
-				LOG_DEBUG("识别命令：" + pu, model_name);
-
-				for (const auto& user_info : user_info_list)
+				catch (const std::exception&)
 				{
-					LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
+					LOG_ERROR(ps + "<-[HERE]", model_name);
+					goto OpenWorldWhile;
+				}
+
+				std::string pps = comm.substr(5, 5);
+				if (pps == "world")
+				{
+					LOG_DEBUG("识别命令：" + pps, model_name);
+
+					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+					{
+						LOG_INFO("\n存档名称：" + world_name_list.world_name_list[i] + "\n存档路径" + world_name_list.world_directory_list[i] + "\n", model_name);
+					}
+				}
+
+				pps = comm.substr(5, 6);
+				if (pps == "player")
+				{
+					LOG_DEBUG("识别命令：" + pps, model_name);
+
+					for (const auto& user_info : user_info_list)
+					{
+						LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
+					}
 				}
 			}
 		}
