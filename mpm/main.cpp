@@ -181,10 +181,10 @@ int main()
 							}
 						}
 					}
-					
+
 				}
 
-				ppc = comm.substr(5, 5);
+				ppc = comm.substr(5, 6);
 				if (ppc == "player")
 				{
 					LOG_DEBUG("识别命令：" + ppc, model_name);
@@ -199,8 +199,105 @@ int main()
 						goto OpenWorldWhile;
 					}
 
-					LOG_DEBUG("打开玩家：" + ow, model_name);
-					//TODO: 打开玩家数据
+					std::vector<PlayerInfo_AS> c_advancements_list;
+					std::vector<PlayerInfo_Data> c_playerdata_list;
+					std::vector<PlayerInfo_AS> c_stats_list;
+					struct playerinworldinfo
+					{
+						std::string worldname;
+						std::string uuid;
+						std::string adv_path;
+						std::string pd_path;
+						std::string pd_old_path;
+						std::string cosarmor_path;
+						std::string st_path;
+					};
+					std::vector<playerinworldinfo> piw_list;
+
+					for (const auto& user_info : user_info_list)
+					{
+						if (ow == user_info.user_name)
+						{
+							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+							{
+								playerinworldinfo piw = { "否", "否", "否", "否", "否", "否", "否" };
+								piw.uuid = user_info.uuid;
+								piw.worldname = world_name_list.world_name_list[i];
+								std::string open_path = world_name_list.world_directory_list[i];
+								try
+								{
+									c_advancements_list = GetWorldPlayerAdvancements(open_path);
+									c_playerdata_list = GetWorldPlayerData(open_path);
+									c_stats_list = GetWorldPlayerStats(open_path);
+								}
+								catch (const std::exception& e)
+								{
+									LOG_ERROR(e.what(), model_name);
+								}
+
+								for (int j = 0; j < c_advancements_list.size(); j++)
+								{
+									if (piw.uuid == c_advancements_list[j].uuid)
+									{
+										if (c_advancements_list[j].path.length() != 0)
+										{
+											piw.adv_path = "有";
+										}
+									}
+								}
+
+								for (int j = 0; j < c_playerdata_list.size(); j++)
+								{
+									if (piw.uuid == c_playerdata_list[j].uuid)
+									{
+										if (c_playerdata_list[j].dat_path.length() != 0)
+										{
+											piw.pd_path = "有";
+										}
+										if (c_playerdata_list[j].dat_old_path.length() != 0)
+										{
+											piw.pd_old_path = "有";
+										}
+										if (c_playerdata_list[j].cosarmor_path.length() != 0)
+										{
+											piw.cosarmor_path = "有";
+										}
+									}
+								}
+
+								for (int j = 0; j < c_stats_list.size(); j++)
+								{
+									if (piw.uuid == c_stats_list[j].uuid)
+									{
+										if (c_stats_list[j].path.length() != 0)
+										{
+											piw.st_path = "有";
+										}
+									}
+								}
+
+								piw_list.push_back(piw);
+							}
+						}
+					}
+
+					if (piw_list.size() == 0)
+					{
+						LOG_WARNING("未找到该玩家!", model_name);
+						goto OpenWorldWhile;
+					}
+
+					std::string show_str = "\n玩家：" + ow + "\nUUID：" + piw_list[0].uuid + "\n世界：\n";
+
+					for (const auto& show : piw_list)
+					{
+						if (show.adv_path == "有" || show.pd_path == "有" || show.pd_old_path == "有" || show.cosarmor_path == "有" || show.st_path == "有")
+						{
+							show_str += show.worldname + "|进度：" + show.adv_path + "|数据：" + show.pd_path + "|旧数据：" + show.pd_old_path + "|其他数据：" + show.cosarmor_path + "|统计：" + show.st_path + "\n";
+						}
+					}
+
+					LOG_INFO(show_str + "\n", model_name);
 				}
 			}
 
