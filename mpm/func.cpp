@@ -21,7 +21,14 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 		LOG_DEBUG("发现世界目录：" + d.path().string(), model_name);
 		world_directories_name_list.world_directory_list.push_back(d.path().string());
 		world_name = d.path().string();
-		world_name.erase(0, base_path_copy.length());
+		if (mode == MOD_SERVER)
+		{
+			world_name.erase(0, base_path_copy.length() + 1);
+		}
+		else
+		{
+			world_name.erase(0, base_path_copy.length());
+		}
 		LOG_DEBUG("世界名称：" + world_name, model_name);
 		world_directories_name_list.world_name_list.push_back(world_name);
 	}
@@ -235,7 +242,7 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 	return ps_list;
 }
 
-std::string getLastComponent(const std::string& path) 
+std::string getLastComponent(const std::string& path)
 {
 	// 处理空路径
 	if (path.empty()) return "";
