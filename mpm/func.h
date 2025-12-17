@@ -84,3 +84,4 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path);
 std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path);
 std::string getLastComponent(const std::string& path);
 bool folderExists(const fs::path& base_path, const std::string& folder_name);
+bool isPathValid(const std::string& pathStr);

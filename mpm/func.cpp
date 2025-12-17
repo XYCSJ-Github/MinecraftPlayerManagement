@@ -266,3 +266,28 @@ bool folderExists(const fs::path& base_path, const std::string& folder_name) {
 	fs::path full_path = base_path / folder_name;
 	return fs::exists(full_path) && fs::is_directory(full_path);
 }
+
+bool isPathValid(const std::string& pathStr) 
+{
+	try {
+		// 构造 path 对象，这会进行基本的语法检查
+		fs::path p(pathStr);
+
+		// 检查路径是否为空
+		if (p.empty()) {
+			return false;
+		}
+
+		// 检查是否有非法字符（Windows 特别需要注意）
+		// path 构造时会自动处理转义，但我们可以检查一些明显的问题
+
+		return true;
+	}
+	catch (const fs::filesystem_error& e) {
+		std::cerr << "Filesystem error: " << e.what() << std::endl;
+		return false;
+	}
+	catch (...) {
+		return false;
+	}
+}

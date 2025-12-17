@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
 
 	while (mRun)
 	{
+	MainWhile:
 		if (StartwithArgv == true)
 		{
 			StartwithArgv = false;
@@ -44,7 +45,7 @@ int main(int argc, char* argv[])
 		catch (const std::exception& e)
 		{
 			LOG_ERROR(e.what(), model_name);
-			break;
+			goto MainWhile;
 		}
 
 		WorldDirectoriesNameList world_name_list;
