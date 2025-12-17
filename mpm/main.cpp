@@ -29,10 +29,20 @@ int main()
 			break;
 		}
 
-		
-		LOG_INFO("打开" + getLastComponent(pip), model_name);
+		WorldDirectoriesNameList world_name_list;
 
-		WorldDirectoriesNameList world_name_list = GetWorldDirectoriesList(pip);
+		if (folderExists(pip, "saves") == false)
+		{
+			LOG_INFO("打开(服务端)" + getLastComponent(pip), model_name);
+			world_name_list = GetWorldDirectoriesList(pip, MOD_SERVER);
+		}
+		else 
+		{
+			LOG_INFO("打开(客户端)" + getLastComponent(pip), model_name);
+			world_name_list = GetWorldDirectoriesList(pip, MOD_CLIENT);
+		}
+
+		
 		std::vector<UserInfo> user_info_list;
 
 		for (int i = 0; i < world_name_list.world_name_list.size(); ++i)

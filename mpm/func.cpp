@@ -1,19 +1,23 @@
 #include "func.h"
 
-WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path)
+WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mode)
 {
 	LOG_CREATE_MODEL_NAME(model_name, "GetWorldDirectoriesList");
 
 	WorldDirectoriesNameList world_directories_name_list;
 	std::string base_path_copy = base_path;
 
-	base_path_copy += "\\saves\\";
+	if (mode == MOD_CLIENT)
+		base_path_copy += "\\saves\\";
+
 	LOG_DEBUG("最终路径为：" + base_path_copy, model_name);
 	LOG_DEBUG("路径长度：" + std::to_string(base_path_copy.length()), model_name);
 
 	std::string world_name;
 	for (const auto d : std::filesystem::directory_iterator(base_path_copy))
 	{
+		if (fs::is_directory(d.path()) == false)
+			continue;
 		LOG_DEBUG("发现世界目录：" + d.path().string(), model_name);
 		world_directories_name_list.world_directory_list.push_back(d.path().string());
 		world_name = d.path().string();
@@ -21,8 +25,6 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path)
 		LOG_DEBUG("世界名称：" + world_name, model_name);
 		world_directories_name_list.world_name_list.push_back(world_name);
 	}
-
-
 
 	return world_directories_name_list;
 }
@@ -251,4 +253,9 @@ std::string getLastComponent(const std::string& path)
 	}
 
 	return clean_path.substr(pos + 1);
+}
+
+bool folderExists(const fs::path& base_path, const std::string& folder_name) {
+	fs::path full_path = base_path / folder_name;
+	return fs::exists(full_path) && fs::is_directory(full_path);
 }
