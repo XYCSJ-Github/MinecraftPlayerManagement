@@ -1,3 +1,5 @@
+#pragma warning(disable : 28159)
+#pragma warning(disable : 4996)
 #include "func.h"
 
 WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mode)
@@ -262,7 +264,8 @@ std::string getLastComponent(const std::string& path)
 	return clean_path.substr(pos + 1);
 }
 
-bool folderExists(const fs::path& base_path, const std::string& folder_name) {
+bool folderExists(const fs::path& base_path, const std::string& folder_name) 
+{
 	fs::path full_path = base_path / folder_name;
 	return fs::exists(full_path) && fs::is_directory(full_path);
 }
@@ -290,4 +293,23 @@ bool isPathValid(const std::string& pathStr)
 	catch (...) {
 		return false;
 	}
+}
+
+bool MoveToRecycleBinWithPS(const std::string& filepath) 
+{
+	// PowerShell 命令将文件移动到回收站
+	std::string psCommand = "powershell -Command \""
+		"$ErrorActionPreference = 'SilentlyContinue';"
+		"$WarningPreference = 'SilentlyContinue';"
+		"Remove-Item -Path '" + filepath + "' -Recurse -Force -Confirm:$false "
+		"2>$null | Out-Null\"";
+
+	return ExecuteCommand(psCommand);
+}
+
+bool ExecuteCommand(const std::string& cmd) 
+{
+	LOG_DEBUG("执行shell命令：" + cmd + "\n", "DeleteFile");
+	int result = std::system(cmd.c_str());
+	return (result == 0);
 }

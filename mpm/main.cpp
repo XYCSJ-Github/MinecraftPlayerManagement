@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
 				}
 				catch (const std::exception&)
 				{
-					LOG_ERROR(pc + "<-[HERE]", model_name);
+					LOG_ERROR(comm + "<-[HERE]", model_name);
 					goto OpenWorldWhile;
 				}
 
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception&)
 					{
-						LOG_ERROR(ppc + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]", model_name);
 						goto OpenWorldWhile;
 					}
 
@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception&)
 					{
-						LOG_ERROR(ppc + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]", model_name);
 						goto OpenWorldWhile;
 					}
 
@@ -375,6 +375,205 @@ int main(int argc, char* argv[])
 								{
 						LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
 					}
+				}
+			}
+
+			std::string hp = comm.substr(0, 6);
+			if (hp == "delete")
+			{
+				LOG_DEBUG("识别命令：" + hp, model_name);
+
+				std::string os;
+				try
+				{
+					os = comm.substr(7);
+				}
+				catch (const std::exception&)
+				{
+					LOG_ERROR(comm + "<-[HERE]", model_name);
+					goto OpenWorldWhile;
+				}
+
+				std::string oss = comm.substr(7, 6);
+				if (oss == "player")
+				{
+					LOG_DEBUG("识别命令：" + oss, model_name);
+
+					std::string osss;
+					try
+					{
+						osss = comm.substr(14);
+					}
+					catch (const std::exception&)
+					{
+						LOG_ERROR(comm + "<-[HERE]", model_name);
+						goto OpenWorldWhile;
+					}
+
+					std::vector<UserInfo> player_uuid;
+
+					try
+					{
+						player_uuid = GetUserInfo(pip);
+					}
+					catch (const std::exception& e)
+					{
+						LOG_ERROR(e.what(), model_name);
+						break;
+					}
+
+					std::string finded_player_uuid = {};
+
+					for (const UserInfo& findlist : player_uuid)//查找玩家uuid
+					{
+						if (osss == findlist.user_name)
+						{
+							finded_player_uuid = findlist.uuid;
+						}
+					}
+
+					if (finded_player_uuid.empty())
+					{
+						LOG_INFO("找不到此玩家", model_name);
+						goto OpenWorldWhile;
+					}
+
+					LOG_INFO("删除" + osss, model_name);
+
+					std::vector<PlayerInfo_AS> d_advancements_list;
+					std::vector<PlayerInfo_Data> d_playerdata_list;
+					std::vector<PlayerInfo_AS> d_stats_list;
+					playerinworldinfo delete_file_list;
+
+					std::string del_info = "\n从所有世界删除玩家：" + osss + "\nUUID：" + finded_player_uuid;
+
+					for (int i = 0; i < world_name_list.world_directory_list.size(); i++)
+					{
+						try
+						{
+							d_advancements_list = GetWorldPlayerAdvancements(world_name_list.world_directory_list[i]);
+							d_playerdata_list = GetWorldPlayerData(world_name_list.world_directory_list[i]);
+							d_stats_list = GetWorldPlayerStats(world_name_list.world_directory_list[i]);
+						}
+						catch (const std::exception& e)
+						{
+							LOG_ERROR(e.what(), model_name);
+							goto OpenWorldWhile;
+						}
+
+						for (int j = 0; j < d_advancements_list.size(); j++)
+						{
+							if (finded_player_uuid == d_advancements_list[j].uuid)
+							{
+								if (d_advancements_list[j].path.length() != 0)
+								{
+									delete_file_list.adv_path = d_advancements_list[j].path;
+								}
+							}
+						}
+
+						for (int j = 0; j < d_playerdata_list.size(); j++)
+						{
+							if (finded_player_uuid == d_playerdata_list[j].uuid)
+							{
+								if (d_playerdata_list[j].dat_path.length() != 0)
+								{
+									delete_file_list.pd_path = d_playerdata_list[j].dat_path;
+								}
+								if (d_playerdata_list[j].dat_old_path.length() != 0)
+								{
+									delete_file_list.pd_old_path = d_playerdata_list[j].dat_old_path;
+								}
+								if (d_playerdata_list[j].cosarmor_path.length() != 0)
+								{
+									delete_file_list.cosarmor_path = d_playerdata_list[j].cosarmor_path;
+								}
+							}
+						}
+
+						for (int j = 0; j < d_stats_list.size(); j++)
+						{
+							if (finded_player_uuid == d_stats_list[j].uuid)
+							{
+								if (d_stats_list[j].path.length() != 0)
+								{
+									delete_file_list.st_path = d_stats_list[j].path;
+								}
+							}
+						}
+
+						del_info += +"\n世界：" + world_name_list.world_name_list[i] + "\n";
+						bool is_see;
+						is_see = MoveToRecycleBinWithPS(delete_file_list.adv_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + delete_file_list.adv_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+
+						is_see = MoveToRecycleBinWithPS(delete_file_list.cosarmor_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + delete_file_list.cosarmor_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+
+						is_see = MoveToRecycleBinWithPS(delete_file_list.pd_old_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + delete_file_list.pd_old_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+
+						is_see = MoveToRecycleBinWithPS(delete_file_list.pd_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + delete_file_list.pd_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+
+						is_see = MoveToRecycleBinWithPS(delete_file_list.st_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + delete_file_list.st_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+					}
+
+					LOG_INFO(del_info, model_name);
+				}
+
+				oss = comm.substr(7, 5);
+				if (oss == "world")
+				{
+					LOG_DEBUG("识别命令：" + oss, model_name);
+
+					std::string os;
+					try
+					{
+						oss = comm.substr(13);
+					}
+					catch (const std::exception&)
+					{
+						LOG_ERROR(ps + "<-[HERE]", model_name);
+						goto OpenWorldWhile;
+					}
+
 				}
 			}
 		}

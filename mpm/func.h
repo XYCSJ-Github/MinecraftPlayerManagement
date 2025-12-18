@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <fstream>
 #include <vector>
+#include <windows.h>
+#include <shellapi.h>
 
 #define MOD_CLIENT 0
 #define MOD_SERVER 1
@@ -85,3 +87,5 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path);
 std::string getLastComponent(const std::string& path);
 bool folderExists(const fs::path& base_path, const std::string& folder_name);
 bool isPathValid(const std::string& pathStr);
+bool MoveToRecycleBinWithPS(const std::string& filepath);
+bool ExecuteCommand(const std::string& cmd);
