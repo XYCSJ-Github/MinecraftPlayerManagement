@@ -617,126 +617,302 @@ int main(int argc, char* argv[])
 						goto OpenWorldWhile;
 					}
 
-					//for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+					for (const UserInfo& playeruuid : user_info_list)
 					{
 						for (const UserInfo& playeruuid : user_info_list)
 						{
-							for (const UserInfo& playeruuid : user_info_list)
+							delete_file_list.uuid = playeruuid.uuid;
+							delete_file_list.worldname = playeruuid.user_name;
+
+							if (d_advancements_list.size() != 0)
 							{
-								delete_file_list.uuid = playeruuid.uuid;
-								delete_file_list.worldname = playeruuid.user_name;
-
-								if (d_advancements_list.size() != 0)
+								if (playeruuid.uuid == d_advancements_list[0].uuid)
 								{
-									if (playeruuid.uuid == d_advancements_list[0].uuid)
+									if (d_advancements_list[0].path.length() != 0)
 									{
-										if (d_advancements_list[0].path.length() != 0)
-										{
-											delete_file_list.adv_path = d_advancements_list[0].path;
-										}
+										delete_file_list.adv_path = d_advancements_list[0].path;
 									}
 								}
+							}
 
-								if (d_playerdata_list.size() != 0)
+							if (d_playerdata_list.size() != 0)
+							{
+								if (playeruuid.uuid == d_playerdata_list[0].uuid)
 								{
-									if (playeruuid.uuid == d_playerdata_list[0].uuid)
+									if (d_playerdata_list[0].dat_path.length() != 0)
 									{
-										if (d_playerdata_list[0].dat_path.length() != 0)
-										{
-											delete_file_list.pd_path = d_playerdata_list[0].dat_path;
-										}
-										if (d_playerdata_list[0].dat_old_path.length() != 0)
-										{
-											delete_file_list.pd_old_path = d_playerdata_list[0].dat_old_path;
-										}
-										if (d_playerdata_list[0].cosarmor_path.length() != 0)
-										{
-											delete_file_list.cosarmor_path = d_playerdata_list[0].cosarmor_path;
-										}
+										delete_file_list.pd_path = d_playerdata_list[0].dat_path;
+									}
+									if (d_playerdata_list[0].dat_old_path.length() != 0)
+									{
+										delete_file_list.pd_old_path = d_playerdata_list[0].dat_old_path;
+									}
+									if (d_playerdata_list[0].cosarmor_path.length() != 0)
+									{
+										delete_file_list.cosarmor_path = d_playerdata_list[0].cosarmor_path;
 									}
 								}
+							}
 
-								if (d_stats_list.size() != 0)
+							if (d_stats_list.size() != 0)
+							{
+								if (playeruuid.uuid == d_stats_list[0].uuid)
 								{
-									if (playeruuid.uuid == d_stats_list[0].uuid)
+									if (d_stats_list[0].path.length() != 0)
 									{
-										if (d_stats_list[0].path.length() != 0)
-										{
-											delete_file_list.st_path = d_stats_list[0].path;
-										}
+										delete_file_list.st_path = d_stats_list[0].path;
 									}
 								}
+							}
 
-								if (delete_file_list.adv_path.length() != 0 && delete_file_list.cosarmor_path.length() != 0 && delete_file_list.pd_old_path.length() != 0 && delete_file_list.pd_path.length() != 0 && delete_file_list.st_path.length() != 0)
+							if (delete_file_list.adv_path.length() != 0 && delete_file_list.cosarmor_path.length() != 0 && delete_file_list.pd_old_path.length() != 0 && delete_file_list.pd_path.length() != 0 && delete_file_list.st_path.length() != 0)
+							{
+								del_info += "\n玩家：" + delete_file_list.worldname + " | UUID：" + delete_file_list.uuid + "\n";
+								bool is_see;
+								is_see = MoveToRecycleBinWithPS(delete_file_list.adv_path);
+								if (is_see == true)
 								{
-									del_info += "\n玩家：" + delete_file_list.worldname + " | UUID：" + delete_file_list.uuid + "\n";
-									bool is_see;
-									is_see = MoveToRecycleBinWithPS(delete_file_list.adv_path);
-									if (is_see == true)
-									{
-										del_info += "删除：" + delete_file_list.adv_path + "\n";
-									}
-									else
-									{
-										del_info += "失败：文件已删除或不存在\n";
-									}
-
-									is_see = MoveToRecycleBinWithPS(delete_file_list.cosarmor_path);
-									if (is_see == true)
-									{
-										del_info += "删除：" + delete_file_list.cosarmor_path + "\n";
-									}
-									else
-									{
-										del_info += "失败：文件已删除或不存在\n";
-									}
-
-									is_see = MoveToRecycleBinWithPS(delete_file_list.pd_old_path);
-									if (is_see == true)
-									{
-										del_info += "删除：" + delete_file_list.pd_old_path + "\n";
-									}
-									else
-									{
-										del_info += "失败：文件已删除或不存在\n";
-									}
-
-									is_see = MoveToRecycleBinWithPS(delete_file_list.pd_path);
-									if (is_see == true)
-									{
-										del_info += "删除：" + delete_file_list.pd_path + "\n";
-									}
-									else
-									{
-										del_info += "失败：文件已删除或不存在\n";
-									}
-
-									is_see = MoveToRecycleBinWithPS(delete_file_list.st_path);
-									if (is_see == true)
-									{
-										del_info += "删除：" + delete_file_list.st_path + "\n";
-									}
-									else
-									{
-										del_info += "失败：文件已删除或不存在\n";
-									}
-
-									for (int x = 0; x < d_advancements_list.size(); x++)
-									{
-										if (delete_file_list.uuid == d_advancements_list[x].uuid)
-										{
-											d_advancements_list.erase(d_advancements_list.begin() + x);
-											d_playerdata_list.erase(d_playerdata_list.begin() + x);
-											d_stats_list.erase(d_stats_list.begin() + x);
-										}
-									}
-									delete_file_list = { "", "", "", "", "", "", "" };
+									del_info += "删除：" + delete_file_list.adv_path + "\n";
 								}
+								else
+								{
+									del_info += "失败：文件已删除或不存在\n";
+								}
+
+								is_see = MoveToRecycleBinWithPS(delete_file_list.cosarmor_path);
+								if (is_see == true)
+								{
+									del_info += "删除：" + delete_file_list.cosarmor_path + "\n";
+								}
+								else
+								{
+									del_info += "失败：文件已删除或不存在\n";
+								}
+
+								is_see = MoveToRecycleBinWithPS(delete_file_list.pd_old_path);
+								if (is_see == true)
+								{
+									del_info += "删除：" + delete_file_list.pd_old_path + "\n";
+								}
+								else
+								{
+									del_info += "失败：文件已删除或不存在\n";
+								}
+
+								is_see = MoveToRecycleBinWithPS(delete_file_list.pd_path);
+								if (is_see == true)
+								{
+									del_info += "删除：" + delete_file_list.pd_path + "\n";
+								}
+								else
+								{
+									del_info += "失败：文件已删除或不存在\n";
+								}
+
+								is_see = MoveToRecycleBinWithPS(delete_file_list.st_path);
+								if (is_see == true)
+								{
+									del_info += "删除：" + delete_file_list.st_path + "\n";
+								}
+								else
+								{
+									del_info += "失败：文件已删除或不存在\n";
+								}
+
+								for (int x = 0; x < d_advancements_list.size(); x++)
+								{
+									if (delete_file_list.uuid == d_advancements_list[x].uuid)
+									{
+										d_advancements_list.erase(d_advancements_list.begin() + x);
+										d_playerdata_list.erase(d_playerdata_list.begin() + x);
+										d_stats_list.erase(d_stats_list.begin() + x);
+									}
+								}
+								delete_file_list = { "", "", "", "", "", "", "" };
 							}
 						}
 					}
 
 					LOG_INFO(del_info, model_name);
+				}
+
+				oss = comm.substr(7, 2);
+				if (oss == "pw")
+				{
+					LOG_DEBUG("识别命令：" + oss, model_name);
+
+					std::string ossss;
+					try
+					{
+						ossss = comm.substr(9);
+					}
+					catch (const std::exception&)
+					{
+						LOG_ERROR(comm + "<-[HERE]", model_name);
+						goto OpenWorldWhile;
+					}
+
+					std::vector<std::string> p_w = splitString(ossss, ' ');
+					if (p_w[0].empty() && p_w[1].empty())
+					{
+						LOG_ERROR(comm + "<-[HERE]", model_name);
+						goto OpenWorldWhile;
+					}
+
+					UserInfo player;
+					WorldDirectoriesName world;
+					player.user_name = p_w[1];
+					world.world_name = p_w[2];
+
+					LOG_INFO("\n从 " + world.world_name + " 中删除 " + player.user_name + " \n", model_name);
+
+					for (const UserInfo& puuid : user_info_list)//根据用户名查出uuid
+					{
+						if (player.user_name == puuid.user_name)
+						{
+							player.uuid = puuid.uuid;
+						}
+					}
+
+					for (int i = 0; i < world_name_list.world_name_list.size(); i++)//查到存档路径;
+					{
+						if (world.world_name == world_name_list.world_name_list[i])
+						{
+							world.world_directory = world_name_list.world_directory_list[i];
+						}
+					}
+
+					std::vector<PlayerInfo_AS> pw_ad_list;
+					std::vector<PlayerInfo_AS> pw_st_list;
+					std::vector<PlayerInfo_Data> pw_da_list;
+					playerinworldinfo piwi;
+					piwi.worldname = world.world_name;
+					piwi.uuid = player.uuid;
+
+					try
+					{
+						pw_ad_list = GetWorldPlayerAdvancements(world.world_directory);
+						pw_da_list = GetWorldPlayerData(world.world_directory);
+						pw_st_list = GetWorldPlayerStats(world.world_directory);
+					}
+					catch (const std::exception& e)
+					{
+						LOG_ERROR(e.what(), model_name);
+						goto OpenWorldWhile;
+					}
+
+					for (const PlayerInfo_AS& un : pw_ad_list)
+					{
+						if (player.uuid == un.uuid)
+						{
+							if (!un.path.empty())
+							{
+								piwi.adv_path = un.path;
+							}
+
+						}
+					}
+
+					for (const PlayerInfo_Data& un : pw_da_list)
+					{
+						if (player.uuid == un.uuid)
+						{
+							if (!un.dat_path.empty())
+							{
+								piwi.pd_path = un.dat_path;
+							}
+						}
+
+						if (player.uuid == un.old_uuid)
+						{
+							if (!un.dat_old_path.empty())
+							{
+								piwi.pd_old_path = un.dat_old_path;
+							}
+						}
+
+						if (player.uuid == un.cosarmor_uuid)
+						{
+							if (!un.cosarmor_path.empty())
+							{
+								piwi.cosarmor_path = un.cosarmor_path;
+							}
+						}
+					}
+
+					for (const PlayerInfo_AS& un : pw_st_list)
+					{
+						if (player.uuid == un.uuid)
+						{
+							if (!un.path.empty())
+							{
+								piwi.st_path = un.path;
+							}
+
+						}
+					}
+
+					std::string del_info = "\n玩家：" + player.user_name + "|UUID：" + player.uuid + "\n世界：" + world.world_name + "|路径：" + world.world_directory + "\n";
+
+					if (piwi.adv_path.length() != 0 && piwi.cosarmor_path.length() != 0 && piwi.pd_old_path.length() != 0 && piwi.pd_path.length() != 0 && piwi.st_path.length() != 0)
+					{
+						bool is_see;
+						is_see = MoveToRecycleBinWithPS(piwi.adv_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + piwi.adv_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+
+						is_see = MoveToRecycleBinWithPS(piwi.cosarmor_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + piwi.cosarmor_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+
+						is_see = MoveToRecycleBinWithPS(piwi.pd_old_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + piwi.pd_old_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+
+						is_see = MoveToRecycleBinWithPS(piwi.pd_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + piwi.pd_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+
+						is_see = MoveToRecycleBinWithPS(piwi.st_path);
+						if (is_see == true)
+						{
+							del_info += "删除：" + piwi.st_path + "\n";
+						}
+						else
+						{
+							del_info += "失败：文件已删除或不存在\n";
+						}
+					}
+					else
+					{
+						del_info += "无数据\n";
+					}
+
+					LOG_INFO(del_info + "\n", model_name);
 				}
 			}
 		}

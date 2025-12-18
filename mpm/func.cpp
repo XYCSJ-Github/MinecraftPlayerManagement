@@ -316,3 +316,19 @@ bool ExecuteCommand(const std::string& cmd)
 	int result = std::system(cmd.c_str());
 	return (result == 0);
 }
+
+std::vector<std::string> splitString(const std::string& str, char delimiter) 
+{
+	std::vector<std::string> parts;
+	size_t start = 0;
+	size_t end = str.find(delimiter);
+
+	while (end != std::string::npos) {
+		parts.push_back(str.substr(start, end - start));
+		start = end + 1;
+		end = str.find(delimiter, start);
+	}
+	parts.push_back(str.substr(start));
+
+	return parts;
+}

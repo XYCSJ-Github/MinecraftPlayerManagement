@@ -20,6 +20,12 @@ struct WorldDirectoriesNameList
 	std::vector<std::string> world_name_list;
 };
 
+struct WorldDirectoriesName
+{
+	std::string world_directory;
+	std::string world_name;
+};
+
 struct UserInfo
 {
 	std::string user_name;
@@ -89,3 +95,4 @@ bool folderExists(const fs::path& base_path, const std::string& folder_name);
 bool isPathValid(const std::string& pathStr);
 bool MoveToRecycleBinWithPS(const std::string& filepath);
 bool ExecuteCommand(const std::string& cmd);
+std::vector<std::string> splitString(const std::string& str, char delimiter);
