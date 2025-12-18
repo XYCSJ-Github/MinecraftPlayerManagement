@@ -67,12 +67,13 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "FileDescription", "用于查看和删除 Minecraft 用户文件的程序"
+            VALUE "CompanyName", "晴小雨_stlr"
+            VALUE "FileDescription", "用于查看和删除 Minecraft 用户数据文件的程序"
             VALUE "FileVersion", "0.1.9.12"
             VALUE "InternalName", "mpm.exe"
             VALUE "LegalCopyright", "Copyright (C) 2025 晴小雨_stlr"
             VALUE "OriginalFilename", "mpm.exe"
-            VALUE "ProductName", "Minecraft 用户管理器"
+            VALUE "ProductName", "Minecraft 用户数据管理器"
             VALUE "ProductVersion", "0.1.0.0"
         END
     END
