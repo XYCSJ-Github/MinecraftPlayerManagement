@@ -51,7 +51,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,8,12
+ FILEVERSION 0,1,9,12
  PRODUCTVERSION 0,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -68,7 +68,7 @@ BEGIN
         BLOCK "080404b0"
         BEGIN
             VALUE "FileDescription", "用于查看和删除 Minecraft 用户文件的程序"
-            VALUE "FileVersion", "0.1.8.12"
+            VALUE "FileVersion", "0.1.9.12"
             VALUE "InternalName", "mpm.exe"
             VALUE "LegalCopyright", "Copyright (C) 2025 晴小雨_stlr"
             VALUE "OriginalFilename", "mpm.exe"

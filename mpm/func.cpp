@@ -297,14 +297,17 @@ bool isPathValid(const std::string& pathStr)
 
 bool MoveToRecycleBinWithPS(const std::string& filepath) 
 {
-	// PowerShell 命令将文件移动到回收站
-	std::string psCommand = "powershell -Command \""
+	// PowerShell 命令
+	std::string psCommand =
+		"powershell -NonInteractive -Command \""
 		"$ErrorActionPreference = 'SilentlyContinue';"
-		"$WarningPreference = 'SilentlyContinue';"
-		"Remove-Item -Path '" + filepath + "' -Recurse -Force -Confirm:$false "
-		"2>$null | Out-Null\"";
+		"Add-Type -AssemblyName Microsoft.VisualBasic;"
+		"[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile('" + filepath + "','OnlyErrorDialogs','SendToRecycleBin');\"";
 
-	return ExecuteCommand(psCommand);
+	// 如果路径包含特殊字符，需要进一步处理
+	std::string finalCommand = "cmd /c \"" + psCommand + " >nul 2>&1\"";
+
+	return ExecuteCommand(finalCommand.c_str());
 }
 
 bool ExecuteCommand(const std::string& cmd) 
