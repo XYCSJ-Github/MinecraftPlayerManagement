@@ -142,6 +142,8 @@
     <ClInclude Include="func.h" />
     <ClInclude Include="Logout.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Struct.h" />
+    <ClInclude Include="throw_error.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp" />

@@ -24,6 +24,12 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="throw_error.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
