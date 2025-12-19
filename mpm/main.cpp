@@ -616,8 +616,32 @@ int main(int argc, char* argv[])
 						LOG_INFO(del_info, model_name);
 						goto OpenWorldWhile;
 					}
+					
+					size_t maxnum;
+					if (d_advancements_list.size() > d_playerdata_list.size())
+					{
+						if (d_advancements_list.size() > d_stats_list.size())
+						{
+							maxnum = d_advancements_list.size();
+						}
+						else
+						{
+							maxnum = d_stats_list.size();
+						}
+					}
+					else
+					{
+						if (d_playerdata_list.size() > d_stats_list.size())
+						{
+							maxnum = d_playerdata_list.size();
+						}
+						else
+						{
+							maxnum = d_stats_list.size();
+						}
+					}
 
-					for (const UserInfo& playeruuid : user_info_list)
+					for (int i = 0; i <= maxnum; i++)
 					{
 						for (const UserInfo& playeruuid : user_info_list)
 						{
@@ -626,42 +650,60 @@ int main(int argc, char* argv[])
 
 							if (d_advancements_list.size() != 0)
 							{
-								if (playeruuid.uuid == d_advancements_list[0].uuid)
+								size_t a_num = 0;
+								for (const PlayerInfo_AS& da : d_advancements_list)
 								{
-									if (d_advancements_list[0].path.length() != 0)
+									if (playeruuid.uuid == d_advancements_list[a_num].uuid)
 									{
-										delete_file_list.adv_path = d_advancements_list[0].path;
+										if (d_advancements_list[a_num].path.length() != 0)
+										{
+											delete_file_list.adv_path = d_advancements_list[a_num].path;
+										}
+										break;
 									}
+									a_num++;
 								}
 							}
 
 							if (d_playerdata_list.size() != 0)
 							{
-								if (playeruuid.uuid == d_playerdata_list[0].uuid)
+								size_t b_num = 0;
+								for (const PlayerInfo_Data& da : d_playerdata_list)
 								{
-									if (d_playerdata_list[0].dat_path.length() != 0)
+									if (playeruuid.uuid == d_playerdata_list[b_num].uuid)
 									{
-										delete_file_list.pd_path = d_playerdata_list[0].dat_path;
+										if (d_playerdata_list[b_num].dat_path.length() != 0)
+										{
+											delete_file_list.pd_path = d_playerdata_list[b_num].dat_path;
+										}
+										if (d_playerdata_list[b_num].dat_old_path.length() != 0)
+										{
+											delete_file_list.pd_old_path = d_playerdata_list[b_num].dat_old_path;
+										}
+										if (d_playerdata_list[b_num].cosarmor_path.length() != 0)
+										{
+											delete_file_list.cosarmor_path = d_playerdata_list[b_num].cosarmor_path;
+										}
+										break;
 									}
-									if (d_playerdata_list[0].dat_old_path.length() != 0)
-									{
-										delete_file_list.pd_old_path = d_playerdata_list[0].dat_old_path;
-									}
-									if (d_playerdata_list[0].cosarmor_path.length() != 0)
-									{
-										delete_file_list.cosarmor_path = d_playerdata_list[0].cosarmor_path;
-									}
+									b_num++;
 								}
 							}
 
 							if (d_stats_list.size() != 0)
 							{
-								if (playeruuid.uuid == d_stats_list[0].uuid)
+								size_t c_num = 0;
+								for (const PlayerInfo_AS& da : d_stats_list)
 								{
-									if (d_stats_list[0].path.length() != 0)
+									if (playeruuid.uuid == d_stats_list[c_num].uuid)
 									{
-										delete_file_list.st_path = d_stats_list[0].path;
+										if (d_stats_list[c_num].path.length() != 0)
+										{
+											delete_file_list.st_path = d_stats_list[c_num].path;
+										}
+										break;
 									}
+									c_num++;
 								}
 							}
 
@@ -719,15 +761,34 @@ int main(int argc, char* argv[])
 									del_info += "失败：文件已删除或不存在\n";
 								}
 
-								for (int x = 0; x < d_advancements_list.size(); x++)
+								for (int x = 0; x <= maxnum; x++)
 								{
 									if (delete_file_list.uuid == d_advancements_list[x].uuid)
 									{
 										d_advancements_list.erase(d_advancements_list.begin() + x);
-										d_playerdata_list.erase(d_playerdata_list.begin() + x);
-										d_stats_list.erase(d_stats_list.begin() + x);
+										break;
 									}
 								}
+								for (int x = 0; x <= maxnum; x++)
+								{
+									if (delete_file_list.uuid == d_playerdata_list[x].uuid)
+									{
+										d_playerdata_list.erase(d_playerdata_list.begin() + x);
+										break;
+									}
+								}
+	
+								for (int x = 0; x <= maxnum; x++)
+								{
+									if (delete_file_list.uuid == d_stats_list[x].uuid)
+									{
+										d_stats_list.erase(d_stats_list.begin() + x);
+										break;
+									}
+								}
+
+
+
 								delete_file_list = { "", "", "", "", "", "", "" };
 							}
 						}
