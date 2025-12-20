@@ -1,29 +1,30 @@
-#pragma warning(disable : 28159)
+//func.cpp 包含程序主要功能函数的实现
+
 #pragma warning(disable : 4996)
 #include "func.h"
 
 WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mode)
 {
-	LOG_CREATE_MODEL_NAME(model_name, "GetWorldDirectoriesList");
+	LOG_CREATE_MODEL_NAME(model_name, "GetWorldDirectoriesList");//设置logout模块名称
 
 	WorldDirectoriesNameList world_directories_name_list;
 	std::string base_path_copy = base_path;
 
 	if (mode == MOD_CLIENT)
-		base_path_copy += "\\saves\\";
+		base_path_copy += "\\saves\\";//如果传参路径为客户端文件夹则在路径后加\saves\去检查世界
 
 	LOG_DEBUG("最终路径为：" + base_path_copy, model_name);
 	LOG_DEBUG("路径长度：" + std::to_string(base_path_copy.length()), model_name);
 
 	std::string world_name;
-	for (const auto d : std::filesystem::directory_iterator(base_path_copy))
+	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(base_path_copy))
 	{
-		if (fs::is_directory(d.path()) == false)
+		if (fs::is_directory(d.path()) == false)//如果路径不为空，将其装入WorldDirectoriesNameList
 			continue;
 		LOG_DEBUG("发现世界目录：" + d.path().string(), model_name);
 		world_directories_name_list.world_directory_list.push_back(d.path().string());
 		world_name = d.path().string();
-		if (mode == MOD_SERVER)
+		if (mode == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
 		{
 			world_name.erase(0, base_path_copy.length() + 1);
 		}
@@ -32,10 +33,10 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 			world_name.erase(0, base_path_copy.length());
 		}
 		LOG_DEBUG("世界名称：" + world_name, model_name);
-		world_directories_name_list.world_name_list.push_back(world_name);
+		world_directories_name_list.world_name_list.push_back(world_name);//将世界名称装入WorldDirectoriesNameList
 	}
 
-	return world_directories_name_list;
+	return world_directories_name_list;//返回WorldDirectoriesNameList容器结构体
 }
 
 std::string ProcessingInputPath(const std::string input_path)
@@ -44,7 +45,7 @@ std::string ProcessingInputPath(const std::string input_path)
 
 	std::string input_path_copy = input_path;
 
-	if (input_path_copy.find('\"') != std::string::npos)
+	if (input_path_copy.find('\"') != std::string::npos)//去除路径双括号
 	{
 		input_path_copy.erase(0, 1);
 		input_path_copy.erase(input_path_copy.length() - 1, 1);
@@ -67,14 +68,14 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path)
 	std::string base_path_copy = base_path;
 	std::vector<UserInfo> userslist;
 
-	base_path_copy += "\\usercache.json";
+	base_path_copy += "\\usercache.json";//在处理后的原始路径上加入文件路径
 
 	LOG_DEBUG("最终路径为：" + base_path_copy, model_name);
 	LOG_DEBUG("路径长度：" + std::to_string(base_path_copy.length()), model_name);
 
 	std::ifstream user_file(base_path_copy);
 	json user_info;
-	if (user_file.is_open())
+	if (user_file.is_open())//将读出数据存入变量
 	{
 		user_file >> user_info;
 		user_file.close();
@@ -87,12 +88,12 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path)
 
 	if (user_info.is_array())
 	{
-		std::string op = "JSON格式为数组，包含元素" + std::to_string(user_info.size());
+		std::string op = "JSON格式为数组，包含元素" + std::to_string(user_info.size());//检查JSON格式(数组|对象)
 		LOG_DEBUG(op, model_name);
 
 		try
 		{
-			for (size_t i = 0; i < user_info.size(); i++)
+			for (size_t i = 0; i < user_info.size(); i++)//遍历变量将数据存入结构体
 			{
 				json tmp_data = user_info[i];
 
@@ -128,7 +129,7 @@ std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_pat
 	LOG_CREATE_MODEL_NAME(model_name, "GetWorldPlayerAdvancements");
 	std::vector<PlayerInfo_AS> pa_list;
 
-	std::string advancements_path = base_path + "\\advancements";
+	std::string advancements_path = base_path + "\\advancements";//加工世界存档路径，再进一步，读取所有进度文件
 	LOG_DEBUG("最终路径为：" + advancements_path, model_name);
 	LOG_DEBUG("路径长度：" + std::to_string(advancements_path.length()), model_name);
 
@@ -138,7 +139,7 @@ std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_pat
 		throw UnknownPath();
 	}
 
-	for (const auto d : std::filesystem::directory_iterator(advancements_path))
+	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(advancements_path))//遍历容器，每次新建一个结构体，将文件完整路径和裁切出的uuid存入结构体，再将结构体存入容器
 	{
 		PlayerInfo_AS advancements_list;
 		advancements_list.path = d.path().string();
@@ -149,7 +150,7 @@ std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_pat
 		pa_list.push_back(advancements_list);
 	}
 
-	return pa_list;
+	return pa_list;//返回包含数据结构体的容器
 }
 
 std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
@@ -169,7 +170,7 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 
 	PlayerInfo_Data playerdata_list;
 
-	for (const auto d : std::filesystem::directory_iterator(playerdata_path))
+	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(playerdata_path))//遍历变量并判断结构体是否填满，存储进容器并清空进行下一个
 	{
 		std::string datorold = d.path().string();
 		datorold.erase(0, d.path().string().length() - 4);
@@ -230,7 +231,7 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 		throw UnknownPath();
 	}
 
-	for (const auto d : std::filesystem::directory_iterator(stats_path))
+	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(stats_path))
 	{
 		PlayerInfo_AS stats_list;
 		stats_list.path = d.path().string();
@@ -264,38 +265,13 @@ std::string getLastComponent(const std::string& path)
 	return clean_path.substr(pos + 1);
 }
 
-bool folderExists(const fs::path& base_path, const std::string& folder_name) 
+bool folderExists(const fs::path& base_path, const std::string& folder_name)
 {
 	fs::path full_path = base_path / folder_name;
 	return fs::exists(full_path) && fs::is_directory(full_path);
 }
 
-bool isPathValid(const std::string& pathStr) 
-{
-	try {
-		// 构造 path 对象，这会进行基本的语法检查
-		fs::path p(pathStr);
-
-		// 检查路径是否为空
-		if (p.empty()) {
-			return false;
-		}
-
-		// 检查是否有非法字符（Windows 特别需要注意）
-		// path 构造时会自动处理转义，但我们可以检查一些明显的问题
-
-		return true;
-	}
-	catch (const fs::filesystem_error& e) {
-		std::cerr << "Filesystem error: " << e.what() << std::endl;
-		return false;
-	}
-	catch (...) {
-		return false;
-	}
-}
-
-bool MoveToRecycleBinWithPS(const std::string& filepath) 
+bool MoveToRecycleBinWithPS(const std::string& filepath)
 {
 	// PowerShell 命令
 	std::string psCommand =
@@ -310,14 +286,14 @@ bool MoveToRecycleBinWithPS(const std::string& filepath)
 	return ExecuteCommand(finalCommand.c_str());
 }
 
-bool ExecuteCommand(const std::string& cmd) 
+bool ExecuteCommand(const std::string& cmd)
 {
 	LOG_DEBUG("执行shell命令：" + cmd + "\n", "DeleteFile");
 	int result = std::system(cmd.c_str());
 	return (result == 0);
 }
 
-std::vector<std::string> splitString(const std::string& str, char delimiter) 
+std::vector<std::string> splitString(const std::string& str, char delimiter)
 {
 	std::vector<std::string> parts;
 	size_t start = 0;

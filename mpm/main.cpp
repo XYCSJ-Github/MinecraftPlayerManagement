@@ -1,19 +1,20 @@
-#include "func.h"
-#include "Logout.h"
-#include <vector>
+//main.cpp 入口点文件
+
+#include "func.h"//功能
+#include "Logout.h"//日志输出
 
 int main(int argc, char* argv[])
 {
-#if _DEBUG
+#if _DEBUG//如果生成模式为debug则开启log_debug输出
 	LOG_DEBUG_OUT
 #endif
-
-		LOG_CREATE_MODEL_NAME(model_name, "Main");
+		;//保持正常缩进
+	LOG_CREATE_MODEL_NAME(model_name, "Main");//设置logout模块名称
 
 	bool StartwithArgv = false;
 	std::string input_path;
 
-	if (argc > 1)
+	if (argc > 1)//如果有参启动，将StartwithArgv设为true，并提取输入参数
 	{
 		LOG_DEBUG("使用命令行参数作为初始路径输入。", model_name);
 		StartwithArgv = true;
@@ -23,10 +24,10 @@ int main(int argc, char* argv[])
 	std::string world_path = {};
 	bool mRun = true;
 
-	while (mRun)
+	while (mRun)//开始主循环
 	{
 	MainWhile:
-		if (StartwithArgv == true)
+		if (StartwithArgv == true)//检查启动参数，如果没有就要求输入，反之将StartwithArgv标记为false录入路径
 		{
 			StartwithArgv = false;
 			world_path = input_path;
@@ -37,7 +38,7 @@ int main(int argc, char* argv[])
 			std::getline(std::cin, world_path);
 		}
 
-		std::string pip;
+		std::string pip;//预处理路径
 		try
 		{
 			pip = ProcessingInputPath(world_path);
@@ -48,7 +49,7 @@ int main(int argc, char* argv[])
 			goto MainWhile;
 		}
 
-		WorldDirectoriesNameList world_name_list;
+		WorldDirectoriesNameList world_name_list;//声明世界列表，检测路径类型并执行对应函数获取
 
 		if (folderExists(pip, "saves") == false)
 		{
@@ -62,7 +63,7 @@ int main(int argc, char* argv[])
 		}
 
 
-		std::vector<UserInfo> user_info_list;
+		std::vector<UserInfo> user_info_list;//创建用户列表
 
 		for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
 		{
@@ -71,7 +72,7 @@ int main(int argc, char* argv[])
 
 		try
 		{
-			user_info_list = GetUserInfo(pip);
+			user_info_list = GetUserInfo(pip);//通过uesrceach.json获取用户信息
 			if (user_info_list.size() == 0)
 			{
 				LOG_INFO("未找到用户信息！", model_name);
@@ -89,27 +90,27 @@ int main(int argc, char* argv[])
 			LOG_ERROR(e.what(), model_name);
 		}
 
-		while (true)
+		while (true)//进入命令模式
 		{
 		OpenWorldWhile:
 			std::string comm;
-			std::getline(std::cin, comm);
+			std::getline(std::cin, comm);//获取命令
 			LOG_CREATE_MODEL_NAME(model_name, "CommandProcessing");
 
 			if (comm == "exit")
 			{
-				LOG_DEBUG("识别命令：" + comm, model_name);
+				LOG_DEBUG("识别命令：" + comm, model_name);//关闭循环并退出
 				mRun = false;
 				break;
 			}
 
 			if (comm == "break")
 			{
-				LOG_DEBUG("识别命令：" + comm, model_name);
+				LOG_DEBUG("识别命令：" + comm, model_name);//退出循环
 				break;
 			}
 
-			std::string pc = comm.substr(0, 4);
+			std::string pc = comm.substr(0, 4);//裁出命令
 			if (pc == "open")
 			{
 				LOG_DEBUG("识别命令：" + pc, model_name);
@@ -120,7 +121,7 @@ int main(int argc, char* argv[])
 				}
 				catch (const std::exception&)
 				{
-					LOG_ERROR(comm + "<-[HERE]", model_name);
+					LOG_ERROR(comm + "<-[HERE]", model_name);//有报错则认为命令错误
 					goto OpenWorldWhile;
 				}
 
@@ -141,7 +142,7 @@ int main(int argc, char* argv[])
 					LOG_DEBUG("打开存档：" + ow, model_name);
 					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
 					{
-						if (ow == world_name_list.world_name_list[i])
+						if (ow == world_name_list.world_name_list[i])//从存档列表中提取正确的存档
 						{
 							std::string open_path = world_name_list.world_directory_list[i];
 							LOG_INFO("正在打开存档：" + open_path, model_name);
@@ -152,7 +153,7 @@ int main(int argc, char* argv[])
 
 							try
 							{
-								sc_advancements_list = GetWorldPlayerAdvancements(open_path);
+								sc_advancements_list = GetWorldPlayerAdvancements(open_path);//提取出文件路径加入容器
 								sc_playerdata_list = GetWorldPlayerData(open_path);
 								sc_stats_list = GetWorldPlayerStats(open_path);
 							}
@@ -165,7 +166,7 @@ int main(int argc, char* argv[])
 
 							std::string out = "\n世界：" + world_name_list.world_name_list[i] + "\n路径：" + open_path + "\n";
 
-							for (int i = 0; i < user_info_list.size(); i++)
+							for (int i = 0; i < user_info_list.size(); i++)//根据存档中advanvement的uuid筛出玩家，并认为该存档中有这些玩家
 							{
 								std::string adv_path = {}, pd_path = {}, pd_old_path = {}, cosarmor_path = {}, st_path = {};
 								for (int j = 0; j < sc_advancements_list.size(); j++)
@@ -244,13 +245,13 @@ int main(int argc, char* argv[])
 
 					for (const auto& user_info : user_info_list)
 					{
-						if (ow == user_info.user_name)
+						if (ow == user_info.user_name)//根据玩家uuid筛选所有世界中的advanvement的uuid,并认为该玩家存在于世界中
 						{
-							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//收集该玩家在本次循环世界中所有数据信息，并记录进playerinworldinfo piw_list
 							{
 								playerinworldinfo piw = { "否", "否", "否", "否", "否", "否", "否" };
 								piw.uuid = user_info.uuid;
-								piw.worldname = world_name_list.world_name_list[i];
+								piw.world_name = world_name_list.world_name_list[i];
 								std::string open_path = world_name_list.world_directory_list[i];
 								try
 								{
@@ -318,11 +319,11 @@ int main(int argc, char* argv[])
 
 					std::string show_str = "\n玩家：" + ow + "\nUUID：" + piw_list[0].uuid + "\n世界：\n";
 
-					for (const auto& show : piw_list)
+					for (const auto& show : piw_list)//只展示路径是否存在
 					{
 						if (show.adv_path == "有" || show.pd_path == "有" || show.pd_old_path == "有" || show.cosarmor_path == "有" || show.st_path == "有")
 						{
-							show_str += show.worldname + "|进度：" + show.adv_path + "|数据：" + show.pd_path + "|旧数据：" + show.pd_old_path + "|其他数据：" + show.cosarmor_path + "|统计：" + show.st_path + "\n";
+							show_str += show.world_name + "|进度：" + show.adv_path + "|数据：" + show.pd_path + "|旧数据：" + show.pd_old_path + "|其他数据：" + show.cosarmor_path + "|统计：" + show.st_path + "\n";
 						}
 					}
 
@@ -352,7 +353,7 @@ int main(int argc, char* argv[])
 					std::vector<PlayerInfo_AS> is_world_player;
 					std::vector<UserInfo> is_world_user;
 
-					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
+					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//用Advancements的uuid来证明玩家在此世界存在
 					{
 						is_world_player = GetWorldPlayerAdvancements(world_name_list.world_directory_list[i]);
 						is_world_user = GetUserInfo(pip);
@@ -469,7 +470,7 @@ int main(int argc, char* argv[])
 							goto OpenWorldWhile;
 						}
 
-						for (int j = 0; j < d_advancements_list.size(); j++)
+						for (int j = 0; j < d_advancements_list.size(); j++)//遍历列表，匹配uuid
 						{
 							if (finded_player_uuid == d_advancements_list[j].uuid)
 							{
@@ -616,8 +617,8 @@ int main(int argc, char* argv[])
 						LOG_INFO(del_info, model_name);
 						goto OpenWorldWhile;
 					}
-					
-					size_t maxnum;
+
+					size_t maxnum;//遍历容器没有遍历计数，所以创一个
 					if (d_advancements_list.size() > d_playerdata_list.size())
 					{
 						if (d_advancements_list.size() > d_stats_list.size())
@@ -641,12 +642,12 @@ int main(int argc, char* argv[])
 						}
 					}
 
-					for (int i = 0; i <= maxnum; i++)
+					for (int i = 0; i <= maxnum; i++)//选取三列表里元素最多的做循环计数
 					{
-						for (const UserInfo& playeruuid : user_info_list)
+						for (const UserInfo& playeruuid : user_info_list)//遍历所有玩家，并匹配该世界内所有的玩家文件，便于展示
 						{
 							delete_file_list.uuid = playeruuid.uuid;
-							delete_file_list.worldname = playeruuid.user_name;
+							delete_file_list.world_name = playeruuid.user_name;
 
 							if (d_advancements_list.size() != 0)
 							{
@@ -706,10 +707,10 @@ int main(int argc, char* argv[])
 									c_num++;
 								}
 							}
-
+							//确认结构体已经填满
 							if (delete_file_list.adv_path.length() != 0 && delete_file_list.cosarmor_path.length() != 0 && delete_file_list.pd_old_path.length() != 0 && delete_file_list.pd_path.length() != 0 && delete_file_list.st_path.length() != 0)
 							{
-								del_info += "\n玩家：" + delete_file_list.worldname + " | UUID：" + delete_file_list.uuid + "\n";
+								del_info += "\n玩家：" + delete_file_list.world_name + " | UUID：" + delete_file_list.uuid + "\n";
 								bool is_see;
 								is_see = MoveToRecycleBinWithPS(delete_file_list.adv_path);
 								if (is_see == true)
@@ -777,7 +778,7 @@ int main(int argc, char* argv[])
 										break;
 									}
 								}
-	
+
 								for (int x = 0; x <= maxnum; x++)
 								{
 									if (delete_file_list.uuid == d_stats_list[x].uuid)
@@ -787,8 +788,7 @@ int main(int argc, char* argv[])
 									}
 								}
 
-
-
+								//清空结构体
 								delete_file_list = { "", "", "", "", "", "", "" };
 							}
 						}
@@ -847,7 +847,7 @@ int main(int argc, char* argv[])
 					std::vector<PlayerInfo_AS> pw_st_list;
 					std::vector<PlayerInfo_Data> pw_da_list;
 					playerinworldinfo piwi;
-					piwi.worldname = world.world_name;
+					piwi.world_name = world.world_name;
 					piwi.uuid = player.uuid;
 
 					try
@@ -862,7 +862,7 @@ int main(int argc, char* argv[])
 						goto OpenWorldWhile;
 					}
 
-					for (const PlayerInfo_AS& un : pw_ad_list)
+					for (const PlayerInfo_AS& un : pw_ad_list)//匹配Advancements
 					{
 						if (player.uuid == un.uuid)
 						{
@@ -874,7 +874,7 @@ int main(int argc, char* argv[])
 						}
 					}
 
-					for (const PlayerInfo_Data& un : pw_da_list)
+					for (const PlayerInfo_Data& un : pw_da_list)//匹配PlayerData
 					{
 						if (player.uuid == un.uuid)
 						{
@@ -901,7 +901,7 @@ int main(int argc, char* argv[])
 						}
 					}
 
-					for (const PlayerInfo_AS& un : pw_st_list)
+					for (const PlayerInfo_AS& un : pw_st_list)//匹配Stats
 					{
 						if (player.uuid == un.uuid)
 						{
