@@ -94,6 +94,7 @@ int main(int argc, char* argv[])
 		{
 		OpenWorldWhile:
 			std::string comm;
+			std::cout << ">";
 			std::getline(std::cin, comm);//获取命令
 			LOG_CREATE_MODEL_NAME(model_name, "CommandProcessing");
 
@@ -380,9 +381,24 @@ int main(int argc, char* argv[])
 				{
 					LOG_DEBUG("识别命令：" + pps, model_name);
 
-					for (const auto& user_info : user_info_list)
+					try
 					{
-						LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
+						user_info_list = GetUserInfo(pip);//通过uesrceach.json获取用户信息
+						if (user_info_list.size() == 0)
+						{
+							LOG_INFO("未找到用户信息！", model_name);
+						}
+						else
+						{
+							for (const auto& user_info : user_info_list)
+							{
+								LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
+							}
+						}
+					}
+					catch (const std::exception& e)
+					{
+						LOG_ERROR(e.what(), model_name);
 					}
 				}
 			}
@@ -562,6 +578,11 @@ int main(int argc, char* argv[])
 						{
 							del_info += "失败：文件已删除或不存在\n";
 						}
+					}
+
+					if (DeletePlayerJSON(pip, osss))
+					{
+						del_info += "删除usercache和usernamecache\n";
 					}
 
 					LOG_INFO(del_info, model_name);
@@ -974,6 +995,42 @@ int main(int argc, char* argv[])
 					}
 
 					LOG_INFO(del_info + "\n", model_name);
+				}
+
+				oss = comm.substr(7, 2);
+				if (oss == "js")
+				{
+					LOG_DEBUG("识别命令：" + oss, model_name);
+
+					std::string osssss;
+					try
+					{
+						osssss = comm.substr(10);
+					}
+					catch (const std::exception&)
+					{
+						LOG_ERROR(comm + "<-[HERE]", model_name);
+						goto OpenWorldWhile;
+					}
+
+					if (osssss == "_ALL_PJS_")
+					{
+						if (MoveToRecycleBinWithPS(pip + "\\usercache.json") && MoveToRecycleBinWithPS(pip + "\\usernamecache.json"))
+						{
+							LOG_INFO("已删除全部玩家名称缓存", model_name);
+						}
+						else 
+						{
+							LOG_WARNING("删除全部缓存失败", model_name);
+						}
+					}else if (DeletePlayerJSON(pip, osssss))
+					{
+						LOG_INFO("删除：" + osssss,model_name);
+					}
+					else
+					{
+						LOG_WARNING("失败或只删了其中一个", model_name);
+					}
 				}
 			}
 		}

@@ -308,3 +308,142 @@ std::vector<std::string> splitString(const std::string& str, char delimiter)
 
 	return parts;
 }
+
+bool DeletePlayerJSON(std::string JSON_path, std::string playerName)
+{
+	if (DeletePlayerInUserCache(JSON_path + "\\usercache.json", playerName) && DeletePlayerInUserNmaeCache(JSON_path + "\\usernamecache.json", playerName))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
+{
+	LOG_CREATE_MODEL_NAME(model_name, "DeletePlayerJSON");
+
+	try
+	{
+		// 1. 读取JSON文件
+		std::ifstream in_file(JSON_path);
+		if (!in_file.is_open()) 
+		{
+			LOG_ERROR("无法打开文件: " + JSON_path, model_name);
+			return false;
+		}
+
+		json j;
+		in_file >> j;
+		in_file.close();
+
+		if (!j.is_array()) {
+			LOG_ERROR("JSON格式错误：应该是一个数组", model_name);
+			return false;
+		}
+
+		// 2. 查找并删除指定玩家
+		bool found = false;
+		for (auto it = j.begin(); it != j.end(); ) 
+		{
+			std::string a = (*it)["name"];
+			if (it->contains("name") && a == playerName)
+			{
+				it = j.erase(it);
+				found = true;
+				LOG_DEBUG("已删除玩家: " + playerName, model_name);
+			}
+			else {
+				++it;
+			}
+		}
+
+		// 3. 写回文件
+		if (found) {
+			std::ofstream out_file(JSON_path);
+			out_file << j.dump();
+			out_file.close();
+			return true;
+		}
+		else {
+			LOG_DEBUG("未找到玩家:" + playerName, model_name);
+			return false;
+		}
+
+	}
+	catch (const json::exception& e) {
+		LOG_ERROR(e.what(),model_name);
+		return false;
+	}
+	catch (const std::exception& e) {
+		LOG_ERROR( e.what(), model_name);
+		return false;
+	}
+
+
+}
+
+bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName) 
+{
+	LOG_CREATE_MODEL_NAME(model_name, "DeletePlayerJSON");
+
+	try {
+		LOG_DEBUG("正在删除玩家: " + playerName, model_name);
+
+		// 1. 读取JSON文件
+		std::ifstream in_file(JSON_path);
+		if (!in_file.is_open()) {
+			LOG_ERROR("无法打开文件: " + JSON_path, model_name);
+			return false;
+		}
+
+		json j;
+		in_file >> j;
+		in_file.close();
+
+		// 2. 检查是否为对象（键值对）
+		if (!j.is_object()) {
+			LOG_ERROR("JSON格式错误：应该是对象类型", model_name);
+			return false;
+		}
+
+		LOG_DEBUG("原始键值对数量: " + std::to_string(j.size()), model_name);
+
+		// 3. 查找并删除（反向查找：通过值找键）
+		bool found = false;
+		std::string foundUUID;
+
+		for (auto it = j.begin(); it != j.end(); ) {
+			// 检查值是否为字符串且等于目标玩家名
+			if (it.value().is_string() && it.value().get<std::string>() == playerName) {
+				foundUUID = it.key();
+				it = j.erase(it);
+				found = true;
+				LOG_DEBUG("删除玩家：" + playerName + "|UUID：" + foundUUID + "\n", model_name);
+			}
+			else {
+				++it;
+			}
+		}
+
+		// 4. 写回文件
+		if (found) {
+			std::ofstream out_file(JSON_path);
+			out_file << j.dump(4);
+			out_file.close();
+
+			 LOG_DEBUG("删除成功！剩余键值对：" + std::to_string(j.size()), model_name);
+			return true;
+		}
+
+		return false;
+	}
+	catch (const json::exception& e) {
+		LOG_ERROR(e.what(), model_name);
+		return false;
+	}
+	catch (const std::exception& e) {
+		LOG_ERROR(e.what(), model_name);
+		return false;
+	}
+}

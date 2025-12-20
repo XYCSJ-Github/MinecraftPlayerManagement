@@ -27,3 +27,6 @@ bool folderExists(const fs::path& base_path, const std::string& folder_name);//²
 bool MoveToRecycleBinWithPS(const std::string& filepath);//ÓÃpowershellÉ¾³ıÎÄ¼ş
 bool ExecuteCommand(const std::string& cmd);//ÓëÉÏÒ»¸ö°ó¶¨£¬ÓÃÓÚÖ´ĞĞ²ÎÊı
 std::vector<std::string> splitString(const std::string& str, char delimiter);//·Ö¸î×Ö·û´®|·µ»ØÊı×é
+bool DeletePlayerJSON(std::string JSON_path, std::string playerName);
+bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName);//´ÓusercacheÖĞÉ¾³ıÍæ¼Ò
+bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName);//´ÓusernamecacheÖĞÉ¾³ıÍæ¼Ò
