@@ -1,3 +1,4 @@
+//throw_error.h 声明异常类型
 #pragma once
 
 #include <iostream>
