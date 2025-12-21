@@ -125,7 +125,7 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path)
 
 std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_path)
 {
-	LOG_CREATE_MODEL_NAME(model_name, "GetWorldPlayerAdvancements");
+	LOG_CREATE_MODEL_NAME("GetWorldPlayerAdvancements");
 	std::vector<PlayerInfo_AS> pa_list;
 
 	std::string advancements_path = base_path + "\\advancements";//加工世界存档路径，再进一步，读取所有进度文件
@@ -154,7 +154,7 @@ std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_pat
 
 std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 {
-	LOG_CREATE_MODEL_NAME(model_name, "GetWorldPlayerData");
+	LOG_CREATE_MODEL_NAME("GetWorldPlayerData");
 	std::vector<PlayerInfo_Data> pd_list;
 
 	std::string playerdata_path = base_path + "\\playerdata";
@@ -217,7 +217,7 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 
 std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 {
-	LOG_CREATE_MODEL_NAME(model_name, "GetWorldPlayerStats");
+	LOG_CREATE_MODEL_NAME("GetWorldPlayerStats");
 	std::vector<PlayerInfo_AS> ps_list;
 
 	std::string stats_path = base_path + "\\stats";
@@ -320,7 +320,7 @@ bool DeletePlayerJSON(std::string JSON_path, std::string playerName)
 
 bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 {
-	LOG_CREATE_MODEL_NAME(model_name, "DeletePlayerJSON");
+	LOG_CREATE_MODEL_NAME("DeletePlayerJSON");
 
 	try
 	{
@@ -371,7 +371,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 
 	}
 	catch (const json::exception& e) {
-		LOG_ERROR(e.what(),model_name);
+		LOG_ERROR(e.what());
 		return false;
 	}
 	catch (const std::exception& e) {
@@ -384,7 +384,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 
 bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName) 
 {
-	LOG_CREATE_MODEL_NAME(model_name, "DeletePlayerJSON");
+	LOG_CREATE_MODEL_NAME("DeletePlayerJSON");
 
 	try {
 		LOG_DEBUG("正在删除玩家: " + playerName);
