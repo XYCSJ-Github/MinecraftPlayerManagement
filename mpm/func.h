@@ -10,8 +10,8 @@
 #include <shellapi.h>
 #include <windows.h>
 
-#define MOD_CLIENT  0
-#define MOD_SERVER  1
+#define MOD_CLIENT  101
+#define MOD_SERVER  102
 
 using json = nlohmann::json;
 namespace fs = std::filesystem;

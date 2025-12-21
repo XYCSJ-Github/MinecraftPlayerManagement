@@ -50,3 +50,19 @@ struct NullVector : public std::exception
 		return "空的容器";
 	}
 };
+
+struct NoUserInfo : public std::exception
+{
+	const char* what() const throw()
+	{
+		return "没有玩家信息";
+	}
+};
+
+struct CommandError : public std::exception
+{
+	const char* what() const throw()
+	{
+		return "命令错误";
+	}
+};
