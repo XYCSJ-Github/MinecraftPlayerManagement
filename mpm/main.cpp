@@ -9,14 +9,14 @@ int main(int argc, char* argv[])
 	LOG_DEBUG_OUT
 #endif
 		;//保持正常缩进
-	LOG_CREATE_MODEL_NAME(model_name, "Main");//设置logout模块名称
+	LOG_CREATE_MODEL_NAME("Main");//设置logout模块名称
 
 	bool StartwithArgv = false;
 	std::string input_path;
 
 	if (argc > 1)//如果有参启动，将StartwithArgv设为true，并提取输入参数
 	{
-		LOG_DEBUG("使用命令行参数作为初始路径输入。", model_name);
+		LOG_DEBUG("使用命令行参数作为初始路径输入");
 		StartwithArgv = true;
 		input_path = argv[1];
 	}
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 		}
 		catch (const std::exception& e)
 		{
-			LOG_ERROR(e.what(), model_name);
+			LOG_ERROR(e.what());
 			goto MainWhile;
 		}
 
@@ -53,12 +53,12 @@ int main(int argc, char* argv[])
 
 		if (folderExists(pip, "saves") == false)
 		{
-			LOG_INFO("打开(服务端)" + getLastComponent(pip), model_name);
+			LOG_INFO("打开(服务端)" + getLastComponent(pip));
 			world_name_list = GetWorldDirectoriesList(pip, MOD_SERVER);
 		}
 		else
 		{
-			LOG_INFO("打开(客户端)" + getLastComponent(pip), model_name);
+			LOG_INFO("打开(客户端)" + getLastComponent(pip));
 			world_name_list = GetWorldDirectoriesList(pip, MOD_CLIENT);
 		}
 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 
 		for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
 		{
-			LOG_INFO("\n存档名称：" + world_name_list.world_name_list[i] + "\n存档路径" + world_name_list.world_directory_list[i] + "\n", model_name);
+			LOG_INFO("\n存档名称：" + world_name_list.world_name_list[i] + "\n存档路径" + world_name_list.world_directory_list[i] + "\n");
 		}
 
 		try
@@ -75,19 +75,19 @@ int main(int argc, char* argv[])
 			user_info_list = GetUserInfo(pip);//通过uesrceach.json获取用户信息
 			if (user_info_list.size() == 0)
 			{
-				LOG_INFO("未找到用户信息！", model_name);
+				LOG_INFO("未找到用户信息！");
 			}
 			else
 			{
 				for (const auto& user_info : user_info_list)
 				{
-					LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
+					LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n");
 				}
 			}
 		}
 		catch (const std::exception& e)
 		{
-			LOG_ERROR(e.what(), model_name);
+			LOG_ERROR(e.what());
 		}
 
 		while (true)//进入命令模式
@@ -96,25 +96,25 @@ int main(int argc, char* argv[])
 			std::string comm;
 			std::cout << ">";
 			std::getline(std::cin, comm);//获取命令
-			LOG_CREATE_MODEL_NAME(model_name, "CommandProcessing");
+			LOG_CREATE_MODEL_NAME("CommandProcessing");
 
 			if (comm == "exit")
 			{
-				LOG_DEBUG("识别命令：" + comm, model_name);//关闭循环并退出
+				LOG_DEBUG("识别命令：" + comm);//关闭循环并退出
 				mRun = false;
 				break;
 			}
 
 			if (comm == "break")
 			{
-				LOG_DEBUG("识别命令：" + comm, model_name);//退出循环
+				LOG_DEBUG("识别命令：" + comm);//退出循环
 				break;
 			}
 
 			std::string pc = comm.substr(0, 4);//裁出命令
 			if (pc == "open")
 			{
-				LOG_DEBUG("识别命令：" + pc, model_name);
+				LOG_DEBUG("识别命令：" + pc);
 				std::string ow;
 				try
 				{
@@ -122,31 +122,31 @@ int main(int argc, char* argv[])
 				}
 				catch (const std::exception&)
 				{
-					LOG_ERROR(comm + "<-[HERE]", model_name);//有报错则认为命令错误
+					LOG_ERROR(comm + "<-[HERE]");//有报错则认为命令错误
 					goto OpenWorldWhile;
 				}
 
 				std::string ppc = comm.substr(5, 5);
 				if (ppc == "world")
 				{
-					LOG_DEBUG("识别命令：" + ppc, model_name);
+					LOG_DEBUG("识别命令：" + ppc);
 					try
 					{
 						ow = comm.substr(11);
 					}
 					catch (const std::exception&)
 					{
-						LOG_ERROR(comm + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]");
 						goto OpenWorldWhile;
 					}
 
-					LOG_DEBUG("打开存档：" + ow, model_name);
+					LOG_DEBUG("打开存档：" + ow);
 					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
 					{
 						if (ow == world_name_list.world_name_list[i])//从存档列表中提取正确的存档
 						{
 							std::string open_path = world_name_list.world_directory_list[i];
-							LOG_INFO("正在打开存档：" + open_path, model_name);
+							LOG_INFO("正在打开存档：" + open_path);
 
 							std::vector<PlayerInfo_AS> sc_advancements_list;
 							std::vector<PlayerInfo_Data> sc_playerdata_list;
@@ -160,10 +160,10 @@ int main(int argc, char* argv[])
 							}
 							catch (const std::exception& e)
 							{
-								LOG_ERROR(e.what(), model_name);
+								LOG_ERROR(e.what());
 							}
 
-							LOG_INFO("存档打开完成！", model_name);
+							LOG_INFO("存档打开完成！");
 
 							std::string out = "\n世界：" + world_name_list.world_name_list[i] + "\n路径：" + open_path + "\n";
 
@@ -210,12 +210,12 @@ int main(int argc, char* argv[])
 
 									out += "\n玩家统计：" + st_path + "\n";
 
-									LOG_INFO(out, model_name);
+									LOG_INFO(out);
 								}
 								else
 								{
 									out += "\n无数据";
-									LOG_INFO(out + "\n", model_name);
+									LOG_INFO(out + "\n");
 									goto OpenWorldWhile;
 								}
 							}
@@ -227,7 +227,7 @@ int main(int argc, char* argv[])
 				ppc = comm.substr(5, 6);
 				if (ppc == "player")
 				{
-					LOG_DEBUG("识别命令：" + ppc, model_name);
+					LOG_DEBUG("识别命令：" + ppc);
 					std::string ow;
 					try
 					{
@@ -235,7 +235,7 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception&)
 					{
-						LOG_ERROR(comm + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]");
 						goto OpenWorldWhile;
 					}
 
@@ -262,7 +262,7 @@ int main(int argc, char* argv[])
 								}
 								catch (const std::exception& e)
 								{
-									LOG_ERROR(e.what(), model_name);
+									LOG_ERROR(e.what());
 								}
 
 								for (int j = 0; j < c_advancements_list.size(); j++)
@@ -313,7 +313,7 @@ int main(int argc, char* argv[])
 
 					if (piw_list.size() == 0)
 					{
-						LOG_WARNING("未找到该玩家!", model_name);
+						LOG_WARNING("未找到该玩家!");
 						goto OpenWorldWhile;
 					}
 
@@ -328,14 +328,14 @@ int main(int argc, char* argv[])
 						}
 					}
 
-					LOG_INFO(show_str + "\n", model_name);
+					LOG_INFO(show_str + "\n");
 				}
 			}
 
 			std::string ps = comm.substr(0, 4);
 			if (ps == "list")
 			{
-				LOG_DEBUG("识别命令：" + ps, model_name);
+				LOG_DEBUG("识别命令：" + ps);
 				std::string ow;
 				try
 				{
@@ -343,14 +343,14 @@ int main(int argc, char* argv[])
 				}
 				catch (const std::exception&)
 				{
-					LOG_ERROR(ps + "<-[HERE]", model_name);
+					LOG_ERROR(ps + "<-[HERE]");
 					goto OpenWorldWhile;
 				}
 
 				std::string pps = comm.substr(5, 5);
 				if (pps == "world")
 				{
-					LOG_DEBUG("识别命令：" + pps, model_name);
+					LOG_DEBUG("识别命令：" + pps);
 					std::vector<PlayerInfo_AS> is_world_player;
 					std::vector<UserInfo> is_world_user;
 
@@ -372,33 +372,33 @@ int main(int argc, char* argv[])
 							}
 						}
 
-						LOG_INFO(out + "\n", model_name);
+						LOG_INFO(out + "\n");
 					}
 				}
 
 				pps = comm.substr(5, 6);
 				if (pps == "player")
 				{
-					LOG_DEBUG("识别命令：" + pps, model_name);
+					LOG_DEBUG("识别命令：" + pps);
 
 					try
 					{
 						user_info_list = GetUserInfo(pip);//通过uesrceach.json获取用户信息
 						if (user_info_list.size() == 0)
 						{
-							LOG_INFO("未找到用户信息！", model_name);
+							LOG_INFO("未找到用户信息！");
 						}
 						else
 						{
 							for (const auto& user_info : user_info_list)
 							{
-								LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n", model_name);
+								LOG_INFO("\n用户名：" + user_info.user_name + "\nUUID：" + user_info.uuid + "\n过期时间：" + user_info.expiresOn + "\n");
 							}
 						}
 					}
 					catch (const std::exception& e)
 					{
-						LOG_ERROR(e.what(), model_name);
+						LOG_ERROR(e.what());
 					}
 				}
 			}
@@ -406,7 +406,7 @@ int main(int argc, char* argv[])
 			std::string hp = comm.substr(0, 6);
 			if (hp == "delete")
 			{
-				LOG_DEBUG("识别命令：" + hp, model_name);
+				LOG_DEBUG("识别命令：" + hp);
 
 				std::string os;
 				try
@@ -415,14 +415,14 @@ int main(int argc, char* argv[])
 				}
 				catch (const std::exception&)
 				{
-					LOG_ERROR(comm + "<-[HERE]", model_name);
+					LOG_ERROR(comm + "<-[HERE]");
 					goto OpenWorldWhile;
 				}
 
 				std::string oss = comm.substr(7, 6);
 				if (oss == "player")
 				{
-					LOG_DEBUG("识别命令：" + oss, model_name);
+					LOG_DEBUG("识别命令：" + oss);
 
 					std::string osss;
 					try
@@ -431,7 +431,7 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception&)
 					{
-						LOG_ERROR(comm + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]");
 						goto OpenWorldWhile;
 					}
 
@@ -443,7 +443,7 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception& e)
 					{
-						LOG_ERROR(e.what(), model_name);
+						LOG_ERROR(e.what());
 						break;
 					}
 
@@ -459,11 +459,11 @@ int main(int argc, char* argv[])
 
 					if (finded_player_uuid.empty())
 					{
-						LOG_INFO("找不到此玩家", model_name);
+						LOG_INFO("找不到此玩家");
 						goto OpenWorldWhile;
 					}
 
-					LOG_INFO("删除" + osss, model_name);
+					LOG_INFO("删除" + osss);
 
 					std::vector<PlayerInfo_AS> d_advancements_list;
 					std::vector<PlayerInfo_Data> d_playerdata_list;
@@ -482,7 +482,7 @@ int main(int argc, char* argv[])
 						}
 						catch (const std::exception& e)
 						{
-							LOG_ERROR(e.what(), model_name);
+							LOG_ERROR(e.what());
 							goto OpenWorldWhile;
 						}
 
@@ -585,13 +585,13 @@ int main(int argc, char* argv[])
 						del_info += "删除usercache和usernamecache\n";
 					}
 
-					LOG_INFO(del_info, model_name);
+					LOG_INFO(del_info);
 				}
 
 				oss = comm.substr(7, 5);
 				if (oss == "world")
 				{
-					LOG_DEBUG("识别命令：" + oss, model_name);
+					LOG_DEBUG("识别命令：" + oss);
 
 					std::string osss;
 					try
@@ -600,11 +600,11 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception&)
 					{
-						LOG_ERROR(comm + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]");
 						goto OpenWorldWhile;
 					}
 
-					LOG_INFO("删除：" + osss, model_name);
+					LOG_INFO("删除：" + osss);
 
 					std::vector<PlayerInfo_AS> d_advancements_list;
 					std::vector<PlayerInfo_Data> d_playerdata_list;
@@ -624,7 +624,7 @@ int main(int argc, char* argv[])
 							}
 							catch (const std::exception& e)
 							{
-								LOG_ERROR(e.what(), model_name);
+								LOG_ERROR(e.what());
 								goto OpenWorldWhile;
 							}
 
@@ -635,7 +635,7 @@ int main(int argc, char* argv[])
 					if (d_advancements_list.size() == 0 && d_playerdata_list.size() == 0 && d_stats_list.size() == 0)
 					{
 						del_info += "无数据\n";
-						LOG_INFO(del_info, model_name);
+						LOG_INFO(del_info);
 						goto OpenWorldWhile;
 					}
 
@@ -815,13 +815,13 @@ int main(int argc, char* argv[])
 						}
 					}
 
-					LOG_INFO(del_info, model_name);
+					LOG_INFO(del_info);
 				}
 
 				oss = comm.substr(7, 2);
 				if (oss == "pw")
 				{
-					LOG_DEBUG("识别命令：" + oss, model_name);
+					LOG_DEBUG("识别命令：" + oss);
 
 					std::string ossss;
 					try
@@ -830,14 +830,14 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception&)
 					{
-						LOG_ERROR(comm + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]");
 						goto OpenWorldWhile;
 					}
 
 					std::vector<std::string> p_w = splitString(ossss, ' ');
 					if (p_w[0].empty() && p_w[1].empty())
 					{
-						LOG_ERROR(comm + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]");
 						goto OpenWorldWhile;
 					}
 
@@ -846,7 +846,7 @@ int main(int argc, char* argv[])
 					player.user_name = p_w[1];
 					world.world_name = p_w[2];
 
-					LOG_INFO("\n从 " + world.world_name + " 中删除 " + player.user_name + " \n", model_name);
+					LOG_INFO("\n从 " + world.world_name + " 中删除 " + player.user_name + " \n");
 
 					for (const UserInfo& puuid : user_info_list)//根据用户名查出uuid
 					{
@@ -879,7 +879,7 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception& e)
 					{
-						LOG_ERROR(e.what(), model_name);
+						LOG_ERROR(e.what());
 						goto OpenWorldWhile;
 					}
 
@@ -994,13 +994,13 @@ int main(int argc, char* argv[])
 						del_info += "无数据\n";
 					}
 
-					LOG_INFO(del_info + "\n", model_name);
+					LOG_INFO(del_info + "\n");
 				}
 
 				oss = comm.substr(7, 2);
 				if (oss == "js")
 				{
-					LOG_DEBUG("识别命令：" + oss, model_name);
+					LOG_DEBUG("识别命令：" + oss);
 
 					std::string osssss;
 					try
@@ -1009,7 +1009,7 @@ int main(int argc, char* argv[])
 					}
 					catch (const std::exception&)
 					{
-						LOG_ERROR(comm + "<-[HERE]", model_name);
+						LOG_ERROR(comm + "<-[HERE]");
 						goto OpenWorldWhile;
 					}
 
@@ -1017,19 +1017,19 @@ int main(int argc, char* argv[])
 					{
 						if (MoveToRecycleBinWithPS(pip + "\\usercache.json") && MoveToRecycleBinWithPS(pip + "\\usernamecache.json"))
 						{
-							LOG_INFO("已删除全部玩家名称缓存", model_name);
+							LOG_INFO("已删除全部玩家名称缓存");
 						}
 						else 
 						{
-							LOG_WARNING("删除全部缓存失败", model_name);
+							LOG_WARNING("删除全部缓存失败");
 						}
 					}else if (DeletePlayerJSON(pip, osssss))
 					{
-						LOG_INFO("删除：" + osssss,model_name);
+						LOG_INFO("删除：" + osssss);
 					}
 					else
 					{
-						LOG_WARNING("失败或只删了其中一个", model_name);
+						LOG_WARNING("失败或只删了其中一个");
 					}
 				}
 			}

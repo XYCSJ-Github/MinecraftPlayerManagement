@@ -5,7 +5,7 @@
 
 WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mode)
 {
-	LOG_CREATE_MODEL_NAME(model_name, "GetWorldDirectoriesList");//设置logout模块名称
+	LOG_CREATE_MODEL_NAME("GetWorldDirectoriesList");//设置logout模块名称
 
 	WorldDirectoriesNameList world_directories_name_list;
 	std::string base_path_copy = base_path;
@@ -13,15 +13,15 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 	if (mode == MOD_CLIENT)
 		base_path_copy += "\\saves\\";//如果传参路径为客户端文件夹则在路径后加\saves\去检查世界
 
-	LOG_DEBUG("最终路径为：" + base_path_copy, model_name);
-	LOG_DEBUG("路径长度：" + std::to_string(base_path_copy.length()), model_name);
+	LOG_DEBUG("最终路径为：" + base_path_copy);
+	LOG_DEBUG("路径长度：" + std::to_string(base_path_copy.length()));
 
 	std::string world_name;
 	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(base_path_copy))
 	{
 		if (fs::is_directory(d.path()) == false)//如果路径不为空，将其装入WorldDirectoriesNameList
 			continue;
-		LOG_DEBUG("发现世界目录：" + d.path().string(), model_name);
+		LOG_DEBUG("发现世界目录：" + d.path().string());
 		world_directories_name_list.world_directory_list.push_back(d.path().string());
 		world_name = d.path().string();
 		if (mode == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
@@ -32,7 +32,7 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 		{
 			world_name.erase(0, base_path_copy.length());
 		}
-		LOG_DEBUG("世界名称：" + world_name, model_name);
+		LOG_DEBUG("世界名称：" + world_name);
 		world_directories_name_list.world_name_list.push_back(world_name);//将世界名称装入WorldDirectoriesNameList
 	}
 
@@ -41,7 +41,7 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 
 std::string ProcessingInputPath(const std::string input_path)
 {
-	LOG_CREATE_MODEL_NAME(model_name, "PathInput");
+	LOG_CREATE_MODEL_NAME("PathInput");
 
 	std::string input_path_copy = input_path;
 
@@ -50,11 +50,11 @@ std::string ProcessingInputPath(const std::string input_path)
 		input_path_copy.erase(0, 1);
 		input_path_copy.erase(input_path_copy.length() - 1, 1);
 	}
-	LOG_DEBUG("输入的路径为：" + input_path_copy, model_name);
+	LOG_DEBUG("输入的路径为：" + input_path_copy);
 
 	if (!std::filesystem::exists(input_path_copy))
 	{
-		LOG_DEBUG("路径不存在，请检查后重新输入！", model_name);
+		LOG_DEBUG("路径不存在，请检查后重新输入！");
 		throw UnknownPath();
 	}
 
@@ -63,15 +63,15 @@ std::string ProcessingInputPath(const std::string input_path)
 
 std::vector<UserInfo> GetUserInfo(const std::string base_path)
 {
-	LOG_CREATE_MODEL_NAME(model_name, "GetUserInfo");
+	LOG_CREATE_MODEL_NAME("GetUserInfo");
 
 	std::string base_path_copy = base_path;
 	std::vector<UserInfo> userslist;
 
 	base_path_copy += "\\usercache.json";//在处理后的原始路径上加入文件路径
 
-	LOG_DEBUG("最终路径为：" + base_path_copy, model_name);
-	LOG_DEBUG("路径长度：" + std::to_string(base_path_copy.length()), model_name);
+	LOG_DEBUG("最终路径为：" + base_path_copy);
+	LOG_DEBUG("路径长度：" + std::to_string(base_path_copy.length()));
 
 	std::ifstream user_file(base_path_copy);
 	json user_info;
@@ -82,14 +82,13 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path)
 	}
 	else
 	{
-		LOG_DEBUG("无法打开用户信息文件！", model_name);
+		LOG_DEBUG("无法打开用户信息文件！");
 		throw NotOpen();
 	}
 
-	if (user_info.is_array())
+	if (user_info.is_array())//检查JSON格式(数组|对象)
 	{
-		std::string op = "JSON格式为数组，包含元素" + std::to_string(user_info.size());//检查JSON格式(数组|对象)
-		LOG_DEBUG(op, model_name);
+		LOG_DEBUG("JSON格式为数组，包含元素" + std::to_string(user_info.size()));
 
 		try
 		{
@@ -108,15 +107,15 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path)
 
 				userslist.push_back(users);
 
-				LOG_DEBUG("用户 " + std::to_string(i) + ": ", model_name);
-				LOG_DEBUG("  name: " + name, model_name);
-				LOG_DEBUG("  uuid: " + uuid, model_name);
-				LOG_DEBUG("  expiresOn: " + expiresOn, model_name);
+				LOG_DEBUG("用户 " + std::to_string(i) + ": ");
+				LOG_DEBUG("  name: " + name);
+				LOG_DEBUG("  uuid: " + uuid);
+				LOG_DEBUG("  expiresOn: " + expiresOn);
 			}
 		}
 		catch (const std::exception& e)
 		{
-			LOG_ERROR(e.what(), model_name);
+			LOG_ERROR(e.what());
 			throw ReadError();
 		}
 	}
@@ -130,12 +129,12 @@ std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_pat
 	std::vector<PlayerInfo_AS> pa_list;
 
 	std::string advancements_path = base_path + "\\advancements";//加工世界存档路径，再进一步，读取所有进度文件
-	LOG_DEBUG("最终路径为：" + advancements_path, model_name);
-	LOG_DEBUG("路径长度：" + std::to_string(advancements_path.length()), model_name);
+	LOG_DEBUG("最终路径为：" + advancements_path);
+	LOG_DEBUG("路径长度：" + std::to_string(advancements_path.length()));
 
 	if (!std::filesystem::exists(advancements_path))
 	{
-		LOG_DEBUG("路径不存在，请检查后重新输入！", model_name);
+		LOG_DEBUG("路径不存在，请检查后重新输入！");
 		throw UnknownPath();
 	}
 
@@ -146,7 +145,7 @@ std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_pat
 		std::string uuid = d.path().string();
 		advancements_list.uuid = uuid.substr(advancements_path.length() + 1);
 		advancements_list.uuid.erase(advancements_list.uuid.length() - 5, 5); // 去掉文件后缀名 ".json"
-		LOG_DEBUG("发现玩家进度文件：\n路径：" + advancements_list.path + "\nuuid：" + advancements_list.uuid, model_name);
+		LOG_DEBUG("发现玩家进度文件：\n路径：" + advancements_list.path + "\nuuid：" + advancements_list.uuid);
 		pa_list.push_back(advancements_list);
 	}
 
@@ -159,12 +158,12 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 	std::vector<PlayerInfo_Data> pd_list;
 
 	std::string playerdata_path = base_path + "\\playerdata";
-	LOG_DEBUG("最终路径为：" + playerdata_path, model_name);
-	LOG_DEBUG("路径长度：" + std::to_string(playerdata_path.length()), model_name);
+	LOG_DEBUG("最终路径为：" + playerdata_path);
+	LOG_DEBUG("路径长度：" + std::to_string(playerdata_path.length()));
 
 	if (!std::filesystem::exists(playerdata_path))
 	{
-		LOG_DEBUG("路径不存在，请检查后重新输入！", model_name);
+		LOG_DEBUG("路径不存在，请检查后重新输入！");
 		throw UnknownPath();
 	}
 
@@ -180,7 +179,7 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 			std::string uuid = d.path().string();
 			playerdata_list.uuid = uuid.substr(playerdata_path.length() + 1);
 			playerdata_list.uuid.erase(playerdata_list.uuid.length() - 4, 4);
-			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_path + "\nuuid：" + playerdata_list.uuid, model_name);
+			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_path + "\nuuid：" + playerdata_list.uuid);
 		}
 		if (datorold.find("_old") != std::string::npos)
 		{
@@ -188,7 +187,7 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 			std::string uuid = d.path().string();
 			playerdata_list.old_uuid = uuid.substr(playerdata_path.length() + 1);
 			playerdata_list.old_uuid.erase(playerdata_list.old_uuid.length() - 8, 8);
-			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_old_path + "\nuuid：" + playerdata_list.old_uuid, model_name);
+			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_old_path + "\nuuid：" + playerdata_list.old_uuid);
 		}
 		if (d.path().string().find(".cosa") != std::string::npos)
 		{
@@ -196,7 +195,7 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 			std::string uuid = d.path().string();
 			playerdata_list.cosarmor_uuid = uuid.substr(playerdata_path.length() + 1);
 			playerdata_list.cosarmor_uuid.erase(playerdata_list.cosarmor_uuid.length() - 9, 9);
-			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.cosarmor_path + "\nuuid：" + playerdata_list.cosarmor_uuid, model_name);
+			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.cosarmor_path + "\nuuid：" + playerdata_list.cosarmor_uuid);
 		}
 		if (!playerdata_list.dat_path.empty() && !playerdata_list.dat_old_path.empty() && !playerdata_list.cosarmor_path.empty())
 		{
@@ -222,12 +221,12 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 	std::vector<PlayerInfo_AS> ps_list;
 
 	std::string stats_path = base_path + "\\stats";
-	LOG_DEBUG("最终路径为：" + stats_path, model_name);
-	LOG_DEBUG("路径长度：" + std::to_string(stats_path.length()), model_name);
+	LOG_DEBUG("最终路径为：" + stats_path);
+	LOG_DEBUG("路径长度：" + std::to_string(stats_path.length()));
 
 	if (!std::filesystem::exists(stats_path))
 	{
-		LOG_DEBUG("路径不存在，请检查后重新输入！", model_name);
+		LOG_DEBUG("路径不存在，请检查后重新输入！");
 		throw UnknownPath();
 	}
 
@@ -238,7 +237,7 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 		std::string uuid = d.path().string();
 		stats_list.uuid = uuid.substr(stats_path.length() + 1);
 		stats_list.uuid.erase(stats_list.uuid.length() - 5, 5); // 去掉文件后缀名 ".json"
-		LOG_DEBUG("发现玩家统计文件：\n路径：" + stats_list.path + "\nuuid：" + stats_list.uuid, model_name);
+		LOG_DEBUG("发现玩家统计文件：\n路径：" + stats_list.path + "\nuuid：" + stats_list.uuid);
 		ps_list.push_back(stats_list);
 	}
 
@@ -288,7 +287,7 @@ bool MoveToRecycleBinWithPS(const std::string& filepath)
 
 bool ExecuteCommand(const std::string& cmd)
 {
-	LOG_DEBUG("执行shell命令：" + cmd + "\n", "DeleteFile");
+	LOG_DEBUG_M("执行shell命令：" + cmd + "\n", "DeleteFile");
 	int result = std::system(cmd.c_str());
 	return (result == 0);
 }
@@ -329,7 +328,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 		std::ifstream in_file(JSON_path);
 		if (!in_file.is_open()) 
 		{
-			LOG_ERROR("无法打开文件: " + JSON_path, model_name);
+			LOG_ERROR("无法打开文件: " + JSON_path);
 			return false;
 		}
 
@@ -338,7 +337,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 		in_file.close();
 
 		if (!j.is_array()) {
-			LOG_ERROR("JSON格式错误：应该是一个数组", model_name);
+			LOG_ERROR("JSON格式错误：应该是一个数组");
 			return false;
 		}
 
@@ -351,7 +350,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 			{
 				it = j.erase(it);
 				found = true;
-				LOG_DEBUG("已删除玩家: " + playerName, model_name);
+				LOG_DEBUG("已删除玩家: " + playerName);
 			}
 			else {
 				++it;
@@ -366,7 +365,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 			return true;
 		}
 		else {
-			LOG_DEBUG("未找到玩家:" + playerName, model_name);
+			LOG_DEBUG("未找到玩家:" + playerName);
 			return false;
 		}
 
@@ -376,7 +375,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 		return false;
 	}
 	catch (const std::exception& e) {
-		LOG_ERROR( e.what(), model_name);
+		LOG_ERROR( e.what());
 		return false;
 	}
 
@@ -388,12 +387,12 @@ bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 	LOG_CREATE_MODEL_NAME(model_name, "DeletePlayerJSON");
 
 	try {
-		LOG_DEBUG("正在删除玩家: " + playerName, model_name);
+		LOG_DEBUG("正在删除玩家: " + playerName);
 
 		// 1. 读取JSON文件
 		std::ifstream in_file(JSON_path);
 		if (!in_file.is_open()) {
-			LOG_ERROR("无法打开文件: " + JSON_path, model_name);
+			LOG_ERROR("无法打开文件: " + JSON_path);
 			return false;
 		}
 
@@ -403,11 +402,11 @@ bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 
 		// 2. 检查是否为对象（键值对）
 		if (!j.is_object()) {
-			LOG_ERROR("JSON格式错误：应该是对象类型", model_name);
+			LOG_ERROR("JSON格式错误：应该是对象类型");
 			return false;
 		}
 
-		LOG_DEBUG("原始键值对数量: " + std::to_string(j.size()), model_name);
+		LOG_DEBUG("原始键值对数量: " + std::to_string(j.size()));
 
 		// 3. 查找并删除（反向查找：通过值找键）
 		bool found = false;
@@ -419,7 +418,7 @@ bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 				foundUUID = it.key();
 				it = j.erase(it);
 				found = true;
-				LOG_DEBUG("删除玩家：" + playerName + "|UUID：" + foundUUID + "\n", model_name);
+				LOG_DEBUG("删除玩家：" + playerName + "|UUID：" + foundUUID + "\n");
 			}
 			else {
 				++it;
@@ -432,18 +431,18 @@ bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 			out_file << j.dump(4);
 			out_file.close();
 
-			 LOG_DEBUG("删除成功！剩余键值对：" + std::to_string(j.size()), model_name);
+			 LOG_DEBUG("删除成功！剩余键值对：" + std::to_string(j.size()));
 			return true;
 		}
 
 		return false;
 	}
 	catch (const json::exception& e) {
-		LOG_ERROR(e.what(), model_name);
+		LOG_ERROR(e.what());
 		return false;
 	}
 	catch (const std::exception& e) {
-		LOG_ERROR(e.what(), model_name);
+		LOG_ERROR(e.what());
 		return false;
 	}
 }
