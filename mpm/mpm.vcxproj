@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="func.h" />
     <ClInclude Include="Logout.h" />
+    <ClInclude Include="p_mpm.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="throw_error.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="func.cpp" />
     <ClCompile Include="Logout.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="p_mpm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mpm.rc" />

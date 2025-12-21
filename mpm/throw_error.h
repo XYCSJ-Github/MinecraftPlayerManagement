@@ -26,3 +26,27 @@ struct ReadError : public std::exception
 		return "读取用文件失败！";
 	}
 };
+
+struct NullString : public std::exception
+{
+	const char* what() const throw()
+	{
+		return "空的字符串";
+	}
+};
+
+struct NullStruct : public std::exception
+{
+	const char* what() const throw()
+	{
+		return "空的结构体";
+	}
+};
+
+struct NullVector : public std::exception
+{
+	const char* what() const throw()
+	{
+		return "空的容器";
+	}
+};
