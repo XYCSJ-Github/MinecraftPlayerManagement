@@ -6,5 +6,8 @@
         xmlns:local="clr-namespace:g_mpm"
         mc:Ignorable="d"
         Title="Minecraft Player Management" Height="580" Width="950">
-    <Grid x:Name="MainWindow1" AllowDrop="True"/>
+    <Grid x:Name="MainWindow1" AllowDrop="True">
+    
+
+    </Grid>
 </Window>
