@@ -10,6 +10,7 @@ p_mpm::p_mpm()
 	this->user_list = {};
 	this->world_list = {};
 	this->load_type = {};
+	this->CommandStr = {};
 }
 
 void p_mpm::ProcessingPath()
@@ -196,17 +197,21 @@ void p_mpm::ReloadList(void)
 
 int p_mpm::ProcessCommand(const std::string _command)
 {
+	std::string l1 = {}, l2 = {}, l3 = {}, l4 = {};
+
+	l1 = _command.substr(0, 4);
 	if (_command == "exit")
 	{
 		return COMMAND_EXIT;
 	}
 
+	l1 = _command.substr(0, 5);
 	if (_command == "break")
 	{
 		return COMMAND_BREAK;
 	}
 
-	std::string l1 = _command.substr(0, 4), l2 = {}, l3 = {}, l4 = {};
+	l1 = _command.substr(0, 4);
 	if (l1 == "open")
 	{
 		try
@@ -222,14 +227,151 @@ int p_mpm::ProcessCommand(const std::string _command)
 		{
 			try
 			{
-				l3 = _command.substr(11);
+				this->SetLastCommand(_command.substr(11));
 			}
 			catch (const std::exception&)
 			{
 				throw CommandError();
 			}
 
-			//TODO 返回命令类别，并保存参数
+			return COMMAND_OPEN_WORLD;
+		}
+
+		if (l2 == "player")
+		{
+			try
+			{
+				this->SetLastCommand(_command.substr(12));
+			}
+			catch (const std::exception&)
+			{
+				throw CommandError();
+			}
+
+			return COMMAND_OPEN_PLAYER;
+		}
+	}
+
+	l1 = _command.substr(0, 4);
+	if (l1 == "list")
+	{
+		try
+		{
+			l2 = _command.substr(6);
+		}
+		catch (const std::exception&)
+		{
+			throw CommandError();
+		}
+		if (l2 == "player")
+		{
+			return COMMAND_LIST_PLAYER;
+		}
+
+		try
+		{
+			l2 = _command.substr(5);
+		}
+		catch (const std::exception&)
+		{
+			throw CommandError();
+		}
+		if (l2 == "world")
+		{
+			return COMMAND_LIST_WORLD;
+		}
+	}
+
+	l1 = _command.substr(0, 6);
+	if (l1 == "delete")
+	{
+		try
+		{
+			l2 = _command.substr(7, 6);
+		}
+		catch (const std::exception&)
+		{
+			throw CommandError();
+		}
+
+		if (l2 == "player")
+		{
+			try
+			{
+				this->SetLastCommand(_command.substr(14));
+			}
+			catch (const std::exception&)
+			{
+				throw CommandError();
+			}
+
+			return COMMAND_DEL_PLAYER;
+		}
+
+		try
+		{
+			l2 = _command.substr(7, 5);
+		}
+		catch (const std::exception&)
+		{
+			throw CommandError();
+		}
+		if (l2 == "world")
+		{
+			try
+			{
+				this->SetLastCommand(_command.substr(13));
+			}
+			catch (const std::exception&)
+			{
+				throw CommandError();
+			}
+
+			return COMMAND_DEL_WORLD;
+		}
+
+		try
+		{
+			l2 = _command.substr(7, 2);
+		}
+		catch (const std::exception&)
+		{
+			throw CommandError();
+		}
+		if (l2 == "pw")
+		{
+			try
+			{
+				this->SetLastCommand(_command.substr(9));
+			}
+			catch (const std::exception&)
+			{
+				throw CommandError();
+			}
+
+			return COMMAND_DEL_PW;
+		}
+
+		try
+		{
+			l2 = _command.substr(7, 2);
+		}
+		catch (const std::exception&)
+		{
+			throw CommandError();
+		}
+		if (l2 == "js")
+		{
+			try
+			{
+				this->SetLastCommand(_command.substr(9));
+			}
+			catch (const std::exception&)
+			{
+				throw CommandError();
+			}
+
+			return COMMAND_DEL_JS;
 		}
 	}
 }
