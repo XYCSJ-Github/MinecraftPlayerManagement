@@ -32,7 +32,7 @@ public:
 	inline const std::vector<UserInfo> GetUserInfoList(void) { if (this->user_list.size() == 0) { throw NullVector(); } return this->user_list; }//获取玩家列表结构体容器
 	inline const int GetPathLoadType() { return this->load_type; }//设置路径加载模式
 	inline const std::string GetLastCommand() { if (this->CommandStr.empty()) { throw NullString(); } return this->CommandStr; }
- 
+
 	void ProcessingPath();//处理输入路径
 	void ProcessingPath(const std::string _input_path);
 	void PathLoadTpye();//检测加载方式
