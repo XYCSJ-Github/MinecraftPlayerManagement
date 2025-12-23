@@ -30,6 +30,12 @@
     <ClInclude Include="Struct.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="p_mpm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="piwbd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
@@ -39,6 +45,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p_mpm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

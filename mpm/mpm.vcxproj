@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="piwbd.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="Logout.h" />
     <ClInclude Include="p_mpm.h" />
