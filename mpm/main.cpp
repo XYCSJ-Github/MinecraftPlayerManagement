@@ -250,7 +250,7 @@ int main(int argc, char* argv[])
 						{
 							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//收集该玩家在本次循环世界中所有数据信息，并记录进playerinworldinfo piw_list
 							{
-								playerinworldinfo piw = { "否", "否", "否", "否", "否", "否", "否" };
+								playerinworldinfo piw = { "", "", "", "否", "否", "否", "否", "否" };
 								piw.uuid = user_info.uuid;
 								piw.world_name = world_name_list.world_name_list[i];
 								std::string open_path = world_name_list.world_directory_list[i];
