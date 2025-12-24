@@ -251,8 +251,8 @@ int main(int argc, char* argv[])
 							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//收集该玩家在本次循环世界中所有数据信息，并记录进playerinworldinfo piw_list
 							{
 								playerinworldinfo piw = { "否", "否", "否", "否", "否", "否", "否" };
-								piw.uuid = user_info.uuid;
-								piw.world_name = world_name_list.world_name_list[i];
+								piw.player.uuid = user_info.uuid;
+								piw.world_dir_name.world_name = world_name_list.world_name_list[i];
 								std::string open_path = world_name_list.world_directory_list[i];
 								try
 								{
@@ -267,7 +267,7 @@ int main(int argc, char* argv[])
 
 								for (int j = 0; j < c_advancements_list.size(); j++)
 								{
-									if (piw.uuid == c_advancements_list[j].uuid)
+									if (piw.player.uuid == c_advancements_list[j].uuid)
 									{
 										if (c_advancements_list[j].path.length() != 0)
 										{
@@ -278,7 +278,7 @@ int main(int argc, char* argv[])
 
 								for (int j = 0; j < c_playerdata_list.size(); j++)
 								{
-									if (piw.uuid == c_playerdata_list[j].uuid)
+									if (piw.player.uuid == c_playerdata_list[j].uuid)
 									{
 										if (c_playerdata_list[j].dat_path.length() != 0)
 										{
@@ -297,7 +297,7 @@ int main(int argc, char* argv[])
 
 								for (int j = 0; j < c_stats_list.size(); j++)
 								{
-									if (piw.uuid == c_stats_list[j].uuid)
+									if (piw.player.uuid == c_stats_list[j].uuid)
 									{
 										if (c_stats_list[j].path.length() != 0)
 										{
@@ -318,13 +318,13 @@ int main(int argc, char* argv[])
 					}
 
 
-					std::string show_str = "\n玩家：" + ow + "\nUUID：" + piw_list[0].uuid + "\n世界：\n";
+					std::string show_str = "\n玩家：" + ow + "\nUUID：" + piw_list[0].player.uuid + "\n世界：\n";
 
 					for (const auto& show : piw_list)//只展示路径是否存在
 					{
 						if (show.adv_path == "有" || show.pd_path == "有" || show.pd_old_path == "有" || show.cosarmor_path == "有" || show.st_path == "有")
 						{
-							show_str += show.world_name + "|进度：" + show.adv_path + "|数据：" + show.pd_path + "|旧数据：" + show.pd_old_path + "|其他数据：" + show.cosarmor_path + "|统计：" + show.st_path + "\n";
+							show_str += show.world_dir_name.world_name + "|进度：" + show.adv_path + "|数据：" + show.pd_path + "|旧数据：" + show.pd_old_path + "|其他数据：" + show.cosarmor_path + "|统计：" + show.st_path + "\n";
 						}
 					}
 
@@ -667,8 +667,8 @@ int main(int argc, char* argv[])
 					{
 						for (const UserInfo& playeruuid : user_info_list)//遍历所有玩家，并匹配该世界内所有的玩家文件，便于展示
 						{
-							delete_file_list.uuid = playeruuid.uuid;
-							delete_file_list.world_name = playeruuid.user_name;
+							delete_file_list.player.uuid = playeruuid.uuid;
+							delete_file_list.world_dir_name.world_name = playeruuid.user_name;
 
 							if (d_advancements_list.size() != 0)
 							{
@@ -731,7 +731,7 @@ int main(int argc, char* argv[])
 							//确认结构体已经填满
 							if (delete_file_list.adv_path.length() != 0 && delete_file_list.cosarmor_path.length() != 0 && delete_file_list.pd_old_path.length() != 0 && delete_file_list.pd_path.length() != 0 && delete_file_list.st_path.length() != 0)
 							{
-								del_info += "\n玩家：" + delete_file_list.world_name + " | UUID：" + delete_file_list.uuid + "\n";
+								del_info += "\n玩家：" + delete_file_list.world_dir_name.world_name + " | UUID：" + delete_file_list.player.uuid + "\n";
 								bool is_see;
 								is_see = MoveToRecycleBinWithPS(delete_file_list.adv_path);
 								if (is_see == true)
@@ -785,7 +785,7 @@ int main(int argc, char* argv[])
 
 								for (int x = 0; x <= maxnum; x++)
 								{
-									if (delete_file_list.uuid == d_advancements_list[x].uuid)
+									if (delete_file_list.player.uuid == d_advancements_list[x].uuid)
 									{
 										d_advancements_list.erase(d_advancements_list.begin() + x);
 										break;
@@ -793,7 +793,7 @@ int main(int argc, char* argv[])
 								}
 								for (int x = 0; x <= maxnum; x++)
 								{
-									if (delete_file_list.uuid == d_playerdata_list[x].uuid)
+									if (delete_file_list.player.uuid == d_playerdata_list[x].uuid)
 									{
 										d_playerdata_list.erase(d_playerdata_list.begin() + x);
 										break;
@@ -802,7 +802,7 @@ int main(int argc, char* argv[])
 
 								for (int x = 0; x <= maxnum; x++)
 								{
-									if (delete_file_list.uuid == d_stats_list[x].uuid)
+									if (delete_file_list.player.uuid == d_stats_list[x].uuid)
 									{
 										d_stats_list.erase(d_stats_list.begin() + x);
 										break;
@@ -868,8 +868,8 @@ int main(int argc, char* argv[])
 					std::vector<PlayerInfo_AS> pw_st_list;
 					std::vector<PlayerInfo_Data> pw_da_list;
 					playerinworldinfo piwi;
-					piwi.world_name = world.world_name;
-					piwi.uuid = player.uuid;
+					piwi.world_dir_name.world_name = world.world_name;
+					piwi.player.uuid = player.uuid;
 
 					try
 					{
@@ -1019,11 +1019,12 @@ int main(int argc, char* argv[])
 						{
 							LOG_INFO("已删除全部玩家名称缓存");
 						}
-						else 
+						else
 						{
 							LOG_WARNING("删除全部缓存失败");
 						}
-					}else if (DeletePlayerJSON(pip, osssss))
+					}
+					else if (DeletePlayerJSON(pip, osssss))
 					{
 						LOG_INFO("删除：" + osssss);
 					}

@@ -1,16 +1,12 @@
-//COW.h COW类声明 是COMMAND_OPEN_WORLD命令的实现类
+//COW.h COW类声明 是COMMAND_OPEN_WORLD命令的执行类
 #pragma once
 #include "piwbd.h"
 
-class COW : public piwbd//COW公开继承piwbd
+class COW : public piwbd
 {
 public:
 	COW() = default;
 	~COW() = default;
 
-	[[noreturn]]virtual void RunCommand() const override;
-
-private:
-
+	virtual void RunCommand() override;
 };
-

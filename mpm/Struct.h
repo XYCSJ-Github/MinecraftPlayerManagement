@@ -41,9 +41,8 @@ struct PlayerInfo_Data//同分类文件的路径与uuid
 
 struct playerinworldinfo//一次性存储单个玩家的所有数据
 {
-	std::string player_name;
-	std::string world_name;
-	std::string uuid;
+	WorldDirectoriesName world_dir_name;
+	UserInfo player;
 	std::string adv_path;
 	std::string pd_path;
 	std::string pd_old_path;

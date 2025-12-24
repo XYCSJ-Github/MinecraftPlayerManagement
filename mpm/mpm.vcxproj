@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="COP.h" />
     <ClInclude Include="COW.h" />
     <ClInclude Include="piwbd.h" />
     <ClInclude Include="func.h" />
@@ -149,10 +150,12 @@
     <ClInclude Include="throw_error.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="COP.cpp" />
     <ClCompile Include="COW.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="Logout.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="piwbd.cpp" />
     <ClCompile Include="p_mpm.cpp" />
   </ItemGroup>
   <ItemGroup>

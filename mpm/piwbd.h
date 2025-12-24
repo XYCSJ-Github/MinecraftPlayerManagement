@@ -13,12 +13,21 @@ public:
 	inline const std::vector<PlayerInfo_AS> GetStatsList() { if (this->stats_list.empty()) { throw NullVector(); } return this->stats_list; }
 	inline const std::string GetShow() { if (this->show.empty()) { throw NullString(); } return this->show; }//获取输出字符串
 
+	//加载指定世界的所有list
+	void LoadAllPlayerdata(std::string world_path);
+	void LoadAdvancementList(std::string world_path);
+	void LoadPlayerdataList(std::string world_path);
+	void LoadStatsList(std::string world_path);
+
 private:
 	inline void SetAdvancementsList(std::vector<PlayerInfo_AS> adv_list) { if (adv_list.empty()) { throw NullVector(); } this->advancements_list = adv_list; }//设置adv、playerdata、sta等数据
 	inline void SetPlayerdataList(std::vector<PlayerInfo_Data> pd_list) { if (pd_list.empty()) { throw NullVector(); } this->playerdata_list = pd_list; }
 	inline void SetStatsList(std::vector<PlayerInfo_AS> st_list) { if (st_list.empty()) { throw NullVector(); } this->stats_list = st_list; }
+
+protected:
 	inline void SetShow(std::string str_show) { if (str_show.empty()) { throw NullString(); } this->show = str_show; }//设置输出字符串
 
+private:
 	std::vector<PlayerInfo_AS> advancements_list;//Advancements结构体STL
 	std::vector<PlayerInfo_Data> playerdata_list;//Playerdata结构体STL
 	std::vector<PlayerInfo_AS> stats_list;//Stats结构体STL

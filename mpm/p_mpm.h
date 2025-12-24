@@ -42,7 +42,7 @@ public:
 	void LoadUserList(const std::string _JSON_path);
 	void ReloadList(void);//重新加载user、world列表
 	int ProcessCommand(const std::string _command);//处理命令
-	virtual void RunCommand() const = 0;//执行命令，需要重写
+	virtual void RunCommand() = 0;//执行命令，需要重写
 
 private:
 	inline void SetProcessingPath(std::string _processing_path) { if (_processing_path.empty()) { throw NullString(); } this->Processed_input_path = _processing_path; }//设置处理后的路径
