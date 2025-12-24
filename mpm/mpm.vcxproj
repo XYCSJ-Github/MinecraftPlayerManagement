@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CLW.h" />
     <ClInclude Include="COP.h" />
     <ClInclude Include="COW.h" />
     <ClInclude Include="piwbd.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="throw_error.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CLW.cpp" />
     <ClCompile Include="COP.cpp" />
     <ClCompile Include="COW.cpp" />
     <ClCompile Include="func.cpp" />
