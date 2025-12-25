@@ -139,6 +139,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CDP.h" />
+    <ClInclude Include="CDW.h" />
+    <ClInclude Include="CLP.h" />
     <ClInclude Include="CLW.h" />
     <ClInclude Include="COP.h" />
     <ClInclude Include="COW.h" />
@@ -151,6 +154,9 @@
     <ClInclude Include="throw_error.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CDP.cpp" />
+    <ClCompile Include="CDW.cpp" />
+    <ClCompile Include="CLP.cpp" />
     <ClCompile Include="CLW.cpp" />
     <ClCompile Include="COP.cpp" />
     <ClCompile Include="COW.cpp" />
