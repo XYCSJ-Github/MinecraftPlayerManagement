@@ -1,6 +1,7 @@
+//CDP.h 声明CDP类，COMMAND_DEL_PLAYER命令的执行类
 #pragma once
 #include "piwbd.h"
-#include <bitset>
+
 class CDP : public piwbd
 {
 public:

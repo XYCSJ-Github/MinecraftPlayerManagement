@@ -1,6 +1,7 @@
 //piwbd.h 声明piwbd类继承p_mpm作为执行拓展类，大多数override RunCommand类都继承此类
 #pragma once
 #include "p_mpm.h"
+#include <bitset>
 
 class piwbd : public p_mpm//piwbd公开继承p_mpm
 {
@@ -26,6 +27,7 @@ private:
 
 protected:
 	inline void SetShow(std::string str_show) { if (str_show.empty()) { throw NullString(); } this->show = str_show; }//设置输出字符串
+	void DeletePlayersFiles(PlayerInWorldInfoList _piwil, std::string* _out);//用PowerShell删除文件
 
 private:
 	std::vector<PlayerInfo_AS> advancements_list;//Advancements结构体STL

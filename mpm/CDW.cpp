@@ -73,8 +73,72 @@ void CDW::RunCommand()
 					}
 				}
 			}
+
+			if (piwil.playerdata_list.size() != 0)
+			{
+				for (int j = 0; j < piwil.playerdata_list.size(); j++)
+				{
+					if (piwil.playerinworldinfo_list[x].player.uuid == piwil.playerdata_list[j].uuid && !piwil.playerdata_list[j].dat_path.empty())
+					{
+						piwil.playerinworldinfo_list[x].pd_path = piwil.playerdata_list[j].dat_path;
+					}
+					if (piwil.playerinworldinfo_list[x].player.uuid == piwil.playerdata_list[j].old_uuid && !piwil.playerdata_list[j].dat_old_path.empty())
+					{
+						piwil.playerinworldinfo_list[x].pd_old_path = piwil.playerdata_list[j].dat_old_path;
+					}
+					if (piwil.playerinworldinfo_list[x].player.uuid == piwil.playerdata_list[j].cosarmor_uuid && !piwil.playerdata_list[j].cosarmor_path.empty())
+					{
+						piwil.playerinworldinfo_list[x].cosarmor_path = piwil.playerdata_list[j].cosarmor_path;
+					}
+				}
+			}
+
+			if (piwil.stats_list.size() != 0)
+			{
+				for (int j = 0; j < piwil.stats_list.size(); j++)
+				{
+					if (piwil.playerinworldinfo_list[x].player.uuid == piwil.stats_list[j].uuid && !piwil.stats_list.empty())
+					{
+						piwil.playerinworldinfo_list[x].st_path = piwil.stats_list[j].path;
+					}
+				}
+			}
+
+			if (!piwil.playerinworldinfo_list[x].adv_path.empty() && !piwil.playerinworldinfo_list[x].cosarmor_path.empty() && !piwil.playerinworldinfo_list[x].pd_old_path.empty() && !piwil.playerinworldinfo_list[x].pd_path.empty() && !piwil.playerinworldinfo_list[x].st_path.empty())
+			{
+				out += "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.user_name + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid + "\n";
+				DeletePlayersFiles(piwil, &out);
+
+				for (int f = 0; f <= maxnum; f++)
+				{
+					if (piwil.playerinworldinfo_list[x].player.uuid == piwil.advancements_list[f].uuid)
+					{
+						piwil.advancements_list.erase(piwil.advancements_list.begin() + f);
+						break;
+					}
+				}
+				for (int f = 0; f <= maxnum; f++)
+				{
+					if (piwil.playerinworldinfo_list[x].player.uuid == piwil.playerdata_list[f].uuid)
+					{
+						piwil.playerdata_list.erase(piwil.playerdata_list.begin() + f);
+						break;
+					}
+				}
+				for (int f = 0; f <= maxnum; f++)
+				{
+					if (piwil.playerinworldinfo_list[x].player.uuid == piwil.stats_list[f].uuid)
+					{
+						piwil.stats_list.erase(piwil.stats_list.begin() + f);
+						break;
+					}
+				}
+
+				piwil.playerinworldinfo_list[x] = {};
+			}
 		}
 	}
 
+	SetShow(out);
 	return;
 }

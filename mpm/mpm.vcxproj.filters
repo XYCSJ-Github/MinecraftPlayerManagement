@@ -54,6 +54,12 @@
     <ClInclude Include="CDW.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CDPW.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CDJS.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
@@ -87,6 +93,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CDW.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDPW.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDJS.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
