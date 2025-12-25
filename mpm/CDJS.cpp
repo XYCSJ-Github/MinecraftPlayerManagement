@@ -22,7 +22,7 @@ void CDJS::RunCommand()
 	}
 	else
 	{
-		out += "删除失败或只删了其中一个"
+		out += "删除失败或只删了其中一个";
 	}
 
 	return;

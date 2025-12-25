@@ -27,7 +27,7 @@ private:
 
 protected:
 	inline void SetShow(std::string str_show) { if (str_show.empty()) { throw NullString(); } this->show = str_show; }//设置输出字符串
-	void DeletePlayersFiles(PlayerInWorldInfoList _piwil, std::string* _out);//用PowerShell删除文件
+	void DeletePlayersFiles(PlayerInWorldInfoList _piwil, std::string* _out, int x);//用PowerShell删除文件
 
 private:
 	std::vector<PlayerInfo_AS> advancements_list;//Advancements结构体STL
