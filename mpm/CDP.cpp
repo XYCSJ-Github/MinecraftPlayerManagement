@@ -2,10 +2,10 @@
 
 void CDP::RunCommand()
 {
+	int x = 0;
 	std::vector<UserInfo> ui;
 	std::string find_player_uuid;
 	PlayerInWorldInfoList piwil;
-	playerinworldinfo del_piwi;
 	std::string out = "´ÓËùÓÐÊ±¼äÉ¾³ý";
 
 	try
@@ -22,8 +22,8 @@ void CDP::RunCommand()
 		if (GetLastCommand() == s.user_name)
 		{
 			find_player_uuid = s.uuid;
-			del_piwi.player.uuid = s.uuid;
-			del_piwi.player.user_name = s.user_name;
+			piwil.playerinworldinfo_list[x].player.uuid = s.uuid;
+			piwil.playerinworldinfo_list[x].player.user_name = s.user_name;
 		}
 	}
 
@@ -32,16 +32,16 @@ void CDP::RunCommand()
 		throw NoUserInfo();
 	}
 
-	out += del_piwi.player.user_name + "|UUID£º" + del_piwi.player.uuid;
+	out += piwil.playerinworldinfo_list[x].player.user_name + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid;
 
 	for (int i = 0; i < GetWorldList().world_name_list.size(); i++)
 	{
-		del_piwi.world_dir_name.world_directory = GetWorldList().world_directory_list[i];
-		del_piwi.world_dir_name.world_name = GetWorldList().world_name_list[i];
+		piwil.playerinworldinfo_list[x].world_dir_name.world_directory = GetWorldList().world_directory_list[i];
+		piwil.playerinworldinfo_list[x].world_dir_name.world_name = GetWorldList().world_name_list[i];
 
 		try
 		{
-			LoadAllPlayerdata(del_piwi.world_dir_name.world_directory);
+			LoadAllPlayerdata(piwil.playerinworldinfo_list[x].world_dir_name.world_directory);
 			piwil.advancements_list = GetAdvancementsList();
 			piwil.playerdata_list = GetPlayerdataList();
 			piwil.stats_list = GetStatsList();
@@ -57,7 +57,7 @@ void CDP::RunCommand()
 			{
 				if (!piwil.advancements_list[j].path.empty())
 				{
-					del_piwi.adv_path = piwil.advancements_list[j].path;
+					piwil.playerinworldinfo_list[x].adv_path = piwil.advancements_list[j].path;
 				}
 			}
 		}
@@ -68,7 +68,7 @@ void CDP::RunCommand()
 			{
 				if (!piwil.playerdata_list[j].dat_path.empty())
 				{
-					del_piwi.pd_path = piwil.advancements_list[j].path;
+					piwil.playerinworldinfo_list[x].pd_path = piwil.advancements_list[j].path;
 				}
 			}
 
@@ -76,7 +76,7 @@ void CDP::RunCommand()
 			{
 				if (!piwil.playerdata_list[j].dat_old_path.empty())
 				{
-					del_piwi.pd_old_path = piwil.playerdata_list[j].dat_old_path;
+					piwil.playerinworldinfo_list[x].pd_old_path = piwil.playerdata_list[j].dat_old_path;
 				}
 			}
 
@@ -84,7 +84,7 @@ void CDP::RunCommand()
 			{
 				if (!piwil.playerdata_list[j].cosarmor_path.empty())
 				{
-					del_piwi.cosarmor_path = piwil.playerdata_list[j].cosarmor_path;
+					piwil.playerinworldinfo_list[x].cosarmor_path = piwil.playerdata_list[j].cosarmor_path;
 				}
 			}
 		}
@@ -95,22 +95,22 @@ void CDP::RunCommand()
 			{
 				if (!piwil.stats_list[j].path.empty())
 				{
-					del_piwi.st_path = piwil.stats_list[j].path;
+					piwil.playerinworldinfo_list[x].st_path = piwil.stats_list[j].path;
 				}
 			}
-		} 
+		}
 
-		out += "\n´æµµ£º" + del_piwi.world_dir_name.world_name + "\n";
+		out += "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\n";
 		std::bitset<5> is_del;
-		is_del.set(0, MoveToRecycleBinWithPS(del_piwi.adv_path));
-		is_del.set(1, MoveToRecycleBinWithPS(del_piwi.pd_path));
-		is_del.set(2, MoveToRecycleBinWithPS(del_piwi.pd_old_path));
-		is_del.set(3, MoveToRecycleBinWithPS(del_piwi.cosarmor_path));
-		is_del.set(4, MoveToRecycleBinWithPS(del_piwi.st_path));
+		is_del.set(0, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].adv_path));
+		is_del.set(1, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].pd_path));
+		is_del.set(2, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].pd_old_path));
+		is_del.set(3, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].cosarmor_path));
+		is_del.set(4, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].st_path));
 
 		if (is_del[0] == true)
 		{
-			out += "É¾³ý£º" + del_piwi.adv_path + "\n";
+			out += "É¾³ý£º" + piwil.playerinworldinfo_list[x].adv_path + "\n";
 		}
 		else
 		{
@@ -118,7 +118,7 @@ void CDP::RunCommand()
 		}
 		if (is_del[1] == true)
 		{
-			out += "É¾³ý£º" + del_piwi..pd_path + "\n";
+			out += "É¾³ý£º" + piwil.playerinworldinfo_list[x].pd_path + "\n";
 		}
 		else
 		{
@@ -126,7 +126,7 @@ void CDP::RunCommand()
 		}
 		if (is_del[2] == true)
 		{
-			out += "É¾³ý£º" + del_piwi.pd_old_path + "\n";
+			out += "É¾³ý£º" + piwil.playerinworldinfo_list[x].pd_old_path + "\n";
 		}
 		else
 		{
@@ -134,7 +134,7 @@ void CDP::RunCommand()
 		}
 		if (is_del[3] == true)
 		{
-			out += "É¾³ý£º" + del_piwi.cosarmor_path + "\n";
+			out += "É¾³ý£º" + piwil.playerinworldinfo_list[x].cosarmor_path + "\n";
 		}
 		else
 		{
@@ -142,7 +142,7 @@ void CDP::RunCommand()
 		}
 		if (is_del[4] == true)
 		{
-			out += "É¾³ý£º" + del_piwi.st_path + "\n";
+			out += "É¾³ý£º" + piwil.playerinworldinfo_list[x].st_path + "\n";
 		}
 		else
 		{
@@ -150,7 +150,7 @@ void CDP::RunCommand()
 		}
 	}
 
-	if (DeletePlayerJSON(GetProcessingPath(), del_piwi.player.user_name))
+	if (DeletePlayerJSON(GetProcessingPath(), piwil.playerinworldinfo_list[x].player.user_name))
 	{
 		out += "É¾³ýusercacheºÍusernamecache\n";
 	}
