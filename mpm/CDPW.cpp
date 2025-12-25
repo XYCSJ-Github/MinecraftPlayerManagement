@@ -83,7 +83,7 @@ void CDPW::RunCommand()
 
 	if (!piwil.playerinworldinfo_list[x].adv_path.empty() && !piwil.playerinworldinfo_list[x].cosarmor_path.empty() && !piwil.playerinworldinfo_list[x].pd_old_path.empty() && !piwil.playerinworldinfo_list[x].pd_path.empty() && !piwil.playerinworldinfo_list[x].st_path.empty())
 	{
-		DeletePlayersFiles(piwil, &out);
+		DeletePlayersFiles(piwil, out, x);
 	}
 	else
 	{

@@ -107,7 +107,7 @@ void CDW::RunCommand()
 			if (!piwil.playerinworldinfo_list[x].adv_path.empty() && !piwil.playerinworldinfo_list[x].cosarmor_path.empty() && !piwil.playerinworldinfo_list[x].pd_old_path.empty() && !piwil.playerinworldinfo_list[x].pd_path.empty() && !piwil.playerinworldinfo_list[x].st_path.empty())
 			{
 				out += "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.user_name + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid + "\n";
-				DeletePlayersFiles(piwil, &out);
+				DeletePlayersFiles(piwil, out, x);
 
 				for (int f = 0; f <= maxnum; f++)
 				{

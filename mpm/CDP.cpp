@@ -102,7 +102,7 @@ void CDP::RunCommand()
 		}
 
 		out += "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\n";
-		DeletePlayersFiles(piwil, &out);
+		DeletePlayersFiles(piwil, out, x);
 	}
 
 	if (DeletePlayerJSON(GetProcessingPath(), piwil.playerinworldinfo_list[x].player.user_name))

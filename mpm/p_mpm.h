@@ -25,7 +25,7 @@ public:
 	inline void SetInputPath(const std::string _path) { this->input_path = _path; };//设置输入路径
 	inline const std::string GetInputPath(void) { if (!this->input_path.empty()) { return this->input_path; } throw NullString(); }//获取输入路径
 	inline const std::string GetProcessingPath(void) { if (this->Processed_input_path.empty()) { throw NullString(); } return this->Processed_input_path; }//获取处理后的输入路径
-	[[deprecated("统一列表的使用，所以该函数被废弃")]] inline const WorldDirectoriesNameList GetWorldList(void) { if (this->uct_world_list.world_directory_list.size() == 0 && this->uct_world_list.world_name_list.size() == 0) { throw NullStruct(); return this->uct_world_list; } }//获取世界列表容器结构体
+	/*[[deprecated("统一列表的使用，所以该函数被废弃")]]*/ inline const WorldDirectoriesNameList GetWorldList(void) { if (this->uct_world_list.world_directory_list.size() == 0 && this->uct_world_list.world_name_list.size() == 0) { throw NullStruct(); } return this->uct_world_list; }//获取世界列表容器结构体
 	inline const std::vector<WorldDirectoriesName> GetSTLWorldList(void) { if (this->world_list.size() == 0) { throw NullVector(); } return this->world_list; }//获取世界列表结构体容器
 	inline const std::vector<UserInfo> GetUserInfoList(void) { if (this->user_list.size() == 0) { throw NullVector(); } return this->user_list; }//获取玩家列表结构体容器
 	inline const int GetPathLoadType() { return this->load_type; }//设置路径加载模式
@@ -45,7 +45,7 @@ public:
 
 private:
 	inline void SetProcessingPath(std::string _processing_path) { if (_processing_path.empty()) { throw NullString(); } this->Processed_input_path = _processing_path; }//设置处理后的路径
-	[[deprecated("统一列表的使用，所以该函数被废弃")]] inline void SetWorldList(WorldDirectoriesNameList _uct_world_list) { if (_uct_world_list.world_directory_list.size() == 0 && _uct_world_list.world_name_list.size() == 0) { throw NullStruct(); } this->uct_world_list = _uct_world_list; }//设置世界列表容器结构体
+	/*[[deprecated("统一列表的使用，所以该函数被废弃")]]*/ inline void SetWorldList(WorldDirectoriesNameList _uct_world_list) { if (_uct_world_list.world_directory_list.size() == 0 && _uct_world_list.world_name_list.size() == 0) { throw NullStruct(); } this->uct_world_list = _uct_world_list; }//设置世界列表容器结构体
 	inline void SetSTLWorldList(std::vector<WorldDirectoriesName> _world_list) { if (_world_list.size() == 0) { throw NullVector(); } this->world_list = _world_list; }//设置世界列表结构体容器
 	inline void SetUserInfoList(std::vector<UserInfo> _user_list) { if (_user_list.size() == 0) { throw NullVector(); } this->user_list = _user_list; }//设置玩家列表结构体容器
 	inline void SetPathLoadType(int type) { this->load_type = type; }//设置路径加载模式

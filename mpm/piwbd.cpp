@@ -26,11 +26,11 @@ void piwbd::LoadStatsList(std::string world_path)
 	SetStatsList(GetWorldPlayerStats(world_path));
 }
 
-void piwbd::DeletePlayersFiles(PlayerInWorldInfoList _piwil, std::string* _out, int _x)
+void piwbd::DeletePlayersFiles(PlayerInWorldInfoList _piwil, std::string &_out, int _x)
 {
 	PlayerInWorldInfoList piwil = _piwil;
 	int x = _x;
-	std::string &out = out;
+	std::string &out = _out;
 
 	std::bitset<5> is_del;
 	is_del.set(0, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].adv_path));

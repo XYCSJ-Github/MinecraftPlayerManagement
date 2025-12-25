@@ -362,4 +362,6 @@ int p_mpm::ProcessCommand(const std::string _command)
 			return COMMAND_DEL_JS;
 		}
 	}
+
+	throw CommandError();
 }
