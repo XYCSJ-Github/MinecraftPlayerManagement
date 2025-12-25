@@ -1,3 +1,4 @@
+//实现CDP.h
 #include "CDP.h"
 
 void CDP::RunCommand()
@@ -101,53 +102,7 @@ void CDP::RunCommand()
 		}
 
 		out += "\n存档：" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\n";
-		std::bitset<5> is_del;
-		is_del.set(0, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].adv_path));
-		is_del.set(1, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].pd_path));
-		is_del.set(2, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].pd_old_path));
-		is_del.set(3, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].cosarmor_path));
-		is_del.set(4, MoveToRecycleBinWithPS(piwil.playerinworldinfo_list[x].st_path));
-
-		if (is_del[0] == true)
-		{
-			out += "删除：" + piwil.playerinworldinfo_list[x].adv_path + "\n";
-		}
-		else
-		{
-			out += "失败：文件已删除或不存在\n";
-		}
-		if (is_del[1] == true)
-		{
-			out += "删除：" + piwil.playerinworldinfo_list[x].pd_path + "\n";
-		}
-		else
-		{
-			out += "失败：文件已删除或不存在\n";
-		}
-		if (is_del[2] == true)
-		{
-			out += "删除：" + piwil.playerinworldinfo_list[x].pd_old_path + "\n";
-		}
-		else
-		{
-			out += "失败：文件已删除或不存在\n";
-		}
-		if (is_del[3] == true)
-		{
-			out += "删除：" + piwil.playerinworldinfo_list[x].cosarmor_path + "\n";
-		}
-		else
-		{
-			out += "失败：文件已删除或不存在\n";
-		}
-		if (is_del[4] == true)
-		{
-			out += "删除：" + piwil.playerinworldinfo_list[x].st_path + "\n";
-		}
-		else
-		{
-			out += "失败：文件已删除或不存在\n";
-		}
+		DeletePlayersFiles(piwil, &out);
 	}
 
 	if (DeletePlayerJSON(GetProcessingPath(), piwil.playerinworldinfo_list[x].player.user_name))
