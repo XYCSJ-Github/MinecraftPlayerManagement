@@ -18,7 +18,27 @@ int main(int argc, char* argv[])
 	{
 		LOG_DEBUG("使用命令行参数作为初始路径输入");
 		StartWithArgv = true;
-		mp.SetInputPath(argv[1]);
+		for (int i = 0; i < argc; i++)
+		{
+			if (argv[i] == "-debug")
+			{
+				LOG_DEBUG_OUT;
+
+				if (i == 1)
+				{
+					mp.SetInputPath(argv[2]);
+				}
+				else
+				{
+					mp.SetInputPath(argv[1]);
+				}
+			}
+			else
+			{
+				mp.SetInputPath(argv[1]);
+			}
+		}
+		
 	}
 
 	bool mRun = true;
@@ -102,22 +122,26 @@ int main(int argc, char* argv[])
 			{
 			case COMMAND_EXIT:
 			{
+				LOG_DEBUG("识别命令：exit");
 				mRun = false;
 				break;
 			}
 
 			case COMMAND_BREAK:
 			{
+				LOG_DEBUG("识别命令：break");
 				break;
 			}
 
 			case COMMAND_OPEN_PLAYER:
 			{
+				LOG_DEBUG("识别命令：open player");
 				COP cop;
 				try
 				{
 					cop >> mp;
 					cop.RunCommand();
+					LOG_INFO(cop.GetShow());
 				}
 				catch (const std::exception& e)
 				{
@@ -128,11 +152,13 @@ int main(int argc, char* argv[])
 
 			case COMMAND_OPEN_WORLD:
 			{
+				LOG_DEBUG("识别命令：open world");
 				COW cow;
 				try
 				{
 					cow >> mp;
 					cow.RunCommand();
+					LOG_INFO(cow.GetShow());
 				}
 				catch (const std::exception& e)
 				{
@@ -143,11 +169,13 @@ int main(int argc, char* argv[])
 
 			case COMMAND_LIST_PLAYER:
 			{
+				LOG_DEBUG("识别命令：list player");
 				CLP clp;
 				try
 				{
 					clp >> mp;
 					clp.RunCommand();
+					LOG_INFO(clp.GetShow());
 				}
 				catch (const std::exception& e)
 				{
@@ -158,11 +186,13 @@ int main(int argc, char* argv[])
 
 			case COMMAND_LIST_WORLD:
 			{
+				LOG_DEBUG("识别命令：list world");
 				CLW clw;
 				try
 				{
 					clw >> mp;
 					clw.RunCommand();
+					LOG_INFO(clw.GetShow());
 				}
 				catch (const std::exception& e)
 				{
@@ -173,11 +203,13 @@ int main(int argc, char* argv[])
 
 			case COMMAND_DEL_PLAYER:
 			{
+				LOG_DEBUG("识别命令：delete player");
 				CDP cdp;
 				try
 				{
 					cdp >> mp;
 					cdp.RunCommand();
+					LOG_INFO(cdp.GetShow());
 				}
 				catch (const std::exception& e)
 				{
@@ -188,11 +220,13 @@ int main(int argc, char* argv[])
 
 			case COMMAND_DEL_WORLD:
 			{
+				LOG_DEBUG("识别命令：delete world");
 				CDW cdw;
 				try
 				{
 					cdw >> mp;
 					cdw.RunCommand();
+					LOG_INFO(cdw.GetShow());
 				}
 				catch (const std::exception& e)
 				{
@@ -203,11 +237,13 @@ int main(int argc, char* argv[])
 
 			case COMMAND_DEL_PW:
 			{
+				LOG_DEBUG("识别命令：delete pw");
 				CDPW cdpw;
 				try
 				{
 					cdpw >> mp;
 					cdpw.RunCommand();
+					LOG_INFO(cdpw.GetShow());
 				}
 				catch (const std::exception& e)
 				{
@@ -218,11 +254,13 @@ int main(int argc, char* argv[])
 
 			case COMMAND_DEL_JS:
 			{
+				LOG_DEBUG("识别命令：delete js");
 				CDJS cdjs;
 				try
 				{
 					cdjs >> mp;
 					cdjs.RunCommand();
+					LOG_INFO(cdjs.GetShow());
 				}
 				catch (const std::exception& e)
 				{
@@ -232,6 +270,7 @@ int main(int argc, char* argv[])
 			}
 
 			case COMMAND_NULL_BACK:
+				LOG_DEBUG("未识别命令");
 				break;
 
 			default:
