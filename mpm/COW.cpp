@@ -5,6 +5,8 @@ void COW::RunCommand()
 {
 	int x = 0;
 	PlayerInWorldInfoList piwil;
+	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
+	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
 
 	for (int i = 0; i < GetWorldList().world_name_list.size(); i++)
 	{
@@ -38,27 +40,27 @@ void COW::RunCommand()
 
 		for (int j = 0; j < piwil.advancements_list.size(); j++)
 		{
-			if (GetUserInfoList()[i].uuid == piwil.advancements_list[i].uuid)
+			if (GetUserInfoList()[i].uuid == piwil.advancements_list[j].uuid)
 			{
-				piwil.playerinworldinfo_list[x].adv_path = piwil.advancements_list[i].path;
+				piwil.playerinworldinfo_list[x].adv_path = piwil.advancements_list[j].path;
 			}
 		}
 
 		for (int j = 0; j < piwil.playerdata_list.size(); j++)
 		{
-			if (GetUserInfoList()[i].uuid == piwil.playerdata_list[i].uuid)
+			if (GetUserInfoList()[i].uuid == piwil.playerdata_list[j].uuid)
 			{
-				piwil.playerinworldinfo_list[x].pd_path = piwil.playerdata_list[i].dat_path;
-				piwil.playerinworldinfo_list[x].pd_old_path = piwil.playerdata_list[i].dat_old_path;
-				piwil.playerinworldinfo_list[x].cosarmor_path = piwil.playerdata_list[i].cosarmor_path;
+				piwil.playerinworldinfo_list[x].pd_path = piwil.playerdata_list[j].dat_path;
+				piwil.playerinworldinfo_list[x].pd_old_path = piwil.playerdata_list[j].dat_old_path;
+				piwil.playerinworldinfo_list[x].cosarmor_path = piwil.playerdata_list[j].cosarmor_path;
 			}
 		}
 
 		for (int j = 0; j < piwil.stats_list.size(); j++)
 		{
-			if (GetUserInfoList()[i].uuid == piwil.stats_list[i].uuid)
+			if (GetUserInfoList()[i].uuid == piwil.stats_list[j].uuid)
 			{
-				piwil.playerinworldinfo_list[x].st_path = piwil.stats_list[i].uuid;
+				piwil.playerinworldinfo_list[x].st_path = piwil.stats_list[j].path;
 			}
 		}
 
@@ -70,8 +72,6 @@ void COW::RunCommand()
 				out += "\n装饰盔甲数据：" + piwil.playerinworldinfo_list[x].cosarmor_path;
 			}
 			out += "\n统计数据：" + piwil.playerinworldinfo_list[x].st_path + "\n";
-
-			x++;
 		}
 	}
 
