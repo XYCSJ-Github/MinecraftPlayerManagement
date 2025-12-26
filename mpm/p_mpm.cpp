@@ -133,6 +133,70 @@ void p_mpm::LoadWorldList(const std::string _world_path)
 	this->SetWorldList(wnl);
 }
 
+void p_mpm::LoadWorldListSTL(void)
+{
+	std::vector<WorldDirectoriesName> wdnl = {};
+
+	try
+	{
+		if (true)
+		{
+			if (GetPathLoadType() == MOD_CLIENT)
+			{
+				wdnl = GetWorldDirectories(GetProcessingPath(), MOD_CLIENT);
+			}
+			else
+			{
+				wdnl = GetWorldDirectories(GetProcessingPath(), MOD_SERVER);
+			}
+		}
+	}
+	catch (const std::exception& e)
+	{
+		throw e;
+	}
+
+
+	if (wdnl.size() == 0 && wdnl.size() == 0)
+	{
+		throw NullVector();
+	}
+
+	this->SetSTLWorldList(wdnl);
+}
+
+void p_mpm::LoadWorldListSTL(const std::string _world_path)
+{
+	std::vector<WorldDirectoriesName> wdnl = {};
+
+	try
+	{
+		if (true)
+		{
+			if (GetPathLoadType() == MOD_CLIENT)
+			{
+				wdnl = GetWorldDirectories(_world_path, MOD_CLIENT);
+			}
+			else
+			{
+				wdnl = GetWorldDirectories(_world_path, MOD_SERVER);
+			}
+		}
+	}
+	catch (const std::exception& e)
+	{
+		throw e;
+	}
+
+
+	if (wdnl.size() == 0 && wdnl.size() == 0)
+	{
+		throw NullVector();
+	}
+
+	this->SetSTLWorldList(wdnl);
+}
+
 void p_mpm::LoadUserList(void)
 {
 	std::vector<UserInfo> uil = {};

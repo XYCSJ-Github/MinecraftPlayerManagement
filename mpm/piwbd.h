@@ -44,7 +44,7 @@ public:
 			this->SetInputPath(p.GetInputPath());
 			this->SetProcessingPath(p.GetProcessingPath());
 			this->SetWorldList(p.GetWorldList());
-			//this->SetSTLWorldList(p.GetSTLWorldList());
+			this->SetSTLWorldList(p.GetSTLWorldList());
 			this->SetUserInfoList(p.GetUserInfoList());
 			this->SetPathLoadType(p.GetPathLoadType());
 			this->SetLastCommand(p.GetLastCommand());

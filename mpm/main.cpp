@@ -85,6 +85,7 @@ int main(int argc, char* argv[])
 		{
 			std::string out;
 			mp.LoadWorldList();
+			mp.LoadWorldListSTL();
 			for (int i = 0; i < mp.GetWorldList().world_name_list.size(); i++)
 			{
 				out += "\n´æµµ£º" + mp.GetWorldList().world_name_list[i] + "\nÂ·¾¶£º" + mp.GetWorldList().world_directory_list[i] + "\n";

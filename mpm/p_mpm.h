@@ -38,6 +38,8 @@ public:
 	void PathLoadTpye(const std::string _warld_path);
 	void LoadWorldList(void);//加载世界列表
 	void LoadWorldList(const std::string _world_path);
+	void LoadWorldListSTL(void);
+	void LoadWorldListSTL(const std::string _world_path);
 	void LoadUserList(void);//加载玩家列表
 	void LoadUserList(const std::string _JSON_path);
 	void ReloadList(void);//重新加载user、world列表

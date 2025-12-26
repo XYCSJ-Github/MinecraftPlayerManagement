@@ -17,6 +17,7 @@ using json = nlohmann::json;
 namespace fs = std::filesystem;
 
 WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mod);//获得存档目录路径|返回包含路径和名称的容器的结构体
+std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_path, int mod);
 std::string ProcessingInputPath(const std::string input_path);//预处理路径，去除有双引号。|返回字符串
 std::vector<UserInfo> GetUserInfo(const std::string base_path);//加工原始路径，读取用户缓存文件。|返回包含用户名和uuid的结构体容器
 std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_path);//加工存档路径，识别文件路径并裁切对应的uuid|返回包含文件路径和对应uuid结构体的容器
