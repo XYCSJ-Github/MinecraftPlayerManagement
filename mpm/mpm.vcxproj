@@ -156,6 +156,7 @@
     <ClInclude Include="throw_error.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CC.h" />
     <ClCompile Include="CDJS.cpp" />
     <ClCompile Include="CDP.cpp" />
     <ClCompile Include="CDPW.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="func.cpp" />
     <ClCompile Include="Logout.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="old_main.cpp" />
     <ClCompile Include="piwbd.cpp" />
     <ClCompile Include="p_mpm.cpp" />
   </ItemGroup>

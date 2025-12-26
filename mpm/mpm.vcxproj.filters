@@ -68,7 +68,7 @@
     <ClCompile Include="Logout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="old_main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="p_mpm.cpp">
@@ -100,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="CDJS.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CC.h">
+      <Filter>头文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
