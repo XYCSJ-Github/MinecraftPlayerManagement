@@ -25,5 +25,6 @@ void CDJS::RunCommand()
 		out += "删除失败或只删了其中一个";
 	}
 
+	SetShow(out);
 	return;
 }

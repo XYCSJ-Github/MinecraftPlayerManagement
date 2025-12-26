@@ -418,7 +418,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 		{
 			try
 			{
-				this->SetLastCommand(_command.substr(9));
+				this->SetLastCommand(_command.substr(10));
 			}
 			catch (const std::exception&)
 			{
