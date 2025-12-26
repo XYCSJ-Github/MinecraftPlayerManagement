@@ -10,7 +10,7 @@ int old_main(int argc, char* argv[])
 #endif
 		;//保持正常缩进
 	LOG_CREATE_MODEL_NAME("Main");//设置logout模块名称
-
+	
 	bool StartwithArgv = false;
 	std::string input_path;
 
