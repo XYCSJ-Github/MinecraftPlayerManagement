@@ -17,28 +17,7 @@ int main(int argc, char* argv[])
 	if (argc > 1)//如果有参启动，将StartwithArgv设为true，并提取输入参数
 	{
 		LOG_DEBUG("使用命令行参数作为初始路径输入");
-		StartWithArgv = true;
-		for (int i = 0; i < argc; i++)
-		{
-			if (argv[i] == "-debug")
-			{
-				LOG_DEBUG_OUT;
-
-				if (i == 1)
-				{
-					mp.SetInputPath(argv[2]);
-				}
-				else
-				{
-					mp.SetInputPath(argv[1]);
-				}
-			}
-			else
-			{
-				mp.SetInputPath(argv[1]);
-			}
-		}
-		
+		mp.SetInputPath(argv[1]);
 	}
 
 	bool mRun = true;
