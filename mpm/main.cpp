@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 			mp.LoadWorldList();
 			for (int i = 0; i < mp.GetWorldList().world_name_list.size(); i++)
 			{
-				out += "\n存档：" + mp.GetWorldList().world_name_list[i] + "\n路径：" + mp.GetWorldList().world_directory_list[i];
+				out += "\n存档：" + mp.GetWorldList().world_name_list[i] + "\n路径：" + mp.GetWorldList().world_directory_list[i] + "\n";
 			}
 			LOG_INFO(out);
 		}
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 			mp.LoadUserList();
 			for (const UserInfo& a : mp.GetUserInfoList())
 			{
-				out += "\n用户名：" + a.user_name + "\nUUID：" + a.uuid + "\n过期时间：" + a.expiresOn;
+				out += "\n用户名：" + a.user_name + "\nUUID：" + a.uuid + "\n过期时间：" + a.expiresOn + "\n";
 			}
 			LOG_INFO(out);
 		}
