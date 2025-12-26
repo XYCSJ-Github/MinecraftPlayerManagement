@@ -39,13 +39,20 @@ private:
 public:
 	piwbd& operator>>(p_mpm& p)//重载>>运算符使两个同父类对象可以传递基础数据
 	{
-		SetInputPath(p.GetInputPath());
-		SetProcessingPath(p.GetProcessingPath());
-		SetWorldList(p.GetWorldList());
-		//SetSTLWorldList(p.GetSTLWorldList());
-		SetUserInfoList(p.GetUserInfoList());
-		SetPathLoadType(p.GetPathLoadType());
-		SetLastCommand(p.GetLastCommand());
+		try
+		{
+			this->SetInputPath(p.GetInputPath());
+			this->SetProcessingPath(p.GetProcessingPath());
+			this->SetWorldList(p.GetWorldList());
+			//this->SetSTLWorldList(p.GetSTLWorldList());
+			this->SetUserInfoList(p.GetUserInfoList());
+			this->SetPathLoadType(p.GetPathLoadType());
+			this->SetLastCommand(p.GetLastCommand());
+		}
+		catch (const std::exception& e)
+		{
+			throw e;
+		}
 
 		return *this;
 	}
