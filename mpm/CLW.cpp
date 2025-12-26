@@ -5,17 +5,15 @@ void CLW::RunCommand()
 {
 	int x = 0;
 	PlayerInWorldInfoList piwil;
+	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
 	std::string out;
 
 	for (int i = 0; i < GetWorldList().world_name_list.size(); i++)
 	{
-		piwil.playerinworldinfo_list[x].world_dir_name.world_name = GetWorldList().world_name_list[i];
-		piwil.playerinworldinfo_list[x].world_dir_name.world_directory = GetWorldList().world_directory_list[i];
-
-		LoadAdvancementList(piwil.playerinworldinfo_list[x].world_dir_name.world_directory);
+		LoadAdvancementList(GetWorldList().world_directory_list[i]);
 		piwil.advancements_list = GetAdvancementsList();
 
-		out += "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name;
+		out += "\n´æµµ£º" + GetWorldList().world_name_list[i];
 
 		for (const PlayerInfo_AS& w : piwil.advancements_list)
 		{
@@ -23,14 +21,12 @@ void CLW::RunCommand()
 			{
 				if (w.uuid == b.uuid)
 				{
-					out += "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.user_name + "£üUUID£º" + piwil.playerinworldinfo_list[x].player.uuid + "\n";
+					out += "\nÍæ¼Ò£º" + b.user_name + "£üUUID£º" + b.uuid;
 				}
 			}
 		}
-
-		out += "\n";
 	}
 
-	SetShow(out);
+	SetShow(out + "\n");
 	return;
 }

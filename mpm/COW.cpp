@@ -6,7 +6,6 @@ void COW::RunCommand()
 	int x = 0;
 	PlayerInWorldInfoList piwil;
 	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
-	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
 
 	for (int i = 0; i < GetWorldList().world_name_list.size(); i++)
 	{

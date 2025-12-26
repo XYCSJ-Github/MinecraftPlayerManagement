@@ -3,7 +3,7 @@
 
 void CDPW::RunCommand()
 {
-	std::vector<std::string> pc = splitString(GetLastCommand(), ' ');
+ 	std::vector<std::string> pc = splitString(GetLastCommand(), ' ');
 	if (pc[0].empty() && pc[1].empty())
 	{
 		throw CommandError();
@@ -12,6 +12,8 @@ void CDPW::RunCommand()
 	int x = 0;
 	std::string out;
 	PlayerInWorldInfoList piwil;
+	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
+
 	piwil.playerinworldinfo_list[x].player.user_name = pc[0];
 	piwil.playerinworldinfo_list[x].world_dir_name.world_name = pc[1];
 
@@ -79,7 +81,7 @@ void CDPW::RunCommand()
 		}
 	}
 
-	out += "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.uuid + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid + "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "|Â·¾¶£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory;
+	out += "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.uuid + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid + "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "|Â·¾¶£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
 
 	if (!piwil.playerinworldinfo_list[x].adv_path.empty() && !piwil.playerinworldinfo_list[x].cosarmor_path.empty() && !piwil.playerinworldinfo_list[x].pd_old_path.empty() && !piwil.playerinworldinfo_list[x].pd_path.empty() && !piwil.playerinworldinfo_list[x].st_path.empty())
 	{

@@ -156,12 +156,6 @@ void p_mpm::LoadWorldListSTL(void)
 		throw e;
 	}
 
-
-	if (wdnl.size() == 0 && wdnl.size() == 0)
-	{
-		throw NullVector();
-	}
-
 	this->SetSTLWorldList(wdnl);
 }
 
@@ -186,12 +180,6 @@ void p_mpm::LoadWorldListSTL(const std::string _world_path)
 	catch (const std::exception& e)
 	{
 		throw e;
-	}
-
-
-	if (wdnl.size() == 0 && wdnl.size() == 0)
-	{
-		throw NullVector();
 	}
 
 	this->SetSTLWorldList(wdnl);
@@ -282,7 +270,6 @@ int p_mpm::ProcessCommand(const std::string _command)
 		{
 			throw CommandError();
 		}
-
 		if (l2 == "world")
 		{
 			try
@@ -297,6 +284,14 @@ int p_mpm::ProcessCommand(const std::string _command)
 			return COMMAND_OPEN_WORLD;
 		}
 
+		try
+		{
+			l2 = _command.substr(5, 6);
+		}
+		catch (const std::exception&)
+		{
+			throw CommandError();
+		}
 		if (l2 == "player")
 		{
 			try
@@ -317,7 +312,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 	{
 		try
 		{
-			l2 = _command.substr(6);
+			l2 = _command.substr(5);
 		}
 		catch (const std::exception&)
 		{
@@ -353,7 +348,6 @@ int p_mpm::ProcessCommand(const std::string _command)
 		{
 			throw CommandError();
 		}
-
 		if (l2 == "player")
 		{
 			try
@@ -402,7 +396,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 		{
 			try
 			{
-				this->SetLastCommand(_command.substr(9));
+				this->SetLastCommand(_command.substr(10));
 			}
 			catch (const std::exception&)
 			{

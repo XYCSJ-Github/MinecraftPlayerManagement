@@ -7,6 +7,8 @@ void CDP::RunCommand()
 	std::vector<UserInfo> ui;
 	std::string find_player_uuid;
 	PlayerInWorldInfoList piwil;
+	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
+
 	std::string out = "从所有时间删除";
 
 	try
@@ -69,7 +71,7 @@ void CDP::RunCommand()
 			{
 				if (!piwil.playerdata_list[j].dat_path.empty())
 				{
-					piwil.playerinworldinfo_list[x].pd_path = piwil.advancements_list[j].path;
+					piwil.playerinworldinfo_list[x].pd_path = piwil.playerdata_list[j].dat_path;
 				}
 			}
 

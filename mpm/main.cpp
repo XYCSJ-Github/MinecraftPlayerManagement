@@ -119,19 +119,30 @@ int main(int argc, char* argv[])
 			std::string comm_;
 			std::cout << ">";
 			std::getline(std::cin, comm_);
-			switch (mp.ProcessCommand(comm_))//命令处理
+
+			int Signal;
+			try 
+			{
+				Signal = mp.ProcessCommand(comm_);
+			}
+			catch (const CommandError& e)
+			{
+				LOG_ERROR(e.what());
+				Signal = 211;
+			}
+
+			switch (Signal)//命令处理
 			{
 			case COMMAND_EXIT:
 			{
 				LOG_DEBUG("识别命令：exit");
-				mRun = false;
-				break;
+				return 0;
 			}
 
 			case COMMAND_BREAK:
 			{
 				LOG_DEBUG("识别命令：break");
-				break;
+				goto MainWhile;
 			}
 
 			case COMMAND_OPEN_PLAYER:

@@ -30,7 +30,7 @@ public:
 	inline const std::vector<WorldDirectoriesName> GetSTLWorldList(void) { if (this->world_list.size() == 0) { throw NullVector(); } return this->world_list; }//获取世界列表结构体容器
 	inline const std::vector<UserInfo> GetUserInfoList(void) { if (this->user_list.size() == 0) { throw NullVector(); } return this->user_list; }//获取玩家列表结构体容器
 	inline const int GetPathLoadType() { if (this->load_type == 0) { throw TypeError(); } return this->load_type; }//设置路径加载模式
-	inline const std::string GetLastCommand() { if (this->CommandStr.empty()) { throw NullString(); } return this->CommandStr; }
+	inline const std::string GetLastCommand() { return this->CommandStr; }
 
 	void ProcessingPath(void);//处理输入路径
 	void ProcessingPath(const std::string _input_path);
@@ -52,7 +52,7 @@ protected:
 	inline void SetSTLWorldList(std::vector<WorldDirectoriesName> _world_list) { if (_world_list.size() == 0) { throw NullVector(); } this->world_list = _world_list; }//设置世界列表结构体容器
 	inline void SetUserInfoList(std::vector<UserInfo> _user_list) { if (_user_list.size() == 0) { throw NullVector(); } this->user_list = _user_list; }//设置玩家列表结构体容器
 	inline void SetPathLoadType(int type) { if (type == 0) { throw TypeError(); } this->load_type = type; }//设置路径加载模式
-	inline void SetLastCommand(const std::string _command) { if (_command.empty()) { throw NullString(); } this->CommandStr = _command; }//设置命令参数
+	inline void SetLastCommand(const std::string _command) { this->CommandStr = _command; }//设置命令参数
 
 private:
 	std::string input_path;//输入路径

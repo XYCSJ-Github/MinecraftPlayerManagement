@@ -4,6 +4,7 @@ void CDW::RunCommand()
 {
 	int x = 0;
 	PlayerInWorldInfoList piwil;
+	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
 	std::string out;
 
 	for (int i = 0; i < GetWorldList().world_directory_list.size(); i++)

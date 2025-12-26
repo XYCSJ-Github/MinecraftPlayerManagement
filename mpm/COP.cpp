@@ -5,6 +5,7 @@ void COP::RunCommand()
 {
 	int x = 0;
 	PlayerInWorldInfoList piwil;
+	piwil.playerinworldinfo_list.resize(GetUserInfoList().size());
 	std::string out;
 
 	for (int i = 0; i < GetUserInfoList().size(); i++)
@@ -106,7 +107,7 @@ void COP::RunCommand()
 			}
 		}
 
-		out += "\n进度：" + piwil.playerinworldinfo_list[x].adv_path + "|数据：" + piwil.playerinworldinfo_list[x].pd_path + piwil.playerinworldinfo_list[x].pd_old_path + piwil.playerinworldinfo_list[x].cosarmor_path + "|统计：" + piwil.playerinworldinfo_list[x].st_path + "\n";
+		out += "|进度：" + piwil.playerinworldinfo_list[x].adv_path + "|数据：" + piwil.playerinworldinfo_list[x].pd_path + piwil.playerinworldinfo_list[x].pd_old_path + piwil.playerinworldinfo_list[x].cosarmor_path + "|统计：" + piwil.playerinworldinfo_list[x].st_path + "\n";
 	}
 
 	SetShow(out);

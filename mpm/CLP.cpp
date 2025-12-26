@@ -14,7 +14,7 @@ void CLP::RunCommand()
 		{
 			for (const UserInfo& x : GetUserInfoList())
 			{
-				out += "\n玩家：" + x.user_name + "|UUID：" + x.uuid + "|过期时间：" + x.expiresOn + "\n";
+				out += "\n玩家：" + x.user_name + "|UUID：" + x.uuid + "|过期时间：" + x.expiresOn;
 			}
 		}
 	}
@@ -23,6 +23,6 @@ void CLP::RunCommand()
 		throw e;
 	}
 
-	SetShow(out);
+	SetShow(out + "\n");
 	return;
 }
