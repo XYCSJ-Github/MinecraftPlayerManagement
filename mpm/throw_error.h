@@ -66,3 +66,11 @@ struct CommandError : public std::exception
 		return "命令错误";
 	}
 };
+
+struct TypeError : public std::exception
+{
+	const char* what() const throw()
+	{
+		return "路径加载类型错误";
+	}
+};

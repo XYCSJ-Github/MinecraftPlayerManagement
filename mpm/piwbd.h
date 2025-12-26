@@ -35,5 +35,19 @@ private:
 	std::vector<PlayerInfo_AS> stats_list;//Stats结构体STL
 	std::vector<playerinworldinfo> piw_list;//单个玩家数据结构体STL
 	std::string show;//输出到控制台的字符串
+
+public:
+	piwbd& operator>>(p_mpm& p)//重载>>运算符使两个同父类对象可以传递基础数据
+	{
+		SetInputPath(p.GetInputPath());
+		SetProcessingPath(p.GetProcessingPath());
+		SetWorldList(p.GetWorldList());
+		//SetSTLWorldList(p.GetSTLWorldList());
+		SetUserInfoList(p.GetUserInfoList());
+		SetPathLoadType(p.GetPathLoadType());
+		SetLastCommand(p.GetLastCommand());
+
+		return *this;
+	}
 };
 

@@ -82,14 +82,22 @@ void p_mpm::LoadWorldList(void)
 {
 	WorldDirectoriesNameList wnl = {};
 
-	if (GetPathLoadType() == MOD_CLIENT)
+	try
 	{
-		wnl = GetWorldDirectoriesList(GetProcessingPath(), MOD_CLIENT);
+		if (GetPathLoadType() == MOD_CLIENT)
+		{
+			wnl = GetWorldDirectoriesList(GetProcessingPath(), MOD_CLIENT);
+		}
+		else
+		{
+			wnl = GetWorldDirectoriesList(GetProcessingPath(), MOD_SERVER);
+		}
 	}
-	else
+	catch (const std::exception& e)
 	{
-		wnl = GetWorldDirectoriesList(GetProcessingPath(), MOD_SERVER);
+		throw e;
 	}
+
 
 	if (wnl.world_directory_list.size() == 0 && wnl.world_name_list.size() == 0)
 	{
@@ -363,5 +371,5 @@ int p_mpm::ProcessCommand(const std::string _command)
 		}
 	}
 
-	throw CommandError();
+	return COMMAND_NULL_BACK;
 }
