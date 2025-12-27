@@ -1,4 +1,4 @@
-//COW.cpp 实现COW
+﻿//COW.cpp 实现COW
 #include "COW.h"
 
 void COW::RunCommand()

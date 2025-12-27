@@ -1,4 +1,4 @@
-//CC.h 包含所有CommandClass的头文件
+﻿//CC.h 包含所有CommandClass的头文件
 #pragma once
 
 #include "p_mpm.h"

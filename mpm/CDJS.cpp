@@ -1,4 +1,4 @@
-//实现CDJS类
+﻿//实现CDJS类
 #include "CDJS.h"
 
 void CDJS::RunCommand()

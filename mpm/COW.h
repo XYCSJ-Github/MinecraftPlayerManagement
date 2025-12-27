@@ -1,4 +1,4 @@
-//COW.h COW类声明 是COMMAND_OPEN_WORLD命令的执行类
+﻿//COW.h COW类声明 是COMMAND_OPEN_WORLD命令的执行类
 #pragma once
 #include "piwbd.h"
 

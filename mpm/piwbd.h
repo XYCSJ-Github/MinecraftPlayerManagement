@@ -1,4 +1,4 @@
-//piwbd.h 声明piwbd类继承p_mpm作为执行拓展类，大多数override RunCommand类都继承此类
+﻿//piwbd.h 声明piwbd类继承p_mpm作为执行拓展类，大多数override RunCommand类都继承此类
 #pragma once
 #include "p_mpm.h"
 #include <bitset>

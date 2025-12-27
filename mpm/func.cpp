@@ -1,4 +1,4 @@
-//func.cpp 包含程序主要功能函数的实现
+﻿//func.cpp 包含程序主要功能函数的实现
 
 #pragma warning(disable : 4996)
 #include "func.h"
