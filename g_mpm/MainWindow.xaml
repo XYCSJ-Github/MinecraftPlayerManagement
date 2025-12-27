@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:g_mpm"
         mc:Ignorable="d"
         Title="Minecraft 玩家档案数据管理" Height="580" Width="950">
-    <Grid x:Name="MainWindow1" AllowDrop="True">
+    <Grid>
         
     </Grid>
 </Window>
