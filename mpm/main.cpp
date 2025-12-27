@@ -264,6 +264,22 @@ int main(int argc, char* argv[])
 				LOG_DEBUG("未识别命令");
 				break;
 
+			case COMMAND_REFRESH:
+			{
+				LOG_DEBUG("识别命令：refresh");
+				try
+				{
+					mp.LoadUserList();
+					mp.LoadWorldList();
+					mp.GetSTLWorldList();
+				}
+				catch (const std::exception& e)
+				{
+					LOG_ERROR(e.what());
+				}
+				break;
+			}
+
 			default:
 				break;
 			}

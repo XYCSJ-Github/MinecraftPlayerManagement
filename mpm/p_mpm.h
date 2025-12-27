@@ -16,6 +16,7 @@
 #define COMMAND_DEL_PW 209
 #define COMMAND_DEL_JS 210
 #define COMMAND_NULL_BACK 211
+#define COMMAND_REFRESH 212
 
 class p_mpm
 {

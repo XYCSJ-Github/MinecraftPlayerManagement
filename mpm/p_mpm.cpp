@@ -259,6 +259,12 @@ int p_mpm::ProcessCommand(const std::string _command)
 		return COMMAND_BREAK;
 	}
 
+	l1 = _command.substr(0, 7);
+	if (l1 == "refresh")
+	{
+		return COMMAND_REFRESH;
+	}
+
 	l1 = _command.substr(0, 4);
 	if (l1 == "open")
 	{
