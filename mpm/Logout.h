@@ -1,5 +1,5 @@
-//Logout.h ÈÕÖ¾Êä³ö
-#pragma warning(disable: 4005) //½ûÓÃ¾¯¸æC4005: ºêÖØ¶¨Òå
+//Logout.h æ—¥å¿—è¾“å‡º
+#pragma warning(disable: 4005) //ç¦ç”¨è­¦å‘ŠC4005: å®é‡å®šä¹‰
 #pragma once
 
 #include <chrono>
@@ -8,32 +8,32 @@
 #include <string>
 #include <Windows.h>
 
-#define LOG_MOD_INFO     0//ÏûÏ¢Êä³ö
-#define LOG_MOD_WARNING  1//¾¯¸æÊä³ö
-#define LOG_MOD_ERROR    2//´íÎóÊä³ö
-#define LOG_MOD_DEBUG    3//µ÷ÊÔÊä³ö
+#define LOG_MOD_INFO     0//æ¶ˆæ¯è¾“å‡º
+#define LOG_MOD_WARNING  1//è­¦å‘Šè¾“å‡º
+#define LOG_MOD_ERROR    2//é”™è¯¯è¾“å‡º
+#define LOG_MOD_DEBUG    3//è°ƒè¯•è¾“å‡º
 
-#define LOGOUT(msg, model, out_mod, join_time) LO::Logout(msg, model, out_mod, join_time)//È«×Ô¶¨ÒåÄ£Ê½µ÷ÓÃ
+#define LOGOUT(msg, model, out_mod, join_time) LO::Logout(msg, model, out_mod, join_time)//å…¨è‡ªå®šä¹‰æ¨¡å¼è°ƒç”¨
 
-//×Ô¶¨ÒåÄ£¿éÃû³Æµ÷ÓÃ
+//è‡ªå®šä¹‰æ¨¡å—åç§°è°ƒç”¨
 #define LOG_INFO_M(msg, model)    LO::Logout(msg, model, LOG_MOD_INFO)
 #define LOG_WARNING_M(msg, model) LO::Logout(msg, model, LOG_MOD_WARNING)
 #define LOG_ERROR_M(msg, model)   LO::Logout(msg, model, LOG_MOD_ERROR)
 #define LOG_DEBUG_M(msg, model)   LO::Logout(msg, model, LOG_MOD_DEBUG)
 
-//½öÎÄ×Öµ÷ÓÃ
+//ä»…æ–‡å­—è°ƒç”¨
 #define LOG_INFO(msg)    LO::Logout(msg, model_name, LOG_MOD_INFO)
 #define LOG_WARNING(msg) LO::Logout(msg, model_name, LOG_MOD_WARNING)
 #define LOG_ERROR(msg)   LO::Logout(msg, model_name, LOG_MOD_ERROR)
 #define LOG_DEBUG(msg)   LO::Logout(msg, model_name, LOG_MOD_DEBUG)
 
-#define LOG_DEBUG_OUT   LO::SetDebugLogOut();//ÆôÓÃµ÷ÊÔÊä³ö
+#define LOG_DEBUG_OUT   LO::SetDebugLogOut();//å¯ç”¨è°ƒè¯•è¾“å‡º
 
-#define LOG_CREATE_MODEL_NAME(name) std::string model_name = name//´´½¨Ä£¿éÃû
-#define LOG_CREATE_MODEL_NAME_VAR(name, model_name_var) std::string model_name_var = name//×Ô¶¨Òå±äÁ¿Ä£¿éÃû
+#define LOG_CREATE_MODEL_NAME(name) std::string model_name = name//åˆ›å»ºæ¨¡å—å
+#define LOG_CREATE_MODEL_NAME_VAR(name, model_name_var) std::string model_name_var = name//è‡ªå®šä¹‰å˜é‡æ¨¡å—å
 
 namespace LO {
-	//¶¨ÒåÑÕÉ«Ã¶¾Ù
+	//å®šä¹‰é¢œè‰²æšä¸¾
 	enum ConsoleColor {
 		Black = 0,
 		Blue = 1,
@@ -53,8 +53,8 @@ namespace LO {
 		BrightWhite = 15
 	};
 
-	void Logout(const std::string msg, const std::string model, const int out_mod = 0, const bool join_time = true);//Êä³öÈÕÖ¾
-	std::tm* GetTime();//»ñÈ¡Ê±¼ä
-	long long GetMSTime();//»ñÈ¡ºÁÃë£¨3Î»£©
-	void SetDebugLogOut();//ÆôÓÃµ÷ÊÔ
+	void Logout(const std::string msg, const std::string model, const int out_mod = 0, const bool join_time = true);//è¾“å‡ºæ—¥å¿—
+	std::tm* GetTime();//è·å–æ—¶é—´
+	long long GetMSTime();//è·å–æ¯«ç§’ï¼ˆ3ä½ï¼‰
+	void SetDebugLogOut();//å¯ç”¨è°ƒè¯•
 }

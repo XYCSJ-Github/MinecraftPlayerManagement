@@ -1,4 +1,4 @@
-//ÊµÏÖCDP.h
+//å®žçŽ°CDP.h
 #include "CDP.h"
 
 void CDP::RunCommand()
@@ -9,7 +9,7 @@ void CDP::RunCommand()
 	PlayerInWorldInfoList piwil;
 	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
 
-	std::string out = "´ÓËùÓÐÊ±¼äÉ¾³ý";
+	std::string out = "ä»Žæ‰€æœ‰æ—¶é—´åˆ é™¤";
 
 	try
 	{
@@ -35,7 +35,7 @@ void CDP::RunCommand()
 		throw NoUserInfo();
 	}
 
-	out += piwil.playerinworldinfo_list[x].player.user_name + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid;
+	out += piwil.playerinworldinfo_list[x].player.user_name + "|UUIDï¼š" + piwil.playerinworldinfo_list[x].player.uuid;
 
 	for (int i = 0; i < GetWorldList().world_name_list.size(); i++)
 	{
@@ -103,13 +103,13 @@ void CDP::RunCommand()
 			}
 		}
 
-		out += "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\n";
+		out += "\nå­˜æ¡£ï¼š" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\n";
 		DeletePlayersFiles(piwil, out, x);
 	}
 
 	if (DeletePlayerJSON(GetProcessingPath(), piwil.playerinworldinfo_list[x].player.user_name))
 	{
-		out += "É¾³ýusercacheºÍusernamecache\n";
+		out += "åˆ é™¤usercacheå’Œusernamecache\n";
 	}
 
 	SetShow(out);

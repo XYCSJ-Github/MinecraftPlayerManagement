@@ -1,4 +1,4 @@
-//throw_error.h ÉùÃ÷Òì³£ÀàĞÍ
+//throw_error.h å£°æ˜å¼‚å¸¸ç±»å‹
 #pragma once
 
 #include <iostream>
@@ -7,7 +7,7 @@ struct UnknownPath : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "Â·¾¶²»´æÔÚ£¬Çë¼ì²éºóÖØĞÂÊäÈë£¡";
+		return "è·¯å¾„ä¸å­˜åœ¨ï¼Œè¯·æ£€æŸ¥åé‡æ–°è¾“å…¥ï¼";
 	}
 };
 
@@ -15,7 +15,7 @@ struct NotOpen : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "ÎŞ·¨´ò¿ªÎÄ¼ş£¡";
+		return "æ— æ³•æ‰“å¼€æ–‡ä»¶ï¼";
 	}
 };
 
@@ -23,7 +23,7 @@ struct ReadError : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "¶ÁÈ¡ÓÃÎÄ¼şÊ§°Ü£¡";
+		return "è¯»å–ç”¨æ–‡ä»¶å¤±è´¥ï¼";
 	}
 };
 
@@ -31,7 +31,7 @@ struct NullString : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "¿ÕµÄ×Ö·û´®";
+		return "ç©ºçš„å­—ç¬¦ä¸²";
 	}
 };
 
@@ -39,7 +39,7 @@ struct NullStruct : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "¿ÕµÄ½á¹¹Ìå";
+		return "ç©ºçš„ç»“æ„ä½“";
 	}
 };
 
@@ -47,7 +47,7 @@ struct NullVector : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "¿ÕµÄÈİÆ÷";
+		return "ç©ºçš„å®¹å™¨";
 	}
 };
 
@@ -55,7 +55,7 @@ struct NoUserInfo : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "Ã»ÓĞÍæ¼ÒĞÅÏ¢";
+		return "æ²¡æœ‰ç©å®¶ä¿¡æ¯";
 	}
 };
 
@@ -63,7 +63,7 @@ struct CommandError : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "ÃüÁî´íÎó";
+		return "å‘½ä»¤é”™è¯¯";
 	}
 };
 
@@ -71,6 +71,6 @@ struct TypeError : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "Â·¾¶¼ÓÔØÀàĞÍ´íÎó";
+		return "è·¯å¾„åŠ è½½ç±»å‹é”™è¯¯";
 	}
 };

@@ -1,4 +1,4 @@
-//CDPW.h 声明CDPW类，是COMMAND_DEL_PW命令的执行类
+//CDPW.h 澹版槑CDPW绫伙紝鏄疌OMMAND_DEL_PW鍛戒护鐨勬墽琛岀被
 #pragma once
 #include "piwbd.h"
 

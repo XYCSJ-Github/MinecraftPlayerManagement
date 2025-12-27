@@ -1,4 +1,4 @@
-//COP.cpp ÊµÏÖCOP
+//COP.cpp å®žçŽ°COP
 #include "COP.h"
 
 void COP::RunCommand()
@@ -17,14 +17,14 @@ void COP::RunCommand()
 		}
 	}
 
-	out = "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.user_name + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid;
+	out = "\nçŽ©å®¶ï¼š" + piwil.playerinworldinfo_list[x].player.user_name + "|UUIDï¼š" + piwil.playerinworldinfo_list[x].player.uuid;
 
 	for (int i = 0; i < GetWorldList().world_name_list.size(); i++)
 	{
 		piwil.playerinworldinfo_list[x].world_dir_name.world_name = GetWorldList().world_name_list[i];
 		piwil.playerinworldinfo_list[x].world_dir_name.world_directory = GetWorldList().world_directory_list[i];
 
-		out += "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name;
+		out += "\nå­˜æ¡£ï¼š" + piwil.playerinworldinfo_list[x].world_dir_name.world_name;
 
 		try
 		{
@@ -44,11 +44,11 @@ void COP::RunCommand()
 			{
 				if (!piwil.advancements_list[j].path.empty())
 				{
-					piwil.playerinworldinfo_list[x].adv_path = "ÓÐ";
+					piwil.playerinworldinfo_list[x].adv_path = "æœ‰";
 				}
 				else
 				{
-					piwil.playerinworldinfo_list[x].adv_path = "ÎÞ";
+					piwil.playerinworldinfo_list[x].adv_path = "æ— ";
 				}
 			}
 		}
@@ -59,11 +59,11 @@ void COP::RunCommand()
 			{
 				if (!piwil.playerdata_list[j].dat_path.empty())
 				{
-					piwil.playerinworldinfo_list[x].pd_path = "ÓÐ";
+					piwil.playerinworldinfo_list[x].pd_path = "æœ‰";
 				}
 				else
 				{
-					piwil.playerinworldinfo_list[x].pd_path = "ÎÞ";
+					piwil.playerinworldinfo_list[x].pd_path = "æ— ";
 				}
 			}
 
@@ -71,11 +71,11 @@ void COP::RunCommand()
 			{
 				if (!piwil.playerdata_list[j].dat_old_path.empty())
 				{
-					piwil.playerinworldinfo_list[x].pd_old_path = "ÓÐ";
+					piwil.playerinworldinfo_list[x].pd_old_path = "æœ‰";
 				}
 				else
 				{
-					piwil.playerinworldinfo_list[x].pd_old_path = "ÎÞ";
+					piwil.playerinworldinfo_list[x].pd_old_path = "æ— ";
 				}
 			}
 
@@ -83,11 +83,11 @@ void COP::RunCommand()
 			{
 				if (!piwil.playerdata_list[j].cosarmor_path.empty())
 				{
-					piwil.playerinworldinfo_list[x].cosarmor_path = "ÓÐ";
+					piwil.playerinworldinfo_list[x].cosarmor_path = "æœ‰";
 				}
 				else
 				{
-					piwil.playerinworldinfo_list[x].cosarmor_path = "ÎÞ";
+					piwil.playerinworldinfo_list[x].cosarmor_path = "æ— ";
 				}
 			}
 		}
@@ -98,16 +98,16 @@ void COP::RunCommand()
 			{
 				if (!piwil.stats_list[j].path.empty())
 				{
-					piwil.playerinworldinfo_list[x].st_path = "ÓÐ";
+					piwil.playerinworldinfo_list[x].st_path = "æœ‰";
 				}
 				else
 				{
-					piwil.playerinworldinfo_list[x].st_path = "ÎÞ";
+					piwil.playerinworldinfo_list[x].st_path = "æ— ";
 				}
 			}
 		}
 
-		out += "|½ø¶È£º" + piwil.playerinworldinfo_list[x].adv_path + "|Êý¾Ý£º" + piwil.playerinworldinfo_list[x].pd_path + piwil.playerinworldinfo_list[x].pd_old_path + piwil.playerinworldinfo_list[x].cosarmor_path + "|Í³¼Æ£º" + piwil.playerinworldinfo_list[x].st_path + "\n";
+		out += "|è¿›åº¦ï¼š" + piwil.playerinworldinfo_list[x].adv_path + "|æ•°æ®ï¼š" + piwil.playerinworldinfo_list[x].pd_path + piwil.playerinworldinfo_list[x].pd_old_path + piwil.playerinworldinfo_list[x].cosarmor_path + "|ç»Ÿè®¡ï¼š" + piwil.playerinworldinfo_list[x].st_path + "\n";
 	}
 
 	SetShow(out);

@@ -1,30 +1,30 @@
-//func.cpp °üº¬³ÌĞòÖ÷Òª¹¦ÄÜº¯ÊıµÄÊµÏÖ
+//func.cpp åŒ…å«ç¨‹åºä¸»è¦åŠŸèƒ½å‡½æ•°çš„å®ç°
 
 #pragma warning(disable : 4996)
 #include "func.h"
 
 WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mod)
 {
-	LOG_CREATE_MODEL_NAME("GetWorldDirectoriesList");//ÉèÖÃlogoutÄ£¿éÃû³Æ
+	LOG_CREATE_MODEL_NAME("GetWorldDirectoriesList");//è®¾ç½®logoutæ¨¡å—åç§°
 
 	WorldDirectoriesNameList world_directories_name_list;
 	std::string base_path_copy = base_path;
 
 	if (mod == MOD_CLIENT)
-		base_path_copy += "\\saves\\";//Èç¹û´«²ÎÂ·¾¶Îª¿Í»§¶ËÎÄ¼ş¼ĞÔòÔÚÂ·¾¶ºó¼Ó\saves\È¥¼ì²éÊÀ½ç
+		base_path_copy += "\\saves\\";//å¦‚æœä¼ å‚è·¯å¾„ä¸ºå®¢æˆ·ç«¯æ–‡ä»¶å¤¹åˆ™åœ¨è·¯å¾„ååŠ \saves\å»æ£€æŸ¥ä¸–ç•Œ
 
-	LOG_DEBUG("×îÖÕÂ·¾¶Îª£º" + base_path_copy);
-	LOG_DEBUG("Â·¾¶³¤¶È£º" + std::to_string(base_path_copy.length()));
+	LOG_DEBUG("æœ€ç»ˆè·¯å¾„ä¸ºï¼š" + base_path_copy);
+	LOG_DEBUG("è·¯å¾„é•¿åº¦ï¼š" + std::to_string(base_path_copy.length()));
 
 	std::string world_name;
 	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(base_path_copy))
 	{
-		if (fs::is_directory(d.path()) == false)//Èç¹ûÂ·¾¶²»Îª¿Õ£¬½«Æä×°ÈëWorldDirectoriesNameList
+		if (fs::is_directory(d.path()) == false)//å¦‚æœè·¯å¾„ä¸ä¸ºç©ºï¼Œå°†å…¶è£…å…¥WorldDirectoriesNameList
 			continue;
-		LOG_DEBUG("·¢ÏÖÊÀ½çÄ¿Â¼£º" + d.path().string());
+		LOG_DEBUG("å‘ç°ä¸–ç•Œç›®å½•ï¼š" + d.path().string());
 		world_directories_name_list.world_directory_list.push_back(d.path().string());
 		world_name = d.path().string();
-		if (mod == MOD_SERVER)//Èç¹ûÊÇ·şÎñÆ÷Ä¿Â¼£¬ÇĞ³öÄ¿Â¼Ãû»á¶àÇĞÒ»¸ö×Ö·û¡£ËùÒÔ×÷³öÅĞ¶Ï
+		if (mod == MOD_SERVER)//å¦‚æœæ˜¯æœåŠ¡å™¨ç›®å½•ï¼Œåˆ‡å‡ºç›®å½•åä¼šå¤šåˆ‡ä¸€ä¸ªå­—ç¬¦ã€‚æ‰€ä»¥ä½œå‡ºåˆ¤æ–­
 		{
 			world_name.erase(0, base_path_copy.length() + 1);
 		}
@@ -32,11 +32,11 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 		{
 			world_name.erase(0, base_path_copy.length());
 		}
-		LOG_DEBUG("ÊÀ½çÃû³Æ£º" + world_name);
-		world_directories_name_list.world_name_list.push_back(world_name);//½«ÊÀ½çÃû³Æ×°ÈëWorldDirectoriesNameList
+		LOG_DEBUG("ä¸–ç•Œåç§°ï¼š" + world_name);
+		world_directories_name_list.world_name_list.push_back(world_name);//å°†ä¸–ç•Œåç§°è£…å…¥WorldDirectoriesNameList
 	}
 
-	return world_directories_name_list;//·µ»ØWorldDirectoriesNameListÈİÆ÷½á¹¹Ìå
+	return world_directories_name_list;//è¿”å›WorldDirectoriesNameListå®¹å™¨ç»“æ„ä½“
 }
 
 std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_path, int mod)
@@ -48,21 +48,21 @@ std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_pat
 	std::string base_path_copy = base_path;
 
 	if (mod == MOD_CLIENT)
-		base_path_copy += "\\saves\\";//Èç¹û´«²ÎÂ·¾¶Îª¿Í»§¶ËÎÄ¼ş¼ĞÔòÔÚÂ·¾¶ºó¼Ó\saves\È¥¼ì²éÊÀ½ç
+		base_path_copy += "\\saves\\";//å¦‚æœä¼ å‚è·¯å¾„ä¸ºå®¢æˆ·ç«¯æ–‡ä»¶å¤¹åˆ™åœ¨è·¯å¾„ååŠ \saves\å»æ£€æŸ¥ä¸–ç•Œ
 
-	LOG_DEBUG("×îÖÕÂ·¾¶Îª£º" + base_path_copy);
-	LOG_DEBUG("Â·¾¶³¤¶È£º" + std::to_string(base_path_copy.length()));
+	LOG_DEBUG("æœ€ç»ˆè·¯å¾„ä¸ºï¼š" + base_path_copy);
+	LOG_DEBUG("è·¯å¾„é•¿åº¦ï¼š" + std::to_string(base_path_copy.length()));
 
 	std::string world_name;
 	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(base_path_copy))
 	{
-		if (fs::is_directory(d.path()) == false)//Èç¹ûÂ·¾¶²»Îª¿Õ£¬½«Æä×°ÈëWorldDirectoriesNameList
+		if (fs::is_directory(d.path()) == false)//å¦‚æœè·¯å¾„ä¸ä¸ºç©ºï¼Œå°†å…¶è£…å…¥WorldDirectoriesNameList
 			continue;
 
-		LOG_DEBUG("·¢ÏÖÊÀ½çÄ¿Â¼£º" + d.path().string());
+		LOG_DEBUG("å‘ç°ä¸–ç•Œç›®å½•ï¼š" + d.path().string());
 		wdn.world_directory = d.path().string();
 		world_name = d.path().string();
-		if (mod == MOD_SERVER)//Èç¹ûÊÇ·şÎñÆ÷Ä¿Â¼£¬ÇĞ³öÄ¿Â¼Ãû»á¶àÇĞÒ»¸ö×Ö·û¡£ËùÒÔ×÷³öÅĞ¶Ï
+		if (mod == MOD_SERVER)//å¦‚æœæ˜¯æœåŠ¡å™¨ç›®å½•ï¼Œåˆ‡å‡ºç›®å½•åä¼šå¤šåˆ‡ä¸€ä¸ªå­—ç¬¦ã€‚æ‰€ä»¥ä½œå‡ºåˆ¤æ–­
 		{
 			world_name.erase(0, base_path_copy.length() + 1);
 		}
@@ -70,7 +70,7 @@ std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_pat
 		{
 			world_name.erase(0, base_path_copy.length());
 		}
-		LOG_DEBUG("ÊÀ½çÃû³Æ£º" + world_name);
+		LOG_DEBUG("ä¸–ç•Œåç§°ï¼š" + world_name);
 		wdn.world_name = world_name;
 		wdnl.push_back(wdn);
 	}
@@ -84,16 +84,16 @@ std::string ProcessingInputPath(const std::string input_path)
 
 	std::string input_path_copy = input_path;
 
-	if (input_path_copy.find('\"') != std::string::npos)//È¥³ıÂ·¾¶Ë«À¨ºÅ
+	if (input_path_copy.find('\"') != std::string::npos)//å»é™¤è·¯å¾„åŒæ‹¬å·
 	{
 		input_path_copy.erase(0, 1);
 		input_path_copy.erase(input_path_copy.length() - 1, 1);
 	}
-	LOG_DEBUG("ÊäÈëµÄÂ·¾¶Îª£º" + input_path_copy);
+	LOG_DEBUG("è¾“å…¥çš„è·¯å¾„ä¸ºï¼š" + input_path_copy);
 
 	if (!std::filesystem::exists(input_path_copy))
 	{
-		LOG_DEBUG("Â·¾¶²»´æÔÚ£¬Çë¼ì²éºóÖØĞÂÊäÈë£¡");
+		LOG_DEBUG("è·¯å¾„ä¸å­˜åœ¨ï¼Œè¯·æ£€æŸ¥åé‡æ–°è¾“å…¥ï¼");
 		throw UnknownPath();
 	}
 
@@ -107,31 +107,31 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path)
 	std::string base_path_copy = base_path;
 	std::vector<UserInfo> userslist;
 
-	base_path_copy += "\\usercache.json";//ÔÚ´¦ÀíºóµÄÔ­Ê¼Â·¾¶ÉÏ¼ÓÈëÎÄ¼şÂ·¾¶
+	base_path_copy += "\\usercache.json";//åœ¨å¤„ç†åçš„åŸå§‹è·¯å¾„ä¸ŠåŠ å…¥æ–‡ä»¶è·¯å¾„
 
-	LOG_DEBUG("×îÖÕÂ·¾¶Îª£º" + base_path_copy);
-	LOG_DEBUG("Â·¾¶³¤¶È£º" + std::to_string(base_path_copy.length()));
+	LOG_DEBUG("æœ€ç»ˆè·¯å¾„ä¸ºï¼š" + base_path_copy);
+	LOG_DEBUG("è·¯å¾„é•¿åº¦ï¼š" + std::to_string(base_path_copy.length()));
 
 	std::ifstream user_file(base_path_copy);
 	json user_info;
-	if (user_file.is_open())//½«¶Á³öÊı¾İ´æÈë±äÁ¿
+	if (user_file.is_open())//å°†è¯»å‡ºæ•°æ®å­˜å…¥å˜é‡
 	{
 		user_file >> user_info;
 		user_file.close();
 	}
 	else
 	{
-		LOG_DEBUG("ÎŞ·¨´ò¿ªÓÃ»§ĞÅÏ¢ÎÄ¼ş£¡");
+		LOG_DEBUG("æ— æ³•æ‰“å¼€ç”¨æˆ·ä¿¡æ¯æ–‡ä»¶ï¼");
 		throw NotOpen();
 	}
 
-	if (user_info.is_array())//¼ì²éJSON¸ñÊ½(Êı×é|¶ÔÏó)
+	if (user_info.is_array())//æ£€æŸ¥JSONæ ¼å¼(æ•°ç»„|å¯¹è±¡)
 	{
-		LOG_DEBUG("JSON¸ñÊ½ÎªÊı×é£¬°üº¬ÔªËØ" + std::to_string(user_info.size()));
+		LOG_DEBUG("JSONæ ¼å¼ä¸ºæ•°ç»„ï¼ŒåŒ…å«å…ƒç´ " + std::to_string(user_info.size()));
 
 		try
 		{
-			for (size_t i = 0; i < user_info.size(); i++)//±éÀú±äÁ¿½«Êı¾İ´æÈë½á¹¹Ìå
+			for (size_t i = 0; i < user_info.size(); i++)//éå†å˜é‡å°†æ•°æ®å­˜å…¥ç»“æ„ä½“
 			{
 				json tmp_data = user_info[i];
 
@@ -146,7 +146,7 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path)
 
 				userslist.push_back(users);
 
-				LOG_DEBUG("ÓÃ»§ " + std::to_string(i) + ": ");
+				LOG_DEBUG("ç”¨æˆ· " + std::to_string(i) + ": ");
 				LOG_DEBUG("  name: " + name);
 				LOG_DEBUG("  uuid: " + uuid);
 				LOG_DEBUG("  expiresOn: " + expiresOn);
@@ -167,28 +167,28 @@ std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_pat
 	LOG_CREATE_MODEL_NAME("GetWorldPlayerAdvancements");
 	std::vector<PlayerInfo_AS> pa_list;
 
-	std::string advancements_path = base_path + "\\advancements";//¼Ó¹¤ÊÀ½ç´æµµÂ·¾¶£¬ÔÙ½øÒ»²½£¬¶ÁÈ¡ËùÓĞ½ø¶ÈÎÄ¼ş
-	LOG_DEBUG("×îÖÕÂ·¾¶Îª£º" + advancements_path);
-	LOG_DEBUG("Â·¾¶³¤¶È£º" + std::to_string(advancements_path.length()));
+	std::string advancements_path = base_path + "\\advancements";//åŠ å·¥ä¸–ç•Œå­˜æ¡£è·¯å¾„ï¼Œå†è¿›ä¸€æ­¥ï¼Œè¯»å–æ‰€æœ‰è¿›åº¦æ–‡ä»¶
+	LOG_DEBUG("æœ€ç»ˆè·¯å¾„ä¸ºï¼š" + advancements_path);
+	LOG_DEBUG("è·¯å¾„é•¿åº¦ï¼š" + std::to_string(advancements_path.length()));
 
 	if (!std::filesystem::exists(advancements_path))
 	{
-		LOG_DEBUG("Â·¾¶²»´æÔÚ£¬Çë¼ì²éºóÖØĞÂÊäÈë£¡");
+		LOG_DEBUG("è·¯å¾„ä¸å­˜åœ¨ï¼Œè¯·æ£€æŸ¥åé‡æ–°è¾“å…¥ï¼");
 		throw UnknownPath();
 	}
 
-	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(advancements_path))//±éÀúÈİÆ÷£¬Ã¿´ÎĞÂ½¨Ò»¸ö½á¹¹Ìå£¬½«ÎÄ¼şÍêÕûÂ·¾¶ºÍ²ÃÇĞ³öµÄuuid´æÈë½á¹¹Ìå£¬ÔÙ½«½á¹¹Ìå´æÈëÈİÆ÷
+	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(advancements_path))//éå†å®¹å™¨ï¼Œæ¯æ¬¡æ–°å»ºä¸€ä¸ªç»“æ„ä½“ï¼Œå°†æ–‡ä»¶å®Œæ•´è·¯å¾„å’Œè£åˆ‡å‡ºçš„uuidå­˜å…¥ç»“æ„ä½“ï¼Œå†å°†ç»“æ„ä½“å­˜å…¥å®¹å™¨
 	{
 		PlayerInfo_AS advancements_list;
 		advancements_list.path = d.path().string();
 		std::string uuid = d.path().string();
 		advancements_list.uuid = uuid.substr(advancements_path.length() + 1);
-		advancements_list.uuid.erase(advancements_list.uuid.length() - 5, 5); // È¥µôÎÄ¼şºó×ºÃû ".json"
-		LOG_DEBUG("·¢ÏÖÍæ¼Ò½ø¶ÈÎÄ¼ş£º\nÂ·¾¶£º" + advancements_list.path + "\nuuid£º" + advancements_list.uuid);
+		advancements_list.uuid.erase(advancements_list.uuid.length() - 5, 5); // å»æ‰æ–‡ä»¶åç¼€å ".json"
+		LOG_DEBUG("å‘ç°ç©å®¶è¿›åº¦æ–‡ä»¶ï¼š\nè·¯å¾„ï¼š" + advancements_list.path + "\nuuidï¼š" + advancements_list.uuid);
 		pa_list.push_back(advancements_list);
 	}
 
-	return pa_list;//·µ»Ø°üº¬Êı¾İ½á¹¹ÌåµÄÈİÆ÷
+	return pa_list;//è¿”å›åŒ…å«æ•°æ®ç»“æ„ä½“çš„å®¹å™¨
 }
 
 std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
@@ -197,18 +197,18 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 	std::vector<PlayerInfo_Data> pd_list;
 
 	std::string playerdata_path = base_path + "\\playerdata";
-	LOG_DEBUG("×îÖÕÂ·¾¶Îª£º" + playerdata_path);
-	LOG_DEBUG("Â·¾¶³¤¶È£º" + std::to_string(playerdata_path.length()));
+	LOG_DEBUG("æœ€ç»ˆè·¯å¾„ä¸ºï¼š" + playerdata_path);
+	LOG_DEBUG("è·¯å¾„é•¿åº¦ï¼š" + std::to_string(playerdata_path.length()));
 
 	if (!std::filesystem::exists(playerdata_path))
 	{
-		LOG_DEBUG("Â·¾¶²»´æÔÚ£¬Çë¼ì²éºóÖØĞÂÊäÈë£¡");
+		LOG_DEBUG("è·¯å¾„ä¸å­˜åœ¨ï¼Œè¯·æ£€æŸ¥åé‡æ–°è¾“å…¥ï¼");
 		throw UnknownPath();
 	}
 
 	PlayerInfo_Data playerdata_list;
 
-	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(playerdata_path))//±éÀú±äÁ¿²¢ÅĞ¶Ï½á¹¹ÌåÊÇ·ñÌîÂú£¬´æ´¢½øÈİÆ÷²¢Çå¿Õ½øĞĞÏÂÒ»¸ö
+	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(playerdata_path))//éå†å˜é‡å¹¶åˆ¤æ–­ç»“æ„ä½“æ˜¯å¦å¡«æ»¡ï¼Œå­˜å‚¨è¿›å®¹å™¨å¹¶æ¸…ç©ºè¿›è¡Œä¸‹ä¸€ä¸ª
 	{
 		std::string datorold = d.path().string();
 		datorold.erase(0, d.path().string().length() - 4);
@@ -218,7 +218,7 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 			std::string uuid = d.path().string();
 			playerdata_list.uuid = uuid.substr(playerdata_path.length() + 1);
 			playerdata_list.uuid.erase(playerdata_list.uuid.length() - 4, 4);
-			LOG_DEBUG("·¢ÏÖÍæ¼ÒÊı¾İÎÄ¼ş£º\nÂ·¾¶£º" + playerdata_list.dat_path + "\nuuid£º" + playerdata_list.uuid);
+			LOG_DEBUG("å‘ç°ç©å®¶æ•°æ®æ–‡ä»¶ï¼š\nè·¯å¾„ï¼š" + playerdata_list.dat_path + "\nuuidï¼š" + playerdata_list.uuid);
 		}
 		if (datorold.find("_old") != std::string::npos)
 		{
@@ -226,7 +226,7 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 			std::string uuid = d.path().string();
 			playerdata_list.old_uuid = uuid.substr(playerdata_path.length() + 1);
 			playerdata_list.old_uuid.erase(playerdata_list.old_uuid.length() - 8, 8);
-			LOG_DEBUG("·¢ÏÖÍæ¼ÒÊı¾İÎÄ¼ş£º\nÂ·¾¶£º" + playerdata_list.dat_old_path + "\nuuid£º" + playerdata_list.old_uuid);
+			LOG_DEBUG("å‘ç°ç©å®¶æ•°æ®æ–‡ä»¶ï¼š\nè·¯å¾„ï¼š" + playerdata_list.dat_old_path + "\nuuidï¼š" + playerdata_list.old_uuid);
 		}
 		if (d.path().string().find(".cosa") != std::string::npos)
 		{
@@ -234,7 +234,7 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 			std::string uuid = d.path().string();
 			playerdata_list.cosarmor_uuid = uuid.substr(playerdata_path.length() + 1);
 			playerdata_list.cosarmor_uuid.erase(playerdata_list.cosarmor_uuid.length() - 9, 9);
-			LOG_DEBUG("·¢ÏÖÍæ¼ÒÊı¾İÎÄ¼ş£º\nÂ·¾¶£º" + playerdata_list.cosarmor_path + "\nuuid£º" + playerdata_list.cosarmor_uuid);
+			LOG_DEBUG("å‘ç°ç©å®¶æ•°æ®æ–‡ä»¶ï¼š\nè·¯å¾„ï¼š" + playerdata_list.cosarmor_path + "\nuuidï¼š" + playerdata_list.cosarmor_uuid);
 		}
 		if (!playerdata_list.dat_path.empty() && !playerdata_list.dat_old_path.empty() && !playerdata_list.cosarmor_path.empty())
 		{
@@ -260,12 +260,12 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 	std::vector<PlayerInfo_AS> ps_list;
 
 	std::string stats_path = base_path + "\\stats";
-	LOG_DEBUG("×îÖÕÂ·¾¶Îª£º" + stats_path);
-	LOG_DEBUG("Â·¾¶³¤¶È£º" + std::to_string(stats_path.length()));
+	LOG_DEBUG("æœ€ç»ˆè·¯å¾„ä¸ºï¼š" + stats_path);
+	LOG_DEBUG("è·¯å¾„é•¿åº¦ï¼š" + std::to_string(stats_path.length()));
 
 	if (!std::filesystem::exists(stats_path))
 	{
-		LOG_DEBUG("Â·¾¶²»´æÔÚ£¬Çë¼ì²éºóÖØĞÂÊäÈë£¡");
+		LOG_DEBUG("è·¯å¾„ä¸å­˜åœ¨ï¼Œè¯·æ£€æŸ¥åé‡æ–°è¾“å…¥ï¼");
 		throw UnknownPath();
 	}
 
@@ -275,8 +275,8 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 		stats_list.path = d.path().string();
 		std::string uuid = d.path().string();
 		stats_list.uuid = uuid.substr(stats_path.length() + 1);
-		stats_list.uuid.erase(stats_list.uuid.length() - 5, 5); // È¥µôÎÄ¼şºó×ºÃû ".json"
-		LOG_DEBUG("·¢ÏÖÍæ¼ÒÍ³¼ÆÎÄ¼ş£º\nÂ·¾¶£º" + stats_list.path + "\nuuid£º" + stats_list.uuid);
+		stats_list.uuid.erase(stats_list.uuid.length() - 5, 5); // å»æ‰æ–‡ä»¶åç¼€å ".json"
+		LOG_DEBUG("å‘ç°ç©å®¶ç»Ÿè®¡æ–‡ä»¶ï¼š\nè·¯å¾„ï¼š" + stats_list.path + "\nuuidï¼š" + stats_list.uuid);
 		ps_list.push_back(stats_list);
 	}
 
@@ -285,19 +285,19 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 
 std::string getLastComponent(const std::string& path)
 {
-	// ´¦Àí¿ÕÂ·¾¶
+	// å¤„ç†ç©ºè·¯å¾„
 	if (path.empty()) return "";
 
-	// ÒÆ³ıÄ©Î²µÄĞ±¸Ü
+	// ç§»é™¤æœ«å°¾çš„æ–œæ 
 	std::string clean_path = path;
 	if (!clean_path.empty() && (clean_path.back() == '/' || clean_path.back() == '\\')) {
 		clean_path.pop_back();
 	}
 
-	// ²éÕÒ×îºóÒ»¸ö·Ö¸ô·û
+	// æŸ¥æ‰¾æœ€åä¸€ä¸ªåˆ†éš”ç¬¦
 	size_t pos = clean_path.find_last_of("/\\");
 	if (pos == std::string::npos) {
-		return clean_path;  // Ã»ÓĞ·Ö¸ô·û£¬Õû¸ö×Ö·û´®¾ÍÊÇ×îºóÒ»²ã
+		return clean_path;  // æ²¡æœ‰åˆ†éš”ç¬¦ï¼Œæ•´ä¸ªå­—ç¬¦ä¸²å°±æ˜¯æœ€åä¸€å±‚
 	}
 
 	return clean_path.substr(pos + 1);
@@ -311,14 +311,14 @@ bool folderExists(const fs::path& base_path, const std::string& folder_name)
 
 bool MoveToRecycleBinWithPS(const std::string& filepath)
 {
-	// PowerShell ÃüÁî
+	// PowerShell å‘½ä»¤
 	std::string psCommand =
 		"powershell -NonInteractive -Command \""
 		"$ErrorActionPreference = 'SilentlyContinue';"
 		"Add-Type -AssemblyName Microsoft.VisualBasic;"
 		"[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile('" + filepath + "','OnlyErrorDialogs','SendToRecycleBin');\"";
 
-	// Èç¹ûÂ·¾¶°üº¬ÌØÊâ×Ö·û£¬ĞèÒª½øÒ»²½´¦Àí
+	// å¦‚æœè·¯å¾„åŒ…å«ç‰¹æ®Šå­—ç¬¦ï¼Œéœ€è¦è¿›ä¸€æ­¥å¤„ç†
 	std::string finalCommand = "cmd /c \"" + psCommand + " >nul 2>&1\"";
 
 	return ExecuteCommand(finalCommand.c_str());
@@ -326,7 +326,7 @@ bool MoveToRecycleBinWithPS(const std::string& filepath)
 
 bool ExecuteCommand(const std::string& cmd)
 {
-	LOG_DEBUG_M("Ö´ĞĞshellÃüÁî£º" + cmd + "\n", "DeleteFile");
+	LOG_DEBUG_M("æ‰§è¡Œshellå‘½ä»¤ï¼š" + cmd + "\n", "DeleteFile");
 	int result = std::system(cmd.c_str());
 	return (result == 0);
 }
@@ -363,11 +363,11 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 
 	try
 	{
-		// 1. ¶ÁÈ¡JSONÎÄ¼ş
+		// 1. è¯»å–JSONæ–‡ä»¶
 		std::ifstream in_file(JSON_path);
 		if (!in_file.is_open())
 		{
-			LOG_ERROR("ÎŞ·¨´ò¿ªÎÄ¼ş: " + JSON_path);
+			LOG_ERROR("æ— æ³•æ‰“å¼€æ–‡ä»¶: " + JSON_path);
 			return false;
 		}
 
@@ -376,11 +376,11 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 		in_file.close();
 
 		if (!j.is_array()) {
-			LOG_ERROR("JSON¸ñÊ½´íÎó£ºÓ¦¸ÃÊÇÒ»¸öÊı×é");
+			LOG_ERROR("JSONæ ¼å¼é”™è¯¯ï¼šåº”è¯¥æ˜¯ä¸€ä¸ªæ•°ç»„");
 			return false;
 		}
 
-		// 2. ²éÕÒ²¢É¾³ıÖ¸¶¨Íæ¼Ò
+		// 2. æŸ¥æ‰¾å¹¶åˆ é™¤æŒ‡å®šç©å®¶
 		bool found = false;
 		for (auto it = j.begin(); it != j.end(); )
 		{
@@ -389,14 +389,14 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 			{
 				it = j.erase(it);
 				found = true;
-				LOG_DEBUG("ÒÑÉ¾³ıÍæ¼Ò: " + playerName);
+				LOG_DEBUG("å·²åˆ é™¤ç©å®¶: " + playerName);
 			}
 			else {
 				++it;
 			}
 		}
 
-		// 3. Ğ´»ØÎÄ¼ş
+		// 3. å†™å›æ–‡ä»¶
 		if (found) {
 			std::ofstream out_file(JSON_path);
 			out_file << j.dump();
@@ -404,7 +404,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 			return true;
 		}
 		else {
-			LOG_DEBUG("Î´ÕÒµ½Íæ¼Ò:" + playerName);
+			LOG_DEBUG("æœªæ‰¾åˆ°ç©å®¶:" + playerName);
 			return false;
 		}
 
@@ -426,12 +426,12 @@ bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 	LOG_CREATE_MODEL_NAME("DeletePlayerJSON");
 
 	try {
-		LOG_DEBUG("ÕıÔÚÉ¾³ıÍæ¼Ò: " + playerName);
+		LOG_DEBUG("æ­£åœ¨åˆ é™¤ç©å®¶: " + playerName);
 
-		// 1. ¶ÁÈ¡JSONÎÄ¼ş
+		// 1. è¯»å–JSONæ–‡ä»¶
 		std::ifstream in_file(JSON_path);
 		if (!in_file.is_open()) {
-			LOG_ERROR("ÎŞ·¨´ò¿ªÎÄ¼ş: " + JSON_path);
+			LOG_ERROR("æ— æ³•æ‰“å¼€æ–‡ä»¶: " + JSON_path);
 			return false;
 		}
 
@@ -439,38 +439,38 @@ bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 		in_file >> j;
 		in_file.close();
 
-		// 2. ¼ì²éÊÇ·ñÎª¶ÔÏó£¨¼üÖµ¶Ô£©
+		// 2. æ£€æŸ¥æ˜¯å¦ä¸ºå¯¹è±¡ï¼ˆé”®å€¼å¯¹ï¼‰
 		if (!j.is_object()) {
-			LOG_ERROR("JSON¸ñÊ½´íÎó£ºÓ¦¸ÃÊÇ¶ÔÏóÀàĞÍ");
+			LOG_ERROR("JSONæ ¼å¼é”™è¯¯ï¼šåº”è¯¥æ˜¯å¯¹è±¡ç±»å‹");
 			return false;
 		}
 
-		LOG_DEBUG("Ô­Ê¼¼üÖµ¶ÔÊıÁ¿: " + std::to_string(j.size()));
+		LOG_DEBUG("åŸå§‹é”®å€¼å¯¹æ•°é‡: " + std::to_string(j.size()));
 
-		// 3. ²éÕÒ²¢É¾³ı£¨·´Ïò²éÕÒ£ºÍ¨¹ıÖµÕÒ¼ü£©
+		// 3. æŸ¥æ‰¾å¹¶åˆ é™¤ï¼ˆåå‘æŸ¥æ‰¾ï¼šé€šè¿‡å€¼æ‰¾é”®ï¼‰
 		bool found = false;
 		std::string foundUUID;
 
 		for (auto it = j.begin(); it != j.end(); ) {
-			// ¼ì²éÖµÊÇ·ñÎª×Ö·û´®ÇÒµÈÓÚÄ¿±êÍæ¼ÒÃû
+			// æ£€æŸ¥å€¼æ˜¯å¦ä¸ºå­—ç¬¦ä¸²ä¸”ç­‰äºç›®æ ‡ç©å®¶å
 			if (it.value().is_string() && it.value().get<std::string>() == playerName) {
 				foundUUID = it.key();
 				it = j.erase(it);
 				found = true;
-				LOG_DEBUG("É¾³ıÍæ¼Ò£º" + playerName + "|UUID£º" + foundUUID + "\n");
+				LOG_DEBUG("åˆ é™¤ç©å®¶ï¼š" + playerName + "|UUIDï¼š" + foundUUID + "\n");
 			}
 			else {
 				++it;
 			}
 		}
 
-		// 4. Ğ´»ØÎÄ¼ş
+		// 4. å†™å›æ–‡ä»¶
 		if (found) {
 			std::ofstream out_file(JSON_path);
 			out_file << j.dump(4);
 			out_file.close();
 
-			LOG_DEBUG("É¾³ı³É¹¦£¡Ê£Óà¼üÖµ¶Ô£º" + std::to_string(j.size()));
+			LOG_DEBUG("åˆ é™¤æˆåŠŸï¼å‰©ä½™é”®å€¼å¯¹ï¼š" + std::to_string(j.size()));
 			return true;
 		}
 

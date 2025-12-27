@@ -14,7 +14,7 @@ void CLP::RunCommand()
 		{
 			for (const UserInfo& x : GetUserInfoList())
 			{
-				out += "\nÍæ¼Ò£º" + x.user_name + "|UUID£º" + x.uuid + "|¹ýÆÚÊ±¼ä£º" + x.expiresOn;
+				out += "\nçŽ©å®¶ï¼š" + x.user_name + "|UUIDï¼š" + x.uuid + "|è¿‡æœŸæ—¶é—´ï¼š" + x.expiresOn;
 			}
 		}
 	}

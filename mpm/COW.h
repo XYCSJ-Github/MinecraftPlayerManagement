@@ -1,4 +1,4 @@
-//COW.h COWÀàÉùÃ÷ ÊÇCOMMAND_OPEN_WORLDÃüÁîµÄÖ´ÐÐÀà
+//COW.h COWç±»å£°æ˜Ž æ˜¯COMMAND_OPEN_WORLDå‘½ä»¤çš„æ‰§è¡Œç±»
 #pragma once
 #include "piwbd.h"
 

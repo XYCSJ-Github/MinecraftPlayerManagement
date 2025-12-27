@@ -1,22 +1,22 @@
-//main.cpp ÈË¿ÚµãÎÄ¼ş
+//main.cpp äººå£ç‚¹æ–‡ä»¶
 #include "CC.h"
 #include "Logout.h"
 
-p_mpm mp;//ËùÓĞCommandClassµÄ¸¸Àà
+p_mpm mp;//æ‰€æœ‰CommandClassçš„çˆ¶ç±»
 
 int main(int argc, char* argv[])
 {
-#if _DEBUG//Èç¹ûÉú³ÉÄ£Ê½ÎªdebugÔò¿ªÆôlog_debugÊä³ö
+#if _DEBUG//å¦‚æœç”Ÿæˆæ¨¡å¼ä¸ºdebugåˆ™å¼€å¯log_debugè¾“å‡º
 	LOG_DEBUG_OUT
 #endif
-		;//±£³ÖÕı³£Ëõ½ø
-	LOG_CREATE_MODEL_NAME("Main");//ÉèÖÃlogoutÄ£¿éÃû³Æ
+		;//ä¿æŒæ­£å¸¸ç¼©è¿›
+	LOG_CREATE_MODEL_NAME("Main");//è®¾ç½®logoutæ¨¡å—åç§°
 
 	bool StartWithArgv = false;
 
-	if (argc > 1)//Èç¹ûÓĞ²ÎÆô¶¯£¬½«StartwithArgvÉèÎªtrue£¬²¢ÌáÈ¡ÊäÈë²ÎÊı
+	if (argc > 1)//å¦‚æœæœ‰å‚å¯åŠ¨ï¼Œå°†StartwithArgvè®¾ä¸ºtrueï¼Œå¹¶æå–è¾“å…¥å‚æ•°
 	{
-		LOG_DEBUG("Ê¹ÓÃÃüÁîĞĞ²ÎÊı×÷Îª³õÊ¼Â·¾¶ÊäÈë");
+		LOG_DEBUG("ä½¿ç”¨å‘½ä»¤è¡Œå‚æ•°ä½œä¸ºåˆå§‹è·¯å¾„è¾“å…¥");
 		mp.SetInputPath(argv[1]);
 	}
 
@@ -25,15 +25,15 @@ int main(int argc, char* argv[])
 	while (mRun)
 	{
 	MainWhile:
-		if (StartWithArgv != true)//¼ì²éÆô¶¯²ÎÊı£¬Èç¹ûÃ»ÓĞ¾ÍÒªÇóÊäÈë£¬·´Ö®½«StartwithArgv±ê¼ÇÎªfalseÂ¼ÈëÂ·¾¶
+		if (StartWithArgv != true)//æ£€æŸ¥å¯åŠ¨å‚æ•°ï¼Œå¦‚æœæ²¡æœ‰å°±è¦æ±‚è¾“å…¥ï¼Œåä¹‹å°†StartwithArgvæ ‡è®°ä¸ºfalseå½•å…¥è·¯å¾„
 		{
 			std::string ip;
-			std::cout << "´ò¿ªÎÄ¼ş¼Ğ£º";
+			std::cout << "æ‰“å¼€æ–‡ä»¶å¤¹ï¼š";
 			std::getline(std::cin, ip);
 			mp.SetInputPath(ip);
 		}
 
-		try//´¦ÀíÂ·¾¶
+		try//å¤„ç†è·¯å¾„
 		{
 			mp.ProcessingPath();
 		}
@@ -43,16 +43,16 @@ int main(int argc, char* argv[])
 			goto MainWhile;
 		}
 
-		try//¼ì²âÂ·¾¶ÀàĞÍ
+		try//æ£€æµ‹è·¯å¾„ç±»å‹
 		{
 			mp.PathLoadTpye();
 			if (mp.GetPathLoadType() == MOD_CLIENT)
 			{
-				LOG_INFO("´ò¿ª(·şÎñ¶Ë)" + getLastComponent(mp.GetProcessingPath()));
+				LOG_INFO("æ‰“å¼€(æœåŠ¡ç«¯)" + getLastComponent(mp.GetProcessingPath()));
 			}
 			else if (mp.GetPathLoadType() == MOD_CLIENT)
 			{
-				LOG_INFO("´ò¿ª(¿Í»§¶Ë)" + getLastComponent(mp.GetProcessingPath()));
+				LOG_INFO("æ‰“å¼€(å®¢æˆ·ç«¯)" + getLastComponent(mp.GetProcessingPath()));
 			}
 		}
 		catch (const std::exception& e)
@@ -60,14 +60,14 @@ int main(int argc, char* argv[])
 			LOG_ERROR(e.what());
 		}
 
-		try//»ñÈ¡ÊÀ½çÁĞ±í
+		try//è·å–ä¸–ç•Œåˆ—è¡¨
 		{
 			std::string out;
 			mp.LoadWorldList();
 			mp.LoadWorldListSTL();
 			for (int i = 0; i < mp.GetWorldList().world_name_list.size(); i++)
 			{
-				out += "\n´æµµ£º" + mp.GetWorldList().world_name_list[i] + "\nÂ·¾¶£º" + mp.GetWorldList().world_directory_list[i] + "\n";
+				out += "\nå­˜æ¡£ï¼š" + mp.GetWorldList().world_name_list[i] + "\nè·¯å¾„ï¼š" + mp.GetWorldList().world_directory_list[i] + "\n";
 			}
 			LOG_INFO(out);
 		}
@@ -76,13 +76,13 @@ int main(int argc, char* argv[])
 			LOG_ERROR(e.what());
 		}
 
-		try//»ñÈ¡Íæ¼ÒÁĞ±í
+		try//è·å–ç©å®¶åˆ—è¡¨
 		{
 			std::string out;
 			mp.LoadUserList();
 			for (const UserInfo& a : mp.GetUserInfoList())
 			{
-				out += "\nÓÃ»§Ãû£º" + a.user_name + "\nUUID£º" + a.uuid + "\n¹ıÆÚÊ±¼ä£º" + a.expiresOn + "\n";
+				out += "\nç”¨æˆ·åï¼š" + a.user_name + "\nUUIDï¼š" + a.uuid + "\nè¿‡æœŸæ—¶é—´ï¼š" + a.expiresOn + "\n";
 			}
 			LOG_INFO(out);
 		}
@@ -110,23 +110,23 @@ int main(int argc, char* argv[])
 				Signal = 211;
 			}
 
-			switch (Signal)//ÃüÁî´¦Àí
+			switch (Signal)//å‘½ä»¤å¤„ç†
 			{
 			case COMMAND_EXIT:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºexit");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šexit");
 				return 0;
 			}
 
 			case COMMAND_BREAK:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºbreak");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šbreak");
 				goto MainWhile;
 			}
 
 			case COMMAND_OPEN_PLAYER:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºopen player");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šopen player");
 				COP cop;
 				try
 				{
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
 
 			case COMMAND_OPEN_WORLD:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºopen world");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šopen world");
 				COW cow;
 				try
 				{
@@ -160,7 +160,7 @@ int main(int argc, char* argv[])
 
 			case COMMAND_LIST_PLAYER:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºlist player");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šlist player");
 				CLP clp;
 				try
 				{
@@ -177,7 +177,7 @@ int main(int argc, char* argv[])
 
 			case COMMAND_LIST_WORLD:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºlist world");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šlist world");
 				CLW clw;
 				try
 				{
@@ -194,7 +194,7 @@ int main(int argc, char* argv[])
 
 			case COMMAND_DEL_PLAYER:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºdelete player");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šdelete player");
 				CDP cdp;
 				try
 				{
@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
 
 			case COMMAND_DEL_WORLD:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºdelete world");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šdelete world");
 				CDW cdw;
 				try
 				{
@@ -228,7 +228,7 @@ int main(int argc, char* argv[])
 
 			case COMMAND_DEL_PW:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºdelete pw");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šdelete pw");
 				CDPW cdpw;
 				try
 				{
@@ -245,7 +245,7 @@ int main(int argc, char* argv[])
 
 			case COMMAND_DEL_JS:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºdelete js");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šdelete js");
 				CDJS cdjs;
 				try
 				{
@@ -261,12 +261,12 @@ int main(int argc, char* argv[])
 			}
 
 			case COMMAND_NULL_BACK:
-				LOG_DEBUG("Î´Ê¶±ğÃüÁî");
+				LOG_DEBUG("æœªè¯†åˆ«å‘½ä»¤");
 				break;
 
 			case COMMAND_REFRESH:
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£ºrefresh");
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼šrefresh");
 				try
 				{
 					mp.LoadUserList();

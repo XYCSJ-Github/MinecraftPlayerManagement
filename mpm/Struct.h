@@ -1,35 +1,35 @@
-//Struct.h ÉùÃ÷½á¹¹Ìå
+//Struct.h å£°æ˜ç»“æ„ä½“
 #pragma once
 
 #include <string>
 #include <vector>
 
-struct WorldDirectoriesNameList//ÊÀ½çÂ·¾¶ÁĞ±íÓëÃû³ÆÁĞ±í
+struct WorldDirectoriesNameList//ä¸–ç•Œè·¯å¾„åˆ—è¡¨ä¸åç§°åˆ—è¡¨
 {
 	std::vector<std::string> world_directory_list;
 	std::vector<std::string> world_name_list;
 };
 
-struct WorldDirectoriesName//ÊÀ½çÂ·¾¶ÓëÃû³Æ
+struct WorldDirectoriesName//ä¸–ç•Œè·¯å¾„ä¸åç§°
 {
 	std::string world_directory;
 	std::string world_name;
 };
 
-struct UserInfo//Íæ¼ÒÃû³ÆuuidºÍ¹ıÆÚÊ±¼ä
+struct UserInfo//ç©å®¶åç§°uuidå’Œè¿‡æœŸæ—¶é—´
 {
 	std::string user_name;
 	std::string uuid;
 	std::string expiresOn;
 };
 
-struct PlayerInfo_AS//ÎÄ¼şÂ·¾¶Óëuuid
+struct PlayerInfo_AS//æ–‡ä»¶è·¯å¾„ä¸uuid
 {
 	std::string path;
 	std::string uuid;
 };
 
-struct PlayerInfo_Data//Í¬·ÖÀàÎÄ¼şµÄÂ·¾¶Óëuuid
+struct PlayerInfo_Data//åŒåˆ†ç±»æ–‡ä»¶çš„è·¯å¾„ä¸uuid
 {
 	std::string dat_path;
 	std::string dat_old_path;
@@ -39,7 +39,7 @@ struct PlayerInfo_Data//Í¬·ÖÀàÎÄ¼şµÄÂ·¾¶Óëuuid
 	std::string cosarmor_uuid;
 };
 
-struct playerinworldinfo//Ò»´ÎĞÔ´æ´¢µ¥¸öÍæ¼ÒµÄËùÓĞÊı¾İ
+struct playerinworldinfo//ä¸€æ¬¡æ€§å­˜å‚¨å•ä¸ªç©å®¶çš„æ‰€æœ‰æ•°æ®
 {
 	WorldDirectoriesName world_dir_name;
 	UserInfo player;
@@ -50,7 +50,7 @@ struct playerinworldinfo//Ò»´ÎĞÔ´æ´¢µ¥¸öÍæ¼ÒµÄËùÓĞÊı¾İ
 	std::string st_path;
 };
 
-struct PlayerInWorldInfoList//´æ´¢Íæ¼ÒËùÓĞÊı¾İµÄÈİÆ÷½á¹¹Ìå
+struct PlayerInWorldInfoList//å­˜å‚¨ç©å®¶æ‰€æœ‰æ•°æ®çš„å®¹å™¨ç»“æ„ä½“
 {
 	std::vector<PlayerInfo_AS> advancements_list;
 	std::vector<PlayerInfo_Data> playerdata_list;
