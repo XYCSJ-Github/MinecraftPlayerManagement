@@ -3,14 +3,14 @@
 #pragma warning(disable : 4996)
 #include "func.h"
 
-WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mode)
+WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mod)
 {
 	LOG_CREATE_MODEL_NAME("GetWorldDirectoriesList");//设置logout模块名称
 
 	WorldDirectoriesNameList world_directories_name_list;
 	std::string base_path_copy = base_path;
 
-	if (mode == MOD_CLIENT)
+	if (mod == MOD_CLIENT)
 		base_path_copy += "\\saves\\";//如果传参路径为客户端文件夹则在路径后加\saves\去检查世界
 
 	LOG_DEBUG("最终路径为：" + base_path_copy);
@@ -24,7 +24,7 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 		LOG_DEBUG("发现世界目录：" + d.path().string());
 		world_directories_name_list.world_directory_list.push_back(d.path().string());
 		world_name = d.path().string();
-		if (mode == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
+		if (mod == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
 		{
 			world_name.erase(0, base_path_copy.length() + 1);
 		}
@@ -37,6 +37,45 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 	}
 
 	return world_directories_name_list;//返回WorldDirectoriesNameList容器结构体
+}
+
+std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_path, int mod)
+{
+	LOG_CREATE_MODEL_NAME("GetWorldDirectories");
+
+	WorldDirectoriesName wdn;
+	std::vector<WorldDirectoriesName> wdnl;
+	std::string base_path_copy = base_path;
+
+	if (mod == MOD_CLIENT)
+		base_path_copy += "\\saves\\";//如果传参路径为客户端文件夹则在路径后加\saves\去检查世界
+
+	LOG_DEBUG("最终路径为：" + base_path_copy);
+	LOG_DEBUG("路径长度：" + std::to_string(base_path_copy.length()));
+
+	std::string world_name;
+	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(base_path_copy))
+	{
+		if (fs::is_directory(d.path()) == false)//如果路径不为空，将其装入WorldDirectoriesNameList
+			continue;
+
+		LOG_DEBUG("发现世界目录：" + d.path().string());
+		wdn.world_directory = d.path().string();
+		world_name = d.path().string();
+		if (mod == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
+		{
+			world_name.erase(0, base_path_copy.length() + 1);
+		}
+		else
+		{
+			world_name.erase(0, base_path_copy.length());
+		}
+		LOG_DEBUG("世界名称：" + world_name);
+		wdn.world_name = world_name;
+		wdnl.push_back(wdn);
+	}
+
+	return wdnl;
 }
 
 std::string ProcessingInputPath(const std::string input_path)
@@ -326,7 +365,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 	{
 		// 1. 读取JSON文件
 		std::ifstream in_file(JSON_path);
-		if (!in_file.is_open()) 
+		if (!in_file.is_open())
 		{
 			LOG_ERROR("无法打开文件: " + JSON_path);
 			return false;
@@ -343,7 +382,7 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 
 		// 2. 查找并删除指定玩家
 		bool found = false;
-		for (auto it = j.begin(); it != j.end(); ) 
+		for (auto it = j.begin(); it != j.end(); )
 		{
 			std::string a = (*it)["name"];
 			if (it->contains("name") && a == playerName)
@@ -375,14 +414,14 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 		return false;
 	}
 	catch (const std::exception& e) {
-		LOG_ERROR( e.what());
+		LOG_ERROR(e.what());
 		return false;
 	}
 
 
 }
 
-bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName) 
+bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 {
 	LOG_CREATE_MODEL_NAME("DeletePlayerJSON");
 
@@ -431,7 +470,7 @@ bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 			out_file << j.dump(4);
 			out_file.close();
 
-			 LOG_DEBUG("删除成功！剩余键值对：" + std::to_string(j.size()));
+			LOG_DEBUG("删除成功！剩余键值对：" + std::to_string(j.size()));
 			return true;
 		}
 

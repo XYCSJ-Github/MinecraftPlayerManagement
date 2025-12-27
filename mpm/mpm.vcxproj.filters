@@ -30,6 +30,36 @@
     <ClInclude Include="Struct.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="p_mpm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="piwbd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="COW.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="COP.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CLW.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CLP.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CDP.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CDW.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CDPW.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CDJS.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
@@ -38,8 +68,44 @@
     <ClCompile Include="Logout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="old_main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="p_mpm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="COW.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="piwbd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="COP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CLW.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CLP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDW.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDPW.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDJS.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CC.h">
+      <Filter>头文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
