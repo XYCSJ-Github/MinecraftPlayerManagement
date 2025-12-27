@@ -1,4 +1,4 @@
-//p_mpm.h 声明p_mpm类，作为执行类
+﻿//p_mpm.h 声明p_mpm类，作为执行类
 #pragma once
 
 #include "func.h"

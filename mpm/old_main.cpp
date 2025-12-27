@@ -1,4 +1,4 @@
-//old_main.cpp 之前入口点文件
+﻿//old_main.cpp 之前入口点文件
 
 #include "func.h"//功能
 #include "Logout.h"//日志输出

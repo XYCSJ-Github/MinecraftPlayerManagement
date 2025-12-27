@@ -1,4 +1,4 @@
-//func.h 声明主要功能函数
+﻿//func.h 声明主要功能函数
 #pragma once
 
 #include "include/nlohmann/json.hpp"

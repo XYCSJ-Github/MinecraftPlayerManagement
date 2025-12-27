@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "piwbd.h"
 class CLP : public piwbd
 {

@@ -1,4 +1,4 @@
-//COP.cpp 实现COP
+﻿//COP.cpp 实现COP
 #include "COP.h"
 
 void COP::RunCommand()

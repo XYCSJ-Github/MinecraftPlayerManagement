@@ -1,4 +1,4 @@
-#include <iomanip>
+﻿#include <iomanip>
 #include "Logout.h"
 
 bool is_debug = false;

@@ -1,4 +1,4 @@
-//CDPW.cpp 实现CDPW类
+﻿//CDPW.cpp 实现CDPW类
 #include "CDPW.h"
 
 void CDPW::RunCommand()

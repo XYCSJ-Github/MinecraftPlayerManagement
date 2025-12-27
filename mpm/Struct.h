@@ -1,4 +1,4 @@
-//Struct.h 声明结构体
+﻿//Struct.h 声明结构体
 #pragma once
 
 #include <string>

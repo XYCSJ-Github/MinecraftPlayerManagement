@@ -1,4 +1,4 @@
-//Logout.h 日志输出
+﻿//Logout.h 日志输出
 #pragma warning(disable: 4005) //禁用警告C4005: 宏重定义
 #pragma once
 
