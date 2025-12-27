@@ -1,43 +1,43 @@
-//piwbd.h ÉùÃ÷piwbdÀà¼Ì³Ğp_mpm×÷ÎªÖ´ĞĞÍØÕ¹Àà£¬´ó¶àÊıoverride RunCommandÀà¶¼¼Ì³Ğ´ËÀà
+//piwbd.h å£°æ˜piwbdç±»ç»§æ‰¿p_mpmä½œä¸ºæ‰§è¡Œæ‹“å±•ç±»ï¼Œå¤§å¤šæ•°override RunCommandç±»éƒ½ç»§æ‰¿æ­¤ç±»
 #pragma once
 #include "p_mpm.h"
 #include <bitset>
 
-class piwbd : public p_mpm//piwbd¹«¿ª¼Ì³Ğp_mpm
+class piwbd : public p_mpm//piwbdå…¬å¼€ç»§æ‰¿p_mpm
 {
 public:
-	inline piwbd() { this->advancements_list = {}; this->playerdata_list = {}; this->stats_list = {}; this->show = {}; }//³õÊ¼»¯
+	inline piwbd() { this->advancements_list = {}; this->playerdata_list = {}; this->stats_list = {}; this->show = {}; }//åˆå§‹åŒ–
 	~piwbd() = default;
 
-	inline const std::vector<PlayerInfo_AS> GetAdvancementsList() { if (this->advancements_list.empty()) { throw NullVector(); } return this->advancements_list; }//»ñÈ¡adv¡¢playerdata¡¢staµÈÊı¾İ
+	inline const std::vector<PlayerInfo_AS> GetAdvancementsList() { if (this->advancements_list.empty()) { throw NullVector(); } return this->advancements_list; }//è·å–advã€playerdataã€staç­‰æ•°æ®
 	inline const std::vector<PlayerInfo_Data> GetPlayerdataList() { if (this->playerdata_list.empty()) { throw NullVector(); } return this->playerdata_list; }
 	inline const std::vector<PlayerInfo_AS> GetStatsList() { if (this->stats_list.empty()) { throw NullVector(); } return this->stats_list; }
-	inline const std::string GetShow() { if (this->show.empty()) { throw NullString(); } return this->show; }//»ñÈ¡Êä³ö×Ö·û´®
+	inline const std::string GetShow() { if (this->show.empty()) { throw NullString(); } return this->show; }//è·å–è¾“å‡ºå­—ç¬¦ä¸²
 
-	//¼ÓÔØÖ¸¶¨ÊÀ½çµÄËùÓĞlist
+	//åŠ è½½æŒ‡å®šä¸–ç•Œçš„æ‰€æœ‰list
 	void LoadAllPlayerdata(std::string world_path);
 	void LoadAdvancementList(std::string world_path);
 	void LoadPlayerdataList(std::string world_path);
 	void LoadStatsList(std::string world_path);
 
 private:
-	inline void SetAdvancementsList(std::vector<PlayerInfo_AS> adv_list) { if (adv_list.empty()) { throw NullVector(); } this->advancements_list = adv_list; }//ÉèÖÃadv¡¢playerdata¡¢staµÈÊı¾İ
+	inline void SetAdvancementsList(std::vector<PlayerInfo_AS> adv_list) { if (adv_list.empty()) { throw NullVector(); } this->advancements_list = adv_list; }//è®¾ç½®advã€playerdataã€staç­‰æ•°æ®
 	inline void SetPlayerdataList(std::vector<PlayerInfo_Data> pd_list) { if (pd_list.empty()) { throw NullVector(); } this->playerdata_list = pd_list; }
 	inline void SetStatsList(std::vector<PlayerInfo_AS> st_list) { if (st_list.empty()) { throw NullVector(); } this->stats_list = st_list; }
 
 protected:
-	inline void SetShow(std::string str_show) { if (str_show.empty()) { throw NullString(); } this->show = str_show; }//ÉèÖÃÊä³ö×Ö·û´®
-	void DeletePlayersFiles(PlayerInWorldInfoList _piwil, std::string &_out, int x);//ÓÃPowerShellÉ¾³ıÎÄ¼ş
+	inline void SetShow(std::string str_show) { if (str_show.empty()) { throw NullString(); } this->show = str_show; }//è®¾ç½®è¾“å‡ºå­—ç¬¦ä¸²
+	void DeletePlayersFiles(PlayerInWorldInfoList _piwil, std::string &_out, int x);//ç”¨PowerShellåˆ é™¤æ–‡ä»¶
 
 private:
-	std::vector<PlayerInfo_AS> advancements_list;//Advancements½á¹¹ÌåSTL
-	std::vector<PlayerInfo_Data> playerdata_list;//Playerdata½á¹¹ÌåSTL
-	std::vector<PlayerInfo_AS> stats_list;//Stats½á¹¹ÌåSTL
-	std::vector<playerinworldinfo> piw_list;//µ¥¸öÍæ¼ÒÊı¾İ½á¹¹ÌåSTL
-	std::string show;//Êä³öµ½¿ØÖÆÌ¨µÄ×Ö·û´®
+	std::vector<PlayerInfo_AS> advancements_list;//Advancementsç»“æ„ä½“STL
+	std::vector<PlayerInfo_Data> playerdata_list;//Playerdataç»“æ„ä½“STL
+	std::vector<PlayerInfo_AS> stats_list;//Statsç»“æ„ä½“STL
+	std::vector<playerinworldinfo> piw_list;//å•ä¸ªç©å®¶æ•°æ®ç»“æ„ä½“STL
+	std::string show;//è¾“å‡ºåˆ°æ§åˆ¶å°çš„å­—ç¬¦ä¸²
 
 public:
-	piwbd& operator>>(p_mpm& p)//ÖØÔØ>>ÔËËã·ûÊ¹Á½¸öÍ¬¸¸Àà¶ÔÏó¿ÉÒÔ´«µİ»ù´¡Êı¾İ
+	piwbd& operator>>(p_mpm& p)//é‡è½½>>è¿ç®—ç¬¦ä½¿ä¸¤ä¸ªåŒçˆ¶ç±»å¯¹è±¡å¯ä»¥ä¼ é€’åŸºç¡€æ•°æ®
 	{
 		try
 		{

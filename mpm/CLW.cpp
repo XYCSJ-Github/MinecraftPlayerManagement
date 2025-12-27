@@ -1,4 +1,4 @@
-//CLW.cpp ÊµÏÖCLW
+//CLW.cpp å®žçŽ°CLW
 #include "CLW.h"
 
 void CLW::RunCommand()
@@ -13,7 +13,7 @@ void CLW::RunCommand()
 		LoadAdvancementList(GetWorldList().world_directory_list[i]);
 		piwil.advancements_list = GetAdvancementsList();
 
-		out += "\n´æµµ£º" + GetWorldList().world_name_list[i];
+		out += "\nå­˜æ¡£ï¼š" + GetWorldList().world_name_list[i];
 
 		for (const PlayerInfo_AS& w : piwil.advancements_list)
 		{
@@ -21,7 +21,7 @@ void CLW::RunCommand()
 			{
 				if (w.uuid == b.uuid)
 				{
-					out += "\nÍæ¼Ò£º" + b.user_name + "£üUUID£º" + b.uuid;
+					out += "\nçŽ©å®¶ï¼š" + b.user_name + "ï½œUUIDï¼š" + b.uuid;
 				}
 			}
 		}

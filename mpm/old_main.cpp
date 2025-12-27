@@ -1,22 +1,22 @@
-//old_main.cpp Ö®Ç°Èë¿ÚµãÎÄ¼ş
+//old_main.cpp ä¹‹å‰å…¥å£ç‚¹æ–‡ä»¶
 
-#include "func.h"//¹¦ÄÜ
-#include "Logout.h"//ÈÕÖ¾Êä³ö
+#include "func.h"//åŠŸèƒ½
+#include "Logout.h"//æ—¥å¿—è¾“å‡º
 
 int old_main(int argc, char* argv[])
 {
-#if _DEBUG//Èç¹ûÉú³ÉÄ£Ê½ÎªdebugÔò¿ªÆôlog_debugÊä³ö
+#if _DEBUG//å¦‚æœç”Ÿæˆæ¨¡å¼ä¸ºdebugåˆ™å¼€å¯log_debugè¾“å‡º
 	LOG_DEBUG_OUT
 #endif
-		;//±£³ÖÕı³£Ëõ½ø
-	LOG_CREATE_MODEL_NAME("Main");//ÉèÖÃlogoutÄ£¿éÃû³Æ
+		;//ä¿æŒæ­£å¸¸ç¼©è¿›
+	LOG_CREATE_MODEL_NAME("Main");//è®¾ç½®logoutæ¨¡å—åç§°
 	
 	bool StartwithArgv = false;
 	std::string input_path;
 
-	if (argc > 1)//Èç¹ûÓĞ²ÎÆô¶¯£¬½«StartwithArgvÉèÎªtrue£¬²¢ÌáÈ¡ÊäÈë²ÎÊı
+	if (argc > 1)//å¦‚æœæœ‰å‚å¯åŠ¨ï¼Œå°†StartwithArgvè®¾ä¸ºtrueï¼Œå¹¶æå–è¾“å…¥å‚æ•°
 	{
-		LOG_DEBUG("Ê¹ÓÃÃüÁîĞĞ²ÎÊı×÷Îª³õÊ¼Â·¾¶ÊäÈë");
+		LOG_DEBUG("ä½¿ç”¨å‘½ä»¤è¡Œå‚æ•°ä½œä¸ºåˆå§‹è·¯å¾„è¾“å…¥");
 		StartwithArgv = true;
 		input_path = argv[1];
 	}
@@ -24,21 +24,21 @@ int old_main(int argc, char* argv[])
 	std::string world_path = {};
 	bool mRun = true;
 
-	while (mRun)//¿ªÊ¼Ö÷Ñ­»·
+	while (mRun)//å¼€å§‹ä¸»å¾ªç¯
 	{
 	MainWhile:
-		if (StartwithArgv == true)//¼ì²éÆô¶¯²ÎÊı£¬Èç¹ûÃ»ÓĞ¾ÍÒªÇóÊäÈë£¬·´Ö®½«StartwithArgv±ê¼ÇÎªfalseÂ¼ÈëÂ·¾¶
+		if (StartwithArgv == true)//æ£€æŸ¥å¯åŠ¨å‚æ•°ï¼Œå¦‚æœæ²¡æœ‰å°±è¦æ±‚è¾“å…¥ï¼Œåä¹‹å°†StartwithArgvæ ‡è®°ä¸ºfalseå½•å…¥è·¯å¾„
 		{
 			StartwithArgv = false;
 			world_path = input_path;
 		}
 		else
 		{
-			std::cout << "´ò¿ªÎÄ¼ş¼Ğ£º";
+			std::cout << "æ‰“å¼€æ–‡ä»¶å¤¹ï¼š";
 			std::getline(std::cin, world_path);
 		}
 
-		std::string pip;//Ô¤´¦ÀíÂ·¾¶
+		std::string pip;//é¢„å¤„ç†è·¯å¾„
 		try
 		{
 			pip = ProcessingInputPath(world_path);
@@ -49,39 +49,39 @@ int old_main(int argc, char* argv[])
 			goto MainWhile;
 		}
 
-		WorldDirectoriesNameList world_name_list;//ÉùÃ÷ÊÀ½çÁĞ±í£¬¼ì²âÂ·¾¶ÀàĞÍ²¢Ö´ĞĞ¶ÔÓ¦º¯Êı»ñÈ¡
+		WorldDirectoriesNameList world_name_list;//å£°æ˜ä¸–ç•Œåˆ—è¡¨ï¼Œæ£€æµ‹è·¯å¾„ç±»å‹å¹¶æ‰§è¡Œå¯¹åº”å‡½æ•°è·å–
 
 		if (folderExists(pip, "saves") == false)
 		{
-			LOG_INFO("´ò¿ª(·şÎñ¶Ë)" + getLastComponent(pip));
+			LOG_INFO("æ‰“å¼€(æœåŠ¡ç«¯)" + getLastComponent(pip));
 			world_name_list = GetWorldDirectoriesList(pip, MOD_SERVER);
 		}
 		else
 		{
-			LOG_INFO("´ò¿ª(¿Í»§¶Ë)" + getLastComponent(pip));
+			LOG_INFO("æ‰“å¼€(å®¢æˆ·ç«¯)" + getLastComponent(pip));
 			world_name_list = GetWorldDirectoriesList(pip, MOD_CLIENT);
 		}
 
 
-		std::vector<UserInfo> user_info_list;//´´½¨ÓÃ»§ÁĞ±í
+		std::vector<UserInfo> user_info_list;//åˆ›å»ºç”¨æˆ·åˆ—è¡¨
 
 		for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
 		{
-			LOG_INFO("\n´æµµÃû³Æ£º" + world_name_list.world_name_list[i] + "\n´æµµÂ·¾¶" + world_name_list.world_directory_list[i] + "\n");
+			LOG_INFO("\nå­˜æ¡£åç§°ï¼š" + world_name_list.world_name_list[i] + "\nå­˜æ¡£è·¯å¾„" + world_name_list.world_directory_list[i] + "\n");
 		}
 
 		try
 		{
-			user_info_list = GetUserInfo(pip);//Í¨¹ıuesrceach.json»ñÈ¡ÓÃ»§ĞÅÏ¢
+			user_info_list = GetUserInfo(pip);//é€šè¿‡uesrceach.jsonè·å–ç”¨æˆ·ä¿¡æ¯
 			if (user_info_list.size() == 0)
 			{
-				LOG_INFO("Î´ÕÒµ½ÓÃ»§ĞÅÏ¢£¡");
+				LOG_INFO("æœªæ‰¾åˆ°ç”¨æˆ·ä¿¡æ¯ï¼");
 			}
 			else
 			{
 				for (const auto& user_info : user_info_list)
 				{
-					LOG_INFO("\nÓÃ»§Ãû£º" + user_info.user_name + "\nUUID£º" + user_info.uuid + "\n¹ıÆÚÊ±¼ä£º" + user_info.expiresOn + "\n");
+					LOG_INFO("\nç”¨æˆ·åï¼š" + user_info.user_name + "\nUUIDï¼š" + user_info.uuid + "\nè¿‡æœŸæ—¶é—´ï¼š" + user_info.expiresOn + "\n");
 				}
 			}
 		}
@@ -90,31 +90,31 @@ int old_main(int argc, char* argv[])
 			LOG_ERROR(e.what());
 		}
 
-		while (true)//½øÈëÃüÁîÄ£Ê½
+		while (true)//è¿›å…¥å‘½ä»¤æ¨¡å¼
 		{
 		OpenWorldWhile:
 			std::string comm;
 			std::cout << ">";
-			std::getline(std::cin, comm);//»ñÈ¡ÃüÁî
+			std::getline(std::cin, comm);//è·å–å‘½ä»¤
 			LOG_CREATE_MODEL_NAME("CommandProcessing");
 
 			if (comm == "exit")
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£º" + comm);//¹Ø±ÕÑ­»·²¢ÍË³ö
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + comm);//å…³é—­å¾ªç¯å¹¶é€€å‡º
 				mRun = false;
 				break;
 			}
 
 			if (comm == "break")
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£º" + comm);//ÍË³öÑ­»·
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + comm);//é€€å‡ºå¾ªç¯
 				break;
 			}
 
-			std::string pc = comm.substr(0, 4);//²Ã³öÃüÁî
+			std::string pc = comm.substr(0, 4);//è£å‡ºå‘½ä»¤
 			if (pc == "open")
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£º" + pc);
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + pc);
 				std::string ow;
 				try
 				{
@@ -122,14 +122,14 @@ int old_main(int argc, char* argv[])
 				}
 				catch (const std::exception&)
 				{
-					LOG_ERROR(comm + "<-[HERE]");//ÓĞ±¨´íÔòÈÏÎªÃüÁî´íÎó
+					LOG_ERROR(comm + "<-[HERE]");//æœ‰æŠ¥é”™åˆ™è®¤ä¸ºå‘½ä»¤é”™è¯¯
 					goto OpenWorldWhile;
 				}
 
 				std::string ppc = comm.substr(5, 5);
 				if (ppc == "world")
 				{
-					LOG_DEBUG("Ê¶±ğÃüÁî£º" + ppc);
+					LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + ppc);
 					try
 					{
 						ow = comm.substr(11);
@@ -140,13 +140,13 @@ int old_main(int argc, char* argv[])
 						goto OpenWorldWhile;
 					}
 
-					LOG_DEBUG("´ò¿ª´æµµ£º" + ow);
+					LOG_DEBUG("æ‰“å¼€å­˜æ¡£ï¼š" + ow);
 					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
 					{
-						if (ow == world_name_list.world_name_list[i])//´Ó´æµµÁĞ±íÖĞÌáÈ¡ÕıÈ·µÄ´æµµ
+						if (ow == world_name_list.world_name_list[i])//ä»å­˜æ¡£åˆ—è¡¨ä¸­æå–æ­£ç¡®çš„å­˜æ¡£
 						{
 							std::string open_path = world_name_list.world_directory_list[i];
-							LOG_INFO("ÕıÔÚ´ò¿ª´æµµ£º" + open_path);
+							LOG_INFO("æ­£åœ¨æ‰“å¼€å­˜æ¡£ï¼š" + open_path);
 
 							std::vector<PlayerInfo_AS> sc_advancements_list;
 							std::vector<PlayerInfo_Data> sc_playerdata_list;
@@ -154,7 +154,7 @@ int old_main(int argc, char* argv[])
 
 							try
 							{
-								sc_advancements_list = GetWorldPlayerAdvancements(open_path);//ÌáÈ¡³öÎÄ¼şÂ·¾¶¼ÓÈëÈİÆ÷
+								sc_advancements_list = GetWorldPlayerAdvancements(open_path);//æå–å‡ºæ–‡ä»¶è·¯å¾„åŠ å…¥å®¹å™¨
 								sc_playerdata_list = GetWorldPlayerData(open_path);
 								sc_stats_list = GetWorldPlayerStats(open_path);
 							}
@@ -163,11 +163,11 @@ int old_main(int argc, char* argv[])
 								LOG_ERROR(e.what());
 							}
 
-							LOG_INFO("´æµµ´ò¿ªÍê³É£¡");
+							LOG_INFO("å­˜æ¡£æ‰“å¼€å®Œæˆï¼");
 
-							std::string out = "\nÊÀ½ç£º" + world_name_list.world_name_list[i] + "\nÂ·¾¶£º" + open_path + "\n";
+							std::string out = "\nä¸–ç•Œï¼š" + world_name_list.world_name_list[i] + "\nè·¯å¾„ï¼š" + open_path + "\n";
 
-							for (int i = 0; i < user_info_list.size(); i++)//¸ù¾İ´æµµÖĞadvanvementµÄuuidÉ¸³öÍæ¼Ò£¬²¢ÈÏÎª¸Ã´æµµÖĞÓĞÕâĞ©Íæ¼Ò
+							for (int i = 0; i < user_info_list.size(); i++)//æ ¹æ®å­˜æ¡£ä¸­advanvementçš„uuidç­›å‡ºç©å®¶ï¼Œå¹¶è®¤ä¸ºè¯¥å­˜æ¡£ä¸­æœ‰è¿™äº›ç©å®¶
 							{
 								std::string adv_path = {}, pd_path = {}, pd_old_path = {}, cosarmor_path = {}, st_path = {};
 								for (int j = 0; j < sc_advancements_list.size(); j++)
@@ -198,23 +198,23 @@ int old_main(int argc, char* argv[])
 
 								if (adv_path.length() != 0 || pd_path.length() != 0 || st_path.length() != 0)
 								{
-									out = "\nÍæ¼Ò " + user_info_list[i].user_name + "\nUUID£º" + user_info_list[i].uuid + "\n³É¾Í£º" + adv_path + "\nÍæ¼ÒÊı¾İ£º" + pd_path;
+									out = "\nç©å®¶ " + user_info_list[i].user_name + "\nUUIDï¼š" + user_info_list[i].uuid + "\næˆå°±ï¼š" + adv_path + "\nç©å®¶æ•°æ®ï¼š" + pd_path;
 									if (pd_old_path.length() != 0)
 									{
-										out += "\n¾ÉÍæ¼ÒÊı¾İ£º" + pd_old_path;
+										out += "\næ—§ç©å®¶æ•°æ®ï¼š" + pd_old_path;
 									}
 									if (cosarmor_path.length() != 0)
 									{
-										out += "\n×°ÊÎ¿ø¼×Êı¾İ£º" + cosarmor_path;
+										out += "\nè£…é¥°ç›”ç”²æ•°æ®ï¼š" + cosarmor_path;
 									}
 
-									out += "\nÍæ¼ÒÍ³¼Æ£º" + st_path + "\n";
+									out += "\nç©å®¶ç»Ÿè®¡ï¼š" + st_path + "\n";
 
 									LOG_INFO(out);
 								}
 								else
 								{
-									out += "\nÎŞÊı¾İ";
+									out += "\næ— æ•°æ®";
 									LOG_INFO(out + "\n");
 									goto OpenWorldWhile;
 								}
@@ -227,7 +227,7 @@ int old_main(int argc, char* argv[])
 				ppc = comm.substr(5, 6);
 				if (ppc == "player")
 				{
-					LOG_DEBUG("Ê¶±ğÃüÁî£º" + ppc);
+					LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + ppc);
 					std::string ow;
 					try
 					{
@@ -246,11 +246,11 @@ int old_main(int argc, char* argv[])
 
 					for (const auto& user_info : user_info_list)
 					{
-						if (ow == user_info.user_name)//¸ù¾İÍæ¼ÒuuidÉ¸Ñ¡ËùÓĞÊÀ½çÖĞµÄadvanvementµÄuuid,²¢ÈÏÎª¸ÃÍæ¼Ò´æÔÚÓÚÊÀ½çÖĞ
+						if (ow == user_info.user_name)//æ ¹æ®ç©å®¶uuidç­›é€‰æ‰€æœ‰ä¸–ç•Œä¸­çš„advanvementçš„uuid,å¹¶è®¤ä¸ºè¯¥ç©å®¶å­˜åœ¨äºä¸–ç•Œä¸­
 						{
-							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//ÊÕ¼¯¸ÃÍæ¼ÒÔÚ±¾´ÎÑ­»·ÊÀ½çÖĞËùÓĞÊı¾İĞÅÏ¢£¬²¢¼ÇÂ¼½øplayerinworldinfo piw_list
+							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//æ”¶é›†è¯¥ç©å®¶åœ¨æœ¬æ¬¡å¾ªç¯ä¸–ç•Œä¸­æ‰€æœ‰æ•°æ®ä¿¡æ¯ï¼Œå¹¶è®°å½•è¿›playerinworldinfo piw_list
 							{
-								playerinworldinfo piw = { "·ñ", "·ñ", "·ñ", "·ñ", "·ñ", "·ñ", "·ñ" };
+								playerinworldinfo piw = { "å¦", "å¦", "å¦", "å¦", "å¦", "å¦", "å¦" };
 								piw.player.uuid = user_info.uuid;
 								piw.world_dir_name.world_name = world_name_list.world_name_list[i];
 								std::string open_path = world_name_list.world_directory_list[i];
@@ -271,7 +271,7 @@ int old_main(int argc, char* argv[])
 									{
 										if (c_advancements_list[j].path.length() != 0)
 										{
-											piw.adv_path = "ÓĞ";
+											piw.adv_path = "æœ‰";
 										}
 									}
 								}
@@ -282,15 +282,15 @@ int old_main(int argc, char* argv[])
 									{
 										if (c_playerdata_list[j].dat_path.length() != 0)
 										{
-											piw.pd_path = "ÓĞ";
+											piw.pd_path = "æœ‰";
 										}
 										if (c_playerdata_list[j].dat_old_path.length() != 0)
 										{
-											piw.pd_old_path = "ÓĞ";
+											piw.pd_old_path = "æœ‰";
 										}
 										if (c_playerdata_list[j].cosarmor_path.length() != 0)
 										{
-											piw.cosarmor_path = "ÓĞ";
+											piw.cosarmor_path = "æœ‰";
 										}
 									}
 								}
@@ -301,7 +301,7 @@ int old_main(int argc, char* argv[])
 									{
 										if (c_stats_list[j].path.length() != 0)
 										{
-											piw.st_path = "ÓĞ";
+											piw.st_path = "æœ‰";
 										}
 									}
 								}
@@ -313,18 +313,18 @@ int old_main(int argc, char* argv[])
 
 					if (piw_list.size() == 0)
 					{
-						LOG_WARNING("Î´ÕÒµ½¸ÃÍæ¼Ò!");
+						LOG_WARNING("æœªæ‰¾åˆ°è¯¥ç©å®¶!");
 						goto OpenWorldWhile;
 					}
 
 
-					std::string show_str = "\nÍæ¼Ò£º" + ow + "\nUUID£º" + piw_list[0].player.uuid + "\nÊÀ½ç£º\n";
+					std::string show_str = "\nç©å®¶ï¼š" + ow + "\nUUIDï¼š" + piw_list[0].player.uuid + "\nä¸–ç•Œï¼š\n";
 
-					for (const auto& show : piw_list)//Ö»Õ¹Ê¾Â·¾¶ÊÇ·ñ´æÔÚ
+					for (const auto& show : piw_list)//åªå±•ç¤ºè·¯å¾„æ˜¯å¦å­˜åœ¨
 					{
-						if (show.adv_path == "ÓĞ" || show.pd_path == "ÓĞ" || show.pd_old_path == "ÓĞ" || show.cosarmor_path == "ÓĞ" || show.st_path == "ÓĞ")
+						if (show.adv_path == "æœ‰" || show.pd_path == "æœ‰" || show.pd_old_path == "æœ‰" || show.cosarmor_path == "æœ‰" || show.st_path == "æœ‰")
 						{
-							show_str += show.world_dir_name.world_name + "|½ø¶È£º" + show.adv_path + "|Êı¾İ£º" + show.pd_path + "|¾ÉÊı¾İ£º" + show.pd_old_path + "|ÆäËûÊı¾İ£º" + show.cosarmor_path + "|Í³¼Æ£º" + show.st_path + "\n";
+							show_str += show.world_dir_name.world_name + "|è¿›åº¦ï¼š" + show.adv_path + "|æ•°æ®ï¼š" + show.pd_path + "|æ—§æ•°æ®ï¼š" + show.pd_old_path + "|å…¶ä»–æ•°æ®ï¼š" + show.cosarmor_path + "|ç»Ÿè®¡ï¼š" + show.st_path + "\n";
 						}
 					}
 
@@ -335,7 +335,7 @@ int old_main(int argc, char* argv[])
 			std::string ps = comm.substr(0, 4);
 			if (ps == "list")
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£º" + ps);
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + ps);
 				std::string ow;
 				try
 				{
@@ -350,24 +350,24 @@ int old_main(int argc, char* argv[])
 				std::string pps = comm.substr(5, 5);
 				if (pps == "world")
 				{
-					LOG_DEBUG("Ê¶±ğÃüÁî£º" + pps);
+					LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + pps);
 					std::vector<PlayerInfo_AS> is_world_player;
 					std::vector<UserInfo> is_world_user;
 
-					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//ÓÃAdvancementsµÄuuidÀ´Ö¤Ã÷Íæ¼ÒÔÚ´ËÊÀ½ç´æÔÚ
+					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//ç”¨Advancementsçš„uuidæ¥è¯æ˜ç©å®¶åœ¨æ­¤ä¸–ç•Œå­˜åœ¨
 					{
 						is_world_player = GetWorldPlayerAdvancements(world_name_list.world_directory_list[i]);
 						is_world_user = GetUserInfo(pip);
 
-						std::string out = "\n´æµµ£º" + world_name_list.world_name_list[i] + "\nÂ·¾¶£º" + world_name_list.world_directory_list[i];
+						std::string out = "\nå­˜æ¡£ï¼š" + world_name_list.world_name_list[i] + "\nè·¯å¾„ï¼š" + world_name_list.world_directory_list[i];
 
-						for (const auto& wpl : is_world_player)//»ñÈ¡µ¥¸öÊÀ½çÍæ¼ÒÁĞ±í
+						for (const auto& wpl : is_world_player)//è·å–å•ä¸ªä¸–ç•Œç©å®¶åˆ—è¡¨
 						{
-							for (const auto& uwl : is_world_user)//»ñÈ¡È«²¿ÓÃ»§ĞÅÏ¢
+							for (const auto& uwl : is_world_user)//è·å–å…¨éƒ¨ç”¨æˆ·ä¿¡æ¯
 							{
 								if (wpl.uuid == uwl.uuid)
 								{
-									out += "\nÍæ¼Ò£º" + uwl.user_name + " | UUID£º" + uwl.uuid;
+									out += "\nç©å®¶ï¼š" + uwl.user_name + " | UUIDï¼š" + uwl.uuid;
 								}
 							}
 						}
@@ -379,20 +379,20 @@ int old_main(int argc, char* argv[])
 				pps = comm.substr(5, 6);
 				if (pps == "player")
 				{
-					LOG_DEBUG("Ê¶±ğÃüÁî£º" + pps);
+					LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + pps);
 
 					try
 					{
-						user_info_list = GetUserInfo(pip);//Í¨¹ıuesrceach.json»ñÈ¡ÓÃ»§ĞÅÏ¢
+						user_info_list = GetUserInfo(pip);//é€šè¿‡uesrceach.jsonè·å–ç”¨æˆ·ä¿¡æ¯
 						if (user_info_list.size() == 0)
 						{
-							LOG_INFO("Î´ÕÒµ½ÓÃ»§ĞÅÏ¢£¡");
+							LOG_INFO("æœªæ‰¾åˆ°ç”¨æˆ·ä¿¡æ¯ï¼");
 						}
 						else
 						{
 							for (const auto& user_info : user_info_list)
 							{
-								LOG_INFO("\nÓÃ»§Ãû£º" + user_info.user_name + "\nUUID£º" + user_info.uuid + "\n¹ıÆÚÊ±¼ä£º" + user_info.expiresOn + "\n");
+								LOG_INFO("\nç”¨æˆ·åï¼š" + user_info.user_name + "\nUUIDï¼š" + user_info.uuid + "\nè¿‡æœŸæ—¶é—´ï¼š" + user_info.expiresOn + "\n");
 							}
 						}
 					}
@@ -406,7 +406,7 @@ int old_main(int argc, char* argv[])
 			std::string hp = comm.substr(0, 6);
 			if (hp == "delete")
 			{
-				LOG_DEBUG("Ê¶±ğÃüÁî£º" + hp);
+				LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + hp);
 
 				std::string os;
 				try
@@ -422,7 +422,7 @@ int old_main(int argc, char* argv[])
 				std::string oss = comm.substr(7, 6);
 				if (oss == "player")
 				{
-					LOG_DEBUG("Ê¶±ğÃüÁî£º" + oss);
+					LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + oss);
 
 					std::string osss;
 					try
@@ -449,7 +449,7 @@ int old_main(int argc, char* argv[])
 
 					std::string finded_player_uuid = {};
 
-					for (const UserInfo& findlist : player_uuid)//²éÕÒÍæ¼Òuuid
+					for (const UserInfo& findlist : player_uuid)//æŸ¥æ‰¾ç©å®¶uuid
 					{
 						if (osss == findlist.user_name)
 						{
@@ -459,18 +459,18 @@ int old_main(int argc, char* argv[])
 
 					if (finded_player_uuid.empty())
 					{
-						LOG_INFO("ÕÒ²»µ½´ËÍæ¼Ò");
+						LOG_INFO("æ‰¾ä¸åˆ°æ­¤ç©å®¶");
 						goto OpenWorldWhile;
 					}
 
-					LOG_INFO("É¾³ı" + osss);
+					LOG_INFO("åˆ é™¤" + osss);
 
 					std::vector<PlayerInfo_AS> d_advancements_list;
 					std::vector<PlayerInfo_Data> d_playerdata_list;
 					std::vector<PlayerInfo_AS> d_stats_list;
 					playerinworldinfo delete_file_list;
 
-					std::string del_info = "\n´ÓËùÓĞÊÀ½çÉ¾³ıÍæ¼Ò£º" + osss + "\nUUID£º" + finded_player_uuid;
+					std::string del_info = "\nä»æ‰€æœ‰ä¸–ç•Œåˆ é™¤ç©å®¶ï¼š" + osss + "\nUUIDï¼š" + finded_player_uuid;
 
 					for (int i = 0; i < world_name_list.world_directory_list.size(); i++)
 					{
@@ -486,7 +486,7 @@ int old_main(int argc, char* argv[])
 							goto OpenWorldWhile;
 						}
 
-						for (int j = 0; j < d_advancements_list.size(); j++)//±éÀúÁĞ±í£¬Æ¥Åäuuid
+						for (int j = 0; j < d_advancements_list.size(); j++)//éå†åˆ—è¡¨ï¼ŒåŒ¹é…uuid
 						{
 							if (finded_player_uuid == d_advancements_list[j].uuid)
 							{
@@ -527,62 +527,62 @@ int old_main(int argc, char* argv[])
 							}
 						}
 
-						del_info += +"\nÊÀ½ç£º" + world_name_list.world_name_list[i] + "\n";
+						del_info += +"\nä¸–ç•Œï¼š" + world_name_list.world_name_list[i] + "\n";
 						bool is_see;
 						is_see = MoveToRecycleBinWithPS(delete_file_list.adv_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + delete_file_list.adv_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + delete_file_list.adv_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 
 						is_see = MoveToRecycleBinWithPS(delete_file_list.cosarmor_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + delete_file_list.cosarmor_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + delete_file_list.cosarmor_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 
 						is_see = MoveToRecycleBinWithPS(delete_file_list.pd_old_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + delete_file_list.pd_old_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + delete_file_list.pd_old_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 
 						is_see = MoveToRecycleBinWithPS(delete_file_list.pd_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + delete_file_list.pd_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + delete_file_list.pd_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 
 						is_see = MoveToRecycleBinWithPS(delete_file_list.st_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + delete_file_list.st_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + delete_file_list.st_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 					}
 
 					if (DeletePlayerJSON(pip, osss))
 					{
-						del_info += "É¾³ıusercacheºÍusernamecache\n";
+						del_info += "åˆ é™¤usercacheå’Œusernamecache\n";
 					}
 
 					LOG_INFO(del_info);
@@ -591,7 +591,7 @@ int old_main(int argc, char* argv[])
 				oss = comm.substr(7, 5);
 				if (oss == "world")
 				{
-					LOG_DEBUG("Ê¶±ğÃüÁî£º" + oss);
+					LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + oss);
 
 					std::string osss;
 					try
@@ -604,7 +604,7 @@ int old_main(int argc, char* argv[])
 						goto OpenWorldWhile;
 					}
 
-					LOG_INFO("É¾³ı£º" + osss);
+					LOG_INFO("åˆ é™¤ï¼š" + osss);
 
 					std::vector<PlayerInfo_AS> d_advancements_list;
 					std::vector<PlayerInfo_Data> d_playerdata_list;
@@ -628,18 +628,18 @@ int old_main(int argc, char* argv[])
 								goto OpenWorldWhile;
 							}
 
-							del_info += "\nÊÀ½ç£º" + world_name_list.world_name_list[i] + "\nÂ·¾¶£º" + world_name_list.world_directory_list[i] + "\n";
+							del_info += "\nä¸–ç•Œï¼š" + world_name_list.world_name_list[i] + "\nè·¯å¾„ï¼š" + world_name_list.world_directory_list[i] + "\n";
 						}
 					}
 
 					if (d_advancements_list.size() == 0 && d_playerdata_list.size() == 0 && d_stats_list.size() == 0)
 					{
-						del_info += "ÎŞÊı¾İ\n";
+						del_info += "æ— æ•°æ®\n";
 						LOG_INFO(del_info);
 						goto OpenWorldWhile;
 					}
 
-					size_t maxnum;//±éÀúÈİÆ÷Ã»ÓĞ±éÀú¼ÆÊı£¬ËùÒÔ´´Ò»¸ö
+					size_t maxnum;//éå†å®¹å™¨æ²¡æœ‰éå†è®¡æ•°ï¼Œæ‰€ä»¥åˆ›ä¸€ä¸ª
 					if (d_advancements_list.size() > d_playerdata_list.size())
 					{
 						if (d_advancements_list.size() > d_stats_list.size())
@@ -663,9 +663,9 @@ int old_main(int argc, char* argv[])
 						}
 					}
 
-					for (int i = 0; i <= maxnum; i++)//Ñ¡È¡ÈıÁĞ±íÀïÔªËØ×î¶àµÄ×öÑ­»·¼ÆÊı
+					for (int i = 0; i <= maxnum; i++)//é€‰å–ä¸‰åˆ—è¡¨é‡Œå…ƒç´ æœ€å¤šçš„åšå¾ªç¯è®¡æ•°
 					{
-						for (const UserInfo& playeruuid : user_info_list)//±éÀúËùÓĞÍæ¼Ò£¬²¢Æ¥Åä¸ÃÊÀ½çÄÚËùÓĞµÄÍæ¼ÒÎÄ¼ş£¬±ãÓÚÕ¹Ê¾
+						for (const UserInfo& playeruuid : user_info_list)//éå†æ‰€æœ‰ç©å®¶ï¼Œå¹¶åŒ¹é…è¯¥ä¸–ç•Œå†…æ‰€æœ‰çš„ç©å®¶æ–‡ä»¶ï¼Œä¾¿äºå±•ç¤º
 						{
 							delete_file_list.player.uuid = playeruuid.uuid;
 							delete_file_list.world_dir_name.world_name = playeruuid.user_name;
@@ -728,59 +728,59 @@ int old_main(int argc, char* argv[])
 									c_num++;
 								}
 							}
-							//È·ÈÏ½á¹¹ÌåÒÑ¾­ÌîÂú
+							//ç¡®è®¤ç»“æ„ä½“å·²ç»å¡«æ»¡
 							if (delete_file_list.adv_path.length() != 0 && delete_file_list.cosarmor_path.length() != 0 && delete_file_list.pd_old_path.length() != 0 && delete_file_list.pd_path.length() != 0 && delete_file_list.st_path.length() != 0)
 							{
-								del_info += "\nÍæ¼Ò£º" + delete_file_list.world_dir_name.world_name + " | UUID£º" + delete_file_list.player.uuid + "\n";
+								del_info += "\nç©å®¶ï¼š" + delete_file_list.world_dir_name.world_name + " | UUIDï¼š" + delete_file_list.player.uuid + "\n";
 								bool is_see;
 								is_see = MoveToRecycleBinWithPS(delete_file_list.adv_path);
 								if (is_see == true)
 								{
-									del_info += "É¾³ı£º" + delete_file_list.adv_path + "\n";
+									del_info += "åˆ é™¤ï¼š" + delete_file_list.adv_path + "\n";
 								}
 								else
 								{
-									del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+									del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 								}
 
 								is_see = MoveToRecycleBinWithPS(delete_file_list.cosarmor_path);
 								if (is_see == true)
 								{
-									del_info += "É¾³ı£º" + delete_file_list.cosarmor_path + "\n";
+									del_info += "åˆ é™¤ï¼š" + delete_file_list.cosarmor_path + "\n";
 								}
 								else
 								{
-									del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+									del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 								}
 
 								is_see = MoveToRecycleBinWithPS(delete_file_list.pd_old_path);
 								if (is_see == true)
 								{
-									del_info += "É¾³ı£º" + delete_file_list.pd_old_path + "\n";
+									del_info += "åˆ é™¤ï¼š" + delete_file_list.pd_old_path + "\n";
 								}
 								else
 								{
-									del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+									del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 								}
 
 								is_see = MoveToRecycleBinWithPS(delete_file_list.pd_path);
 								if (is_see == true)
 								{
-									del_info += "É¾³ı£º" + delete_file_list.pd_path + "\n";
+									del_info += "åˆ é™¤ï¼š" + delete_file_list.pd_path + "\n";
 								}
 								else
 								{
-									del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+									del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 								}
 
 								is_see = MoveToRecycleBinWithPS(delete_file_list.st_path);
 								if (is_see == true)
 								{
-									del_info += "É¾³ı£º" + delete_file_list.st_path + "\n";
+									del_info += "åˆ é™¤ï¼š" + delete_file_list.st_path + "\n";
 								}
 								else
 								{
-									del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+									del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 								}
 
 								for (int x = 0; x <= maxnum; x++)
@@ -809,7 +809,7 @@ int old_main(int argc, char* argv[])
 									}
 								}
 
-								//Çå¿Õ½á¹¹Ìå
+								//æ¸…ç©ºç»“æ„ä½“
 								delete_file_list = { "", "", "", "", "", "", "" };
 							}
 						}
@@ -821,7 +821,7 @@ int old_main(int argc, char* argv[])
 				oss = comm.substr(7, 2);
 				if (oss == "pw")
 				{
-					LOG_DEBUG("Ê¶±ğÃüÁî£º" + oss);
+					LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + oss);
 
 					std::string ossss;
 					try
@@ -846,9 +846,9 @@ int old_main(int argc, char* argv[])
 					player.user_name = p_w[1];
 					world.world_name = p_w[2];
 
-					LOG_INFO("\n´Ó " + world.world_name + " ÖĞÉ¾³ı " + player.user_name + " \n");
+					LOG_INFO("\nä» " + world.world_name + " ä¸­åˆ é™¤ " + player.user_name + " \n");
 
-					for (const UserInfo& puuid : user_info_list)//¸ù¾İÓÃ»§Ãû²é³öuuid
+					for (const UserInfo& puuid : user_info_list)//æ ¹æ®ç”¨æˆ·åæŸ¥å‡ºuuid
 					{
 						if (player.user_name == puuid.user_name)
 						{
@@ -856,7 +856,7 @@ int old_main(int argc, char* argv[])
 						}
 					}
 
-					for (int i = 0; i < world_name_list.world_name_list.size(); i++)//²éµ½´æµµÂ·¾¶;
+					for (int i = 0; i < world_name_list.world_name_list.size(); i++)//æŸ¥åˆ°å­˜æ¡£è·¯å¾„;
 					{
 						if (world.world_name == world_name_list.world_name_list[i])
 						{
@@ -883,7 +883,7 @@ int old_main(int argc, char* argv[])
 						goto OpenWorldWhile;
 					}
 
-					for (const PlayerInfo_AS& un : pw_ad_list)//Æ¥ÅäAdvancements
+					for (const PlayerInfo_AS& un : pw_ad_list)//åŒ¹é…Advancements
 					{
 						if (player.uuid == un.uuid)
 						{
@@ -895,7 +895,7 @@ int old_main(int argc, char* argv[])
 						}
 					}
 
-					for (const PlayerInfo_Data& un : pw_da_list)//Æ¥ÅäPlayerData
+					for (const PlayerInfo_Data& un : pw_da_list)//åŒ¹é…PlayerData
 					{
 						if (player.uuid == un.uuid)
 						{
@@ -922,7 +922,7 @@ int old_main(int argc, char* argv[])
 						}
 					}
 
-					for (const PlayerInfo_AS& un : pw_st_list)//Æ¥ÅäStats
+					for (const PlayerInfo_AS& un : pw_st_list)//åŒ¹é…Stats
 					{
 						if (player.uuid == un.uuid)
 						{
@@ -934,7 +934,7 @@ int old_main(int argc, char* argv[])
 						}
 					}
 
-					std::string del_info = "\nÍæ¼Ò£º" + player.user_name + "|UUID£º" + player.uuid + "\nÊÀ½ç£º" + world.world_name + "|Â·¾¶£º" + world.world_directory + "\n";
+					std::string del_info = "\nç©å®¶ï¼š" + player.user_name + "|UUIDï¼š" + player.uuid + "\nä¸–ç•Œï¼š" + world.world_name + "|è·¯å¾„ï¼š" + world.world_directory + "\n";
 
 					if (piwi.adv_path.length() != 0 && piwi.cosarmor_path.length() != 0 && piwi.pd_old_path.length() != 0 && piwi.pd_path.length() != 0 && piwi.st_path.length() != 0)
 					{
@@ -942,56 +942,56 @@ int old_main(int argc, char* argv[])
 						is_see = MoveToRecycleBinWithPS(piwi.adv_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + piwi.adv_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + piwi.adv_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 
 						is_see = MoveToRecycleBinWithPS(piwi.cosarmor_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + piwi.cosarmor_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + piwi.cosarmor_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 
 						is_see = MoveToRecycleBinWithPS(piwi.pd_old_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + piwi.pd_old_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + piwi.pd_old_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 
 						is_see = MoveToRecycleBinWithPS(piwi.pd_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + piwi.pd_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + piwi.pd_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 
 						is_see = MoveToRecycleBinWithPS(piwi.st_path);
 						if (is_see == true)
 						{
-							del_info += "É¾³ı£º" + piwi.st_path + "\n";
+							del_info += "åˆ é™¤ï¼š" + piwi.st_path + "\n";
 						}
 						else
 						{
-							del_info += "Ê§°Ü£ºÎÄ¼şÒÑÉ¾³ı»ò²»´æÔÚ\n";
+							del_info += "å¤±è´¥ï¼šæ–‡ä»¶å·²åˆ é™¤æˆ–ä¸å­˜åœ¨\n";
 						}
 					}
 					else
 					{
-						del_info += "ÎŞÊı¾İ\n";
+						del_info += "æ— æ•°æ®\n";
 					}
 
 					LOG_INFO(del_info + "\n");
@@ -1000,7 +1000,7 @@ int old_main(int argc, char* argv[])
 				oss = comm.substr(7, 2);
 				if (oss == "js")
 				{
-					LOG_DEBUG("Ê¶±ğÃüÁî£º" + oss);
+					LOG_DEBUG("è¯†åˆ«å‘½ä»¤ï¼š" + oss);
 
 					std::string osssss;
 					try
@@ -1017,20 +1017,20 @@ int old_main(int argc, char* argv[])
 					{
 						if (MoveToRecycleBinWithPS(pip + "\\usercache.json") && MoveToRecycleBinWithPS(pip + "\\usernamecache.json"))
 						{
-							LOG_INFO("ÒÑÉ¾³ıÈ«²¿Íæ¼ÒÃû³Æ»º´æ");
+							LOG_INFO("å·²åˆ é™¤å…¨éƒ¨ç©å®¶åç§°ç¼“å­˜");
 						}
 						else
 						{
-							LOG_WARNING("É¾³ıÈ«²¿»º´æÊ§°Ü");
+							LOG_WARNING("åˆ é™¤å…¨éƒ¨ç¼“å­˜å¤±è´¥");
 						}
 					}
 					else if (DeletePlayerJSON(pip, osssss))
 					{
-						LOG_INFO("É¾³ı£º" + osssss);
+						LOG_INFO("åˆ é™¤ï¼š" + osssss);
 					}
 					else
 					{
-						LOG_WARNING("Ê§°Ü»òÖ»É¾ÁËÆäÖĞÒ»¸ö");
+						LOG_WARNING("å¤±è´¥æˆ–åªåˆ äº†å…¶ä¸­ä¸€ä¸ª");
 					}
 				}
 			}

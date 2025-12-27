@@ -1,4 +1,4 @@
-//ÊµÏÖCDJSÀà
+//å®ç°CDJSç±»
 #include "CDJS.h"
 
 void CDJS::RunCommand()
@@ -9,20 +9,20 @@ void CDJS::RunCommand()
 	{
 		if (MoveToRecycleBinWithPS(GetProcessingPath() + "\\usercache.json") && MoveToRecycleBinWithPS(GetProcessingPath() + "\\usernamecache.json"))
 		{
-			out += "ÒÑÉ¾³ıÈ«²¿Íæ¼ÒÃû³Æ»º´æ";
+			out += "å·²åˆ é™¤å…¨éƒ¨ç©å®¶åç§°ç¼“å­˜";
 		}
 		else
 		{
-			out += "É¾³ıÈ«²¿»º´æÊ§°Ü";
+			out += "åˆ é™¤å…¨éƒ¨ç¼“å­˜å¤±è´¥";
 		}
 	}
 	else if (DeletePlayerJSON(GetProcessingPath(), GetLastCommand()))
 	{
-		out += "É¾³ı£º" + GetLastCommand();
+		out += "åˆ é™¤ï¼š" + GetLastCommand();
 	}
 	else
 	{
-		out += "É¾³ıÊ§°Ü»òÖ»É¾ÁËÆäÖĞÒ»¸ö";
+		out += "åˆ é™¤å¤±è´¥æˆ–åªåˆ äº†å…¶ä¸­ä¸€ä¸ª";
 	}
 
 	SetShow(out);

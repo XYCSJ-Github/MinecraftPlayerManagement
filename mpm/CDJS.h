@@ -1,4 +1,4 @@
-//CDJS.h 声明CDJS类，是COMMAND_DEL_JS命令的执行类
+//CDJS.h 澹版槑CDJS绫伙紝鏄疌OMMAND_DEL_JS鍛戒护鐨勬墽琛岀被
 #pragma once
 #include "piwbd.h"
 class CDJS : public piwbd

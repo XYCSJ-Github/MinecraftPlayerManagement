@@ -1,4 +1,4 @@
-//p_mpm.cpp ÊµÏÖp_mpmÖ´ĞĞÀà
+//p_mpm.cpp å®ç°p_mpmæ‰§è¡Œç±»
 #include "p_mpm.h"
 
 void p_mpm::ProcessingPath()

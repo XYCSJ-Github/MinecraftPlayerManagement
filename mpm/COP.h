@@ -1,4 +1,4 @@
-//COP.h COPÀàÉùÃ÷ ÊÇCOMMAND_OPEN_PLAYERÃüÁîµÄÖ´ÐÐÀà 
+//COP.h COPç±»å£°æ˜Ž æ˜¯COMMAND_OPEN_PLAYERå‘½ä»¤çš„æ‰§è¡Œç±» 
 #pragma once
 #include "piwbd.h"
 

@@ -1,4 +1,4 @@
-//CDPW.cpp ÊµÏÖCDPWÀà
+//CDPW.cpp å®ç°CDPWç±»
 #include "CDPW.h"
 
 void CDPW::RunCommand()
@@ -17,7 +17,7 @@ void CDPW::RunCommand()
 	piwil.playerinworldinfo_list[x].player.user_name = pc[0];
 	piwil.playerinworldinfo_list[x].world_dir_name.world_name = pc[1];
 
-	out += "\n´Ó" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "ÖĞÉ¾³ı" + piwil.playerinworldinfo_list[x].player.user_name + "\n";
+	out += "\nä»" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "ä¸­åˆ é™¤" + piwil.playerinworldinfo_list[x].player.user_name + "\n";
 
 	for (const UserInfo& a : GetUserInfoList())
 	{
@@ -81,7 +81,7 @@ void CDPW::RunCommand()
 		}
 	}
 
-	out += "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.uuid + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid + "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "|Â·¾¶£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
+	out += "\nç©å®¶ï¼š" + piwil.playerinworldinfo_list[x].player.uuid + "|UUIDï¼š" + piwil.playerinworldinfo_list[x].player.uuid + "\nå­˜æ¡£ï¼š" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "|è·¯å¾„ï¼š" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
 
 	if (!piwil.playerinworldinfo_list[x].adv_path.empty() && !piwil.playerinworldinfo_list[x].cosarmor_path.empty() && !piwil.playerinworldinfo_list[x].pd_old_path.empty() && !piwil.playerinworldinfo_list[x].pd_path.empty() && !piwil.playerinworldinfo_list[x].st_path.empty())
 	{
@@ -89,7 +89,7 @@ void CDPW::RunCommand()
 	}
 	else
 	{
-		out += "ÎŞÊı¾İ\n";
+		out += "æ— æ•°æ®\n";
 	}
 
 	SetShow(out);

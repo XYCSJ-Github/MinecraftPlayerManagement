@@ -1,4 +1,4 @@
-//COW.cpp ÊµÏÖCOW
+//COW.cpp å®žçŽ°COW
 #include "COW.h"
 
 void COW::RunCommand()
@@ -28,7 +28,7 @@ void COW::RunCommand()
 		}
 	}
 
-	std::string out = "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\nÂ·¾¶£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
+	std::string out = "\nå­˜æ¡£ï¼š" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\nè·¯å¾„ï¼š" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
 
 	for (int i = 0; i < GetUserInfoList().size(); i++)
 	{
@@ -65,12 +65,12 @@ void COW::RunCommand()
 
 		if (piwil.playerinworldinfo_list[x].adv_path.length() != 0 || piwil.playerinworldinfo_list[x].pd_path.length() != 0 || piwil.playerinworldinfo_list[x].st_path.length() != 0 || piwil.playerinworldinfo_list[x].pd_old_path.length() != 0)
 		{
-			out += "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.user_name + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid + "\n½ø¶È£º" + piwil.playerinworldinfo_list[x].adv_path + "\nÍæ¼ÒÊý¾Ý£º" + piwil.playerinworldinfo_list[x].pd_path + "\n¾ÉÍæ¼ÒÊý¾Ý£º" + piwil.playerinworldinfo_list[x].pd_old_path;
+			out += "\nçŽ©å®¶ï¼š" + piwil.playerinworldinfo_list[x].player.user_name + "|UUIDï¼š" + piwil.playerinworldinfo_list[x].player.uuid + "\nè¿›åº¦ï¼š" + piwil.playerinworldinfo_list[x].adv_path + "\nçŽ©å®¶æ•°æ®ï¼š" + piwil.playerinworldinfo_list[x].pd_path + "\næ—§çŽ©å®¶æ•°æ®ï¼š" + piwil.playerinworldinfo_list[x].pd_old_path;
 			if (piwil.playerinworldinfo_list[x].cosarmor_path.length() != 0)
 			{
-				out += "\n×°ÊÎ¿ø¼×Êý¾Ý£º" + piwil.playerinworldinfo_list[x].cosarmor_path;
+				out += "\nè£…é¥°ç›”ç”²æ•°æ®ï¼š" + piwil.playerinworldinfo_list[x].cosarmor_path;
 			}
-			out += "\nÍ³¼ÆÊý¾Ý£º" + piwil.playerinworldinfo_list[x].st_path + "\n";
+			out += "\nç»Ÿè®¡æ•°æ®ï¼š" + piwil.playerinworldinfo_list[x].st_path + "\n";
 		}
 	}
 

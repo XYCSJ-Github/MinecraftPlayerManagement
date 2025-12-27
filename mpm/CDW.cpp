@@ -25,15 +25,15 @@ void CDW::RunCommand()
 		}
 	}
 
-	out += "\n´æµµ£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\nÂ·¾¶£º" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
+	out += "\nå­˜æ¡£ï¼š" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\nè·¯å¾„ï¼š" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
 
 	if (piwil.advancements_list.size() == 0 && piwil.playerdata_list.size() == 0 && piwil.stats_list.size() == 0)
 	{
-		out += "ÎÞÊý¾Ý\n";
+		out += "æ— æ•°æ®\n";
 		return;
 	}
 
-	size_t maxnum;//±éÀúÈÝÆ÷Ã»ÓÐ±éÀú¼ÆÊý£¬ËùÒÔ´´Ò»¸ö
+	size_t maxnum;//éåŽ†å®¹å™¨æ²¡æœ‰éåŽ†è®¡æ•°ï¼Œæ‰€ä»¥åˆ›ä¸€ä¸ª
 	if (piwil.advancements_list.size() > piwil.playerdata_list.size())
 	{
 		if (piwil.advancements_list.size() > piwil.stats_list.size())
@@ -107,7 +107,7 @@ void CDW::RunCommand()
 
 			if (!piwil.playerinworldinfo_list[x].adv_path.empty() && !piwil.playerinworldinfo_list[x].cosarmor_path.empty() && !piwil.playerinworldinfo_list[x].pd_old_path.empty() && !piwil.playerinworldinfo_list[x].pd_path.empty() && !piwil.playerinworldinfo_list[x].st_path.empty())
 			{
-				out += "\nÍæ¼Ò£º" + piwil.playerinworldinfo_list[x].player.user_name + "|UUID£º" + piwil.playerinworldinfo_list[x].player.uuid + "\n";
+				out += "\nçŽ©å®¶ï¼š" + piwil.playerinworldinfo_list[x].player.user_name + "|UUIDï¼š" + piwil.playerinworldinfo_list[x].player.uuid + "\n";
 				DeletePlayersFiles(piwil, out, x);
 
 				for (int f = 0; f <= maxnum; f++)

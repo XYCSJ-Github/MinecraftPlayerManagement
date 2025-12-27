@@ -1,4 +1,4 @@
-//func.h ÉùÃ÷Ö÷Òª¹¦ÄÜº¯Êı
+//func.h å£°æ˜ä¸»è¦åŠŸèƒ½å‡½æ•°
 #pragma once
 
 #include "include/nlohmann/json.hpp"
@@ -16,18 +16,18 @@
 using json = nlohmann::json;
 namespace fs = std::filesystem;
 
-WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mod);//»ñµÃ´æµµÄ¿Â¼Â·¾¶|·µ»Ø°üº¬Â·¾¶ºÍÃû³ÆµÄÈİÆ÷µÄ½á¹¹Ìå
+WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mod);//è·å¾—å­˜æ¡£ç›®å½•è·¯å¾„|è¿”å›åŒ…å«è·¯å¾„å’Œåç§°çš„å®¹å™¨çš„ç»“æ„ä½“
 std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_path, int mod);
-std::string ProcessingInputPath(const std::string input_path);//Ô¤´¦ÀíÂ·¾¶£¬È¥³ıÓĞË«ÒıºÅ¡£|·µ»Ø×Ö·û´®
-std::vector<UserInfo> GetUserInfo(const std::string base_path);//¼Ó¹¤Ô­Ê¼Â·¾¶£¬¶ÁÈ¡ÓÃ»§»º´æÎÄ¼ş¡£|·µ»Ø°üº¬ÓÃ»§ÃûºÍuuidµÄ½á¹¹ÌåÈİÆ÷
-std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_path);//¼Ó¹¤´æµµÂ·¾¶£¬Ê¶±ğÎÄ¼şÂ·¾¶²¢²ÃÇĞ¶ÔÓ¦µÄuuid|·µ»Ø°üº¬ÎÄ¼şÂ·¾¶ºÍ¶ÔÓ¦uuid½á¹¹ÌåµÄÈİÆ÷
-std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path);//¼Ó¹¤´æµµÂ·¾¶£¬Ê¶±ğÎÄ¼şÂ·¾¶²¢²ÃÇĞ¶ÔÓ¦µÄuuid|·µ»Ø°üº¬ÎÄ¼şÂ·¾¶ºÍ¶ÔÓ¦uuid½á¹¹ÌåµÄÈİÆ÷
-std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path);//¼Ó¹¤´æµµÂ·¾¶£¬Ê¶±ğÎÄ¼şÂ·¾¶²¢²ÃÇĞ¶ÔÓ¦µÄuuid|·µ»Ø°üº¬ÎÄ¼şÂ·¾¶ºÍ¶ÔÓ¦uuid½á¹¹ÌåµÄÈİÆ÷
-std::string getLastComponent(const std::string& path);//ÌáÈ¡Â·¾¶×îºóÒ»¼¶µÄÃû³Æ|·µ»Ø×Ö·û´®
-bool folderExists(const fs::path& base_path, const std::string& folder_name);//²éÕÒÄ¿Â¼Ãû³Æ
-bool MoveToRecycleBinWithPS(const std::string& filepath);//ÓÃpowershellÉ¾³ıÎÄ¼ş
-bool ExecuteCommand(const std::string& cmd);//ÓëÉÏÒ»¸ö°ó¶¨£¬ÓÃÓÚÖ´ĞĞ²ÎÊı
-std::vector<std::string> splitString(const std::string& str, char delimiter);//·Ö¸î×Ö·û´®|·µ»ØÊı×é
+std::string ProcessingInputPath(const std::string input_path);//é¢„å¤„ç†è·¯å¾„ï¼Œå»é™¤æœ‰åŒå¼•å·ã€‚|è¿”å›å­—ç¬¦ä¸²
+std::vector<UserInfo> GetUserInfo(const std::string base_path);//åŠ å·¥åŸå§‹è·¯å¾„ï¼Œè¯»å–ç”¨æˆ·ç¼“å­˜æ–‡ä»¶ã€‚|è¿”å›åŒ…å«ç”¨æˆ·åå’Œuuidçš„ç»“æ„ä½“å®¹å™¨
+std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_path);//åŠ å·¥å­˜æ¡£è·¯å¾„ï¼Œè¯†åˆ«æ–‡ä»¶è·¯å¾„å¹¶è£åˆ‡å¯¹åº”çš„uuid|è¿”å›åŒ…å«æ–‡ä»¶è·¯å¾„å’Œå¯¹åº”uuidç»“æ„ä½“çš„å®¹å™¨
+std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path);//åŠ å·¥å­˜æ¡£è·¯å¾„ï¼Œè¯†åˆ«æ–‡ä»¶è·¯å¾„å¹¶è£åˆ‡å¯¹åº”çš„uuid|è¿”å›åŒ…å«æ–‡ä»¶è·¯å¾„å’Œå¯¹åº”uuidç»“æ„ä½“çš„å®¹å™¨
+std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path);//åŠ å·¥å­˜æ¡£è·¯å¾„ï¼Œè¯†åˆ«æ–‡ä»¶è·¯å¾„å¹¶è£åˆ‡å¯¹åº”çš„uuid|è¿”å›åŒ…å«æ–‡ä»¶è·¯å¾„å’Œå¯¹åº”uuidç»“æ„ä½“çš„å®¹å™¨
+std::string getLastComponent(const std::string& path);//æå–è·¯å¾„æœ€åä¸€çº§çš„åç§°|è¿”å›å­—ç¬¦ä¸²
+bool folderExists(const fs::path& base_path, const std::string& folder_name);//æŸ¥æ‰¾ç›®å½•åç§°
+bool MoveToRecycleBinWithPS(const std::string& filepath);//ç”¨powershellåˆ é™¤æ–‡ä»¶
+bool ExecuteCommand(const std::string& cmd);//ä¸ä¸Šä¸€ä¸ªç»‘å®šï¼Œç”¨äºæ‰§è¡Œå‚æ•°
+std::vector<std::string> splitString(const std::string& str, char delimiter);//åˆ†å‰²å­—ç¬¦ä¸²|è¿”å›æ•°ç»„
 bool DeletePlayerJSON(std::string JSON_path, std::string playerName);
-bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName);//´ÓusercacheÖĞÉ¾³ıÍæ¼Ò
-bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName);//´ÓusernamecacheÖĞÉ¾³ıÍæ¼Ò
+bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName);//ä»usercacheä¸­åˆ é™¤ç©å®¶
+bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName);//ä»usernamecacheä¸­åˆ é™¤ç©å®¶

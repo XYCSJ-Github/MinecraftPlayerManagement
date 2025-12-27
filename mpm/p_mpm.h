@@ -1,10 +1,10 @@
-//p_mpm.h ÉùÃ÷p_mpmÀà£¬×÷ÎªÖ´ĞĞÀà
+//p_mpm.h å£°æ˜p_mpmç±»ï¼Œä½œä¸ºæ‰§è¡Œç±»
 #pragma once
 
 #include "func.h"
 #include "Logout.h"
 
-//ËùÓĞÃüÁî
+//æ‰€æœ‰å‘½ä»¤
 #define COMMAND_EXIT 201
 #define COMMAND_BREAK 202
 #define COMMAND_OPEN_WORLD 203
@@ -21,46 +21,46 @@
 class p_mpm
 {
 public:
-	inline p_mpm() { this->input_path = {}; this->Processed_input_path = {}; this->uct_world_list = {}; this->user_list = {}; this->world_list = {}; this->load_type = {}; this->CommandStr = {}; }//³õÊ¼»¯ËùÓĞ±äÁ¿
+	inline p_mpm() { this->input_path = {}; this->Processed_input_path = {}; this->uct_world_list = {}; this->user_list = {}; this->world_list = {}; this->load_type = {}; this->CommandStr = {}; }//åˆå§‹åŒ–æ‰€æœ‰å˜é‡
 	~p_mpm() = default;
 
-	inline void SetInputPath(const std::string _path) { this->input_path = _path; };//ÉèÖÃÊäÈëÂ·¾¶
-	inline const std::string GetInputPath(void) { if (!this->input_path.empty()) { return this->input_path; } throw NullString(); }//»ñÈ¡ÊäÈëÂ·¾¶
-	inline const std::string GetProcessingPath(void) { if (this->Processed_input_path.empty()) { throw NullString(); } return this->Processed_input_path; }//»ñÈ¡´¦ÀíºóµÄÊäÈëÂ·¾¶
-	/*[[deprecated("Í³Ò»ÁĞ±íµÄÊ¹ÓÃ£¬ËùÒÔ¸Ãº¯Êı±»·ÏÆú")]]*/ inline const WorldDirectoriesNameList GetWorldList(void) { if (this->uct_world_list.world_directory_list.size() == 0 && this->uct_world_list.world_name_list.size() == 0) { throw NullStruct(); } return this->uct_world_list; }//»ñÈ¡ÊÀ½çÁĞ±íÈİÆ÷½á¹¹Ìå
-	inline const std::vector<WorldDirectoriesName> GetSTLWorldList(void) { if (this->world_list.size() == 0) { throw NullVector(); } return this->world_list; }//»ñÈ¡ÊÀ½çÁĞ±í½á¹¹ÌåÈİÆ÷
-	inline const std::vector<UserInfo> GetUserInfoList(void) { if (this->user_list.size() == 0) { throw NullVector(); } return this->user_list; }//»ñÈ¡Íæ¼ÒÁĞ±í½á¹¹ÌåÈİÆ÷
-	inline const int GetPathLoadType() { if (this->load_type == 0) { throw TypeError(); } return this->load_type; }//ÉèÖÃÂ·¾¶¼ÓÔØÄ£Ê½
+	inline void SetInputPath(const std::string _path) { this->input_path = _path; };//è®¾ç½®è¾“å…¥è·¯å¾„
+	inline const std::string GetInputPath(void) { if (!this->input_path.empty()) { return this->input_path; } throw NullString(); }//è·å–è¾“å…¥è·¯å¾„
+	inline const std::string GetProcessingPath(void) { if (this->Processed_input_path.empty()) { throw NullString(); } return this->Processed_input_path; }//è·å–å¤„ç†åçš„è¾“å…¥è·¯å¾„
+	/*[[deprecated("ç»Ÿä¸€åˆ—è¡¨çš„ä½¿ç”¨ï¼Œæ‰€ä»¥è¯¥å‡½æ•°è¢«åºŸå¼ƒ")]]*/ inline const WorldDirectoriesNameList GetWorldList(void) { if (this->uct_world_list.world_directory_list.size() == 0 && this->uct_world_list.world_name_list.size() == 0) { throw NullStruct(); } return this->uct_world_list; }//è·å–ä¸–ç•Œåˆ—è¡¨å®¹å™¨ç»“æ„ä½“
+	inline const std::vector<WorldDirectoriesName> GetSTLWorldList(void) { if (this->world_list.size() == 0) { throw NullVector(); } return this->world_list; }//è·å–ä¸–ç•Œåˆ—è¡¨ç»“æ„ä½“å®¹å™¨
+	inline const std::vector<UserInfo> GetUserInfoList(void) { if (this->user_list.size() == 0) { throw NullVector(); } return this->user_list; }//è·å–ç©å®¶åˆ—è¡¨ç»“æ„ä½“å®¹å™¨
+	inline const int GetPathLoadType() { if (this->load_type == 0) { throw TypeError(); } return this->load_type; }//è®¾ç½®è·¯å¾„åŠ è½½æ¨¡å¼
 	inline const std::string GetLastCommand() { return this->CommandStr; }
 
-	void ProcessingPath(void);//´¦ÀíÊäÈëÂ·¾¶
+	void ProcessingPath(void);//å¤„ç†è¾“å…¥è·¯å¾„
 	void ProcessingPath(const std::string _input_path);
-	void PathLoadTpye(void);//¼ì²â¼ÓÔØ·½Ê½
+	void PathLoadTpye(void);//æ£€æµ‹åŠ è½½æ–¹å¼
 	void PathLoadTpye(const std::string _warld_path);
-	void LoadWorldList(void);//¼ÓÔØÊÀ½çÁĞ±í
+	void LoadWorldList(void);//åŠ è½½ä¸–ç•Œåˆ—è¡¨
 	void LoadWorldList(const std::string _world_path);
 	void LoadWorldListSTL(void);
 	void LoadWorldListSTL(const std::string _world_path);
-	void LoadUserList(void);//¼ÓÔØÍæ¼ÒÁĞ±í
+	void LoadUserList(void);//åŠ è½½ç©å®¶åˆ—è¡¨
 	void LoadUserList(const std::string _JSON_path);
-	void ReloadList(void);//ÖØĞÂ¼ÓÔØuser¡¢worldÁĞ±í
-	int ProcessCommand(const std::string _command);//´¦ÀíÃüÁî
-	virtual void RunCommand() {};//Ö´ĞĞÃüÁî£¬ĞèÒªÖØĞ´
+	void ReloadList(void);//é‡æ–°åŠ è½½userã€worldåˆ—è¡¨
+	int ProcessCommand(const std::string _command);//å¤„ç†å‘½ä»¤
+	virtual void RunCommand() {};//æ‰§è¡Œå‘½ä»¤ï¼Œéœ€è¦é‡å†™
 
 protected:
-	inline void SetProcessingPath(std::string _processing_path) { if (_processing_path.empty()) { throw NullString(); } this->Processed_input_path = _processing_path; }//ÉèÖÃ´¦ÀíºóµÄÂ·¾¶
-	/*[[deprecated("Í³Ò»ÁĞ±íµÄÊ¹ÓÃ£¬ËùÒÔ¸Ãº¯Êı±»·ÏÆú")]]*/ inline void SetWorldList(WorldDirectoriesNameList _uct_world_list) { if (_uct_world_list.world_directory_list.size() == 0 && _uct_world_list.world_name_list.size() == 0) { throw NullStruct(); } this->uct_world_list = _uct_world_list; }//ÉèÖÃÊÀ½çÁĞ±íÈİÆ÷½á¹¹Ìå
-	inline void SetSTLWorldList(std::vector<WorldDirectoriesName> _world_list) { if (_world_list.size() == 0) { throw NullVector(); } this->world_list = _world_list; }//ÉèÖÃÊÀ½çÁĞ±í½á¹¹ÌåÈİÆ÷
-	inline void SetUserInfoList(std::vector<UserInfo> _user_list) { if (_user_list.size() == 0) { throw NullVector(); } this->user_list = _user_list; }//ÉèÖÃÍæ¼ÒÁĞ±í½á¹¹ÌåÈİÆ÷
-	inline void SetPathLoadType(int type) { if (type == 0) { throw TypeError(); } this->load_type = type; }//ÉèÖÃÂ·¾¶¼ÓÔØÄ£Ê½
-	inline void SetLastCommand(const std::string _command) { this->CommandStr = _command; }//ÉèÖÃÃüÁî²ÎÊı
+	inline void SetProcessingPath(std::string _processing_path) { if (_processing_path.empty()) { throw NullString(); } this->Processed_input_path = _processing_path; }//è®¾ç½®å¤„ç†åçš„è·¯å¾„
+	/*[[deprecated("ç»Ÿä¸€åˆ—è¡¨çš„ä½¿ç”¨ï¼Œæ‰€ä»¥è¯¥å‡½æ•°è¢«åºŸå¼ƒ")]]*/ inline void SetWorldList(WorldDirectoriesNameList _uct_world_list) { if (_uct_world_list.world_directory_list.size() == 0 && _uct_world_list.world_name_list.size() == 0) { throw NullStruct(); } this->uct_world_list = _uct_world_list; }//è®¾ç½®ä¸–ç•Œåˆ—è¡¨å®¹å™¨ç»“æ„ä½“
+	inline void SetSTLWorldList(std::vector<WorldDirectoriesName> _world_list) { if (_world_list.size() == 0) { throw NullVector(); } this->world_list = _world_list; }//è®¾ç½®ä¸–ç•Œåˆ—è¡¨ç»“æ„ä½“å®¹å™¨
+	inline void SetUserInfoList(std::vector<UserInfo> _user_list) { if (_user_list.size() == 0) { throw NullVector(); } this->user_list = _user_list; }//è®¾ç½®ç©å®¶åˆ—è¡¨ç»“æ„ä½“å®¹å™¨
+	inline void SetPathLoadType(int type) { if (type == 0) { throw TypeError(); } this->load_type = type; }//è®¾ç½®è·¯å¾„åŠ è½½æ¨¡å¼
+	inline void SetLastCommand(const std::string _command) { this->CommandStr = _command; }//è®¾ç½®å‘½ä»¤å‚æ•°
 
 private:
-	std::string input_path;//ÊäÈëÂ·¾¶
-	std::string Processed_input_path;//´¦ÀíºóÂ·¾¶
-	WorldDirectoriesNameList uct_world_list;//ÊÀ½çÁĞ±í
-	std::vector<WorldDirectoriesName> world_list;//ÊÀ½çÁĞ±íÈİÆ÷
-	std::vector<UserInfo> user_list;//ÓÃ»§Êı¾İÁĞ±í
-	int load_type;//Â·¾¶¼ÓÔØÀàĞÍ
-	std::string CommandStr;//Ö¸Áî²ÎÊı
+	std::string input_path;//è¾“å…¥è·¯å¾„
+	std::string Processed_input_path;//å¤„ç†åè·¯å¾„
+	WorldDirectoriesNameList uct_world_list;//ä¸–ç•Œåˆ—è¡¨
+	std::vector<WorldDirectoriesName> world_list;//ä¸–ç•Œåˆ—è¡¨å®¹å™¨
+	std::vector<UserInfo> user_list;//ç”¨æˆ·æ•°æ®åˆ—è¡¨
+	int load_type;//è·¯å¾„åŠ è½½ç±»å‹
+	std::string CommandStr;//æŒ‡ä»¤å‚æ•°
 };

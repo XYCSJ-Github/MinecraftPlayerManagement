@@ -1,4 +1,4 @@
-//CDP.h 声明CDP类，COMMAND_DEL_PLAYER命令的执行类
+//CDP.h 澹版槑CDP绫伙紝COMMAND_DEL_PLAYER鍛戒护鐨勬墽琛岀被
 #pragma once
 #include "piwbd.h"
 
