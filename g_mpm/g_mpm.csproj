@@ -6,6 +6,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <PackageOutputPath>$(ProjectPath)</PackageOutputPath>
+    <BaseOutputPath>D:\Visual Studio Work\MinecraftPlayerManagement\x64</BaseOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 
 </Project>

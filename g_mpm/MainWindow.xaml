@@ -7,6 +7,28 @@
         mc:Ignorable="d"
         Title="Minecraft 玩家档案数据管理" Height="580" Width="950">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="450"/>
+            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+
+
+        <TextBlock Text="路径" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox x:Name="TB_path" Grid.Row="1" Grid.Column="2" FontSize="15" Margin="0,0,8,0" IsReadOnly="True"/>
+        <Button Content="..." Grid.Row="1" Grid.Column="3" Click="Button_Click"/>
+        <Button Content="扫描" Grid.Row="1" Grid.Column="4" Margin="10,0,0,0"/>
+        <TextBlock Grid.Row="1" Grid.Column="5" Text="MAC(Client)" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,20,0"/>
+
+
     </Grid>
 </Window>
