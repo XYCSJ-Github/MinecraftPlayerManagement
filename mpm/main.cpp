@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
 	{
 		LOG_DEBUG("使用命令行参数作为初始路径输入");
 		mp.SetInputPath(argv[1]);
+		StartWithArgv = true;
 	}
 
 	bool mRun = true;
