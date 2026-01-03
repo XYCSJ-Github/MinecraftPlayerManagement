@@ -1,6 +1,7 @@
 ﻿//main.cpp 人口点文件
 #include "CC.h"
 #include "Logout.h"
+#include "SharedMemoryClient.h"
 
 p_mpm mp;//所有CommandClass的父类
 
@@ -16,6 +17,13 @@ int main(int argc, char* argv[])
 
 	if (argc > 1)//如果有参启动，将StartwithArgv设为true，并提取输入参数
 	{
+		if (std::strcmp(argv[1],"bg") == 0)
+		{
+			SharedMemoryClient smc;
+			smc.Initialize();
+			smc.RunLoop();
+			return 0;
+		}
 		LOG_DEBUG("使用命令行参数作为初始路径输入");
 		mp.SetInputPath(argv[1]);
 		StartWithArgv = true;
@@ -41,6 +49,7 @@ int main(int argc, char* argv[])
 		catch (const std::exception& e)
 		{
 			LOG_ERROR(e.what());
+			StartWithArgv = false;
 			goto MainWhile;
 		}
 

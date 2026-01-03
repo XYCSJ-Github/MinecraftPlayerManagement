@@ -170,6 +170,7 @@
     <ClInclude Include="Logout.h" />
     <ClInclude Include="p_mpm.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SharedMemoryClient.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="throw_error.h" />
   </ItemGroup>
