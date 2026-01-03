@@ -16,6 +16,14 @@ int main(int argc, char* argv[])
 
 	if (argc > 1)//如果有参启动，将StartwithArgv设为true，并提取输入参数
 	{
+		for (size_t i = 0; i < argc; i++)
+		{
+			if (std::strcmp(argv[i], "debug") == 0)
+			{
+				LOG_DEBUG_OUT;
+			}
+		}
+
 		LOG_DEBUG("使用命令行参数作为初始路径输入");
 		mp.SetInputPath(argv[1]);
 		StartWithArgv = true;
@@ -41,6 +49,7 @@ int main(int argc, char* argv[])
 		catch (const std::exception& e)
 		{
 			LOG_ERROR(e.what());
+			StartWithArgv = false;
 			goto MainWhile;
 		}
 
