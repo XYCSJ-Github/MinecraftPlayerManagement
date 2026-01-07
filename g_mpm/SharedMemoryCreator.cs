@@ -267,7 +267,7 @@ namespace g_mpm
                     }
                 }
 
-                OnStatusMessage($"找到C++程序: {exePath}");
+                OnStatusMessage($"找到mpm程序: {exePath}");
 
                 // 创建进程启动信息
                 ProcessStartInfo psi = new ProcessStartInfo
@@ -289,7 +289,7 @@ namespace g_mpm
                 _cppProcess.Exited += (sender, args) =>
                 {
                     _cppProcessRunning = false;
-                    OnStatusMessage($"C++进程已退出，退出代码: {_cppProcess.ExitCode}");
+                    OnStatusMessage($"mpm进程已退出，退出代码: {_cppProcess.ExitCode}");
                     OnCppProcessStatusChanged(new CppProcessEventArgs(false, _cppProcess.ExitCode));
 
                     // 清理资源
@@ -302,7 +302,7 @@ namespace g_mpm
                 {
                     if (!string.IsNullOrEmpty(args.Data))
                     {
-                        OnStatusMessage($"C++输出: {args.Data}");
+                        OnStatusMessage($"mpm输出: {args.Data}");
                     }
                 };
 
@@ -310,7 +310,7 @@ namespace g_mpm
                 {
                     if (!string.IsNullOrEmpty(args.Data))
                     {
-                        OnError($"C++错误: {args.Data}");
+                        OnError($"mpm错误: {args.Data}");
                     }
                 };
 
@@ -318,7 +318,7 @@ namespace g_mpm
                 bool started = _cppProcess.Start();
                 if (!started)
                 {
-                    OnError("无法启动C++进程");
+                    OnError("无法启动mpm进程");
                     return false;
                 }
 
@@ -328,14 +328,14 @@ namespace g_mpm
                 _cppProcess.BeginOutputReadLine();
                 _cppProcess.BeginErrorReadLine();
 
-                OnStatusMessage($"C++进程已启动 (PID: {_cppProcess.Id})");
+                OnStatusMessage($"mpm进程已启动 (PID: {_cppProcess.Id})");
                 OnCppProcessStatusChanged(new CppProcessEventArgs(true, 0, _cppProcess.Id));
 
                 // 等待进程初始化
                 await Task.Delay(2000);
 
                 // 通知C++进程初始化完成
-                OnStatusMessage("通知C++进程初始化完成...");
+                OnStatusMessage("通知mpm进程初始化完成...");
                 bool signaled = SignalInitializationComplete();
 
                 if (!signaled)
@@ -348,24 +348,24 @@ namespace g_mpm
                 }
 
                 // 等待C++进程就绪回复（使用新的就绪检测方法）
-                OnStatusMessage("等待C++进程就绪...");
+                OnStatusMessage("等待mpm进程就绪...");
                 var (readySuccess, readyReply) = await WaitForInitialReadyAsync(10000);
                 
                 if (readySuccess)
                 {
-                    OnStatusMessage($"C++进程已就绪: {readyReply}");
+                    OnStatusMessage($"mpm进程已就绪: {readyReply}");
                     return true;
                 }
                 else
                 {
-                    OnWarning($"等待C++进程就绪失败: {readyReply}");
+                    OnWarning($"等待mpm进程就绪失败: {readyReply}");
                     // 即使没有收到就绪回复，进程也可能正在运行
                     return _cppProcessRunning && !_cppProcess.HasExited;
                 }
             }
             catch (Exception ex)
             {
-                OnError($"启动C++进程异常: {ex.Message}", ex);
+                OnError($"启动mpm进程异常: {ex.Message}", ex);
                 return false;
             }
         }
@@ -379,31 +379,31 @@ namespace g_mpm
             {
                 if (_cppProcess == null || !_cppProcessRunning)
                 {
-                    OnStatusMessage("C++进程未运行");
+                    OnStatusMessage("mpm进程未运行");
                     return true;
                 }
 
-                OnStatusMessage("正在停止C++进程...");
+                OnStatusMessage("正在停止mpm进程...");
 
                 // 发送退出指令
                 bool exitSent = SendExitCommand();
                 if (exitSent)
                 {
-                    OnStatusMessage("已发送退出指令给C++进程");
+                    OnStatusMessage("已发送退出指令给mpm进程");
 
                     // 等待回复
                     await Task.Delay(1000);
                     var (replySuccess, reply) = await WaitForReplyAsync(3000);
                     if (replySuccess)
                     {
-                        OnStatusMessage($"C++进程回复: {reply}");
+                        OnStatusMessage($"mpm进程回复: {reply}");
                     }
 
                     // 等待进程退出
                     bool exited = await WaitForProcessExitAsync(5000);
                     if (exited)
                     {
-                        OnStatusMessage("C++进程已优雅退出");
+                        OnStatusMessage("mpm进程已优雅退出");
                         return true;
                     }
                 }
@@ -414,7 +414,7 @@ namespace g_mpm
             }
             catch (Exception ex)
             {
-                OnError($"停止C++进程异常: {ex.Message}", ex);
+                OnError($"停止mpm进程异常: {ex.Message}", ex);
                 return false;
             }
         }
@@ -562,6 +562,67 @@ namespace g_mpm
                 return false;
             }
         }
+        public bool SendCommand(string message, int defCommand, string more)
+        {
+            if (!IsInitialized)
+            {
+                OnError("无法发送消息: 共享内存未初始化");
+                return false;
+            }
+
+            try
+            {
+                if (WaitForSingleObject(_hMutex, 0xFFFFFFFF) != 0)
+                {
+                    OnError("获取互斥锁失败");
+                    return false;
+                }
+
+                try
+                {
+                    var currentData = Marshal.PtrToStructure<CommandRunningData>(_pSharedData);
+
+                    var newData = new CommandRunningData
+                    {
+                        MessageFromA = message.Length > Constants.BufferSize - 1
+                            ? message.Substring(0, Constants.BufferSize - 1)
+                            : message,
+                        ReplyFromB = currentData.ReplyFromB ?? "",
+                        NewMessageFromA = true,
+                        NewReplyFromB = currentData.NewReplyFromB,
+                        ExitFlag = currentData.ExitFlag,
+
+                        Command = defCommand,
+                        input_path = more
+                    };
+
+                    Marshal.StructureToPtr(newData, _pSharedData, false);
+
+                    bool eventSet = SetEvent(_hEventFromAToB);
+                    if (eventSet)
+                    {
+                        Interlocked.Increment(ref _messagesSent);
+                        OnMessageSent(new MessageEventArgs(message));
+                        OnStatusMessage($"消息发送成功: {message}");
+                    }
+                    else
+                    {
+                        OnError("设置事件失败");
+                    }
+
+                    return eventSet;
+                }
+                finally
+                {
+                    ReleaseMutex(_hMutex);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError($"发送消息异常: {ex.Message}", ex);
+                return false;
+            }
+        }
 
         /// <summary>
         /// 发送退出指令
@@ -618,7 +679,7 @@ namespace g_mpm
         }
 
         /// <summary>
-        /// 等待初始就绪消息（修复竞态条件）
+        /// 等待初始就绪消息
         /// </summary>
         private async Task<(bool success, string reply)> WaitForInitialReadyAsync(int timeoutMilliseconds)
         {
@@ -653,7 +714,7 @@ namespace g_mpm
         }
 
         /// <summary>
-        /// 检查是否有新回复（修复版本）
+        /// 检查是否有新回复
         /// </summary>
         public (bool hasReply, string reply) CheckForReply()
         {
@@ -752,7 +813,7 @@ namespace g_mpm
         }
 
         /// <summary>
-        /// 等待回复（修复版本）
+        /// 等待回复
         /// </summary>
         public async Task<(bool success, string reply)> WaitForReplyAsync(int timeoutMilliseconds = -1)
         {

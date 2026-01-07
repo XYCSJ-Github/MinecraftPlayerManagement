@@ -413,35 +413,35 @@ namespace g_mpm
             }
         }
 
-        private async void btnTestPing_Click(object sender, RoutedEventArgs e)
-        {
-            if (_memoryCreator == null || !_memoryCreator.IsInitialized)
-            {
-                MessageBox.Show("请先初始化共享内存", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+        //private async void btnTestPing_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (_memoryCreator == null || !_memoryCreator.IsInitialized)
+        //    {
+        //        MessageBox.Show("请先初始化共享内存", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        return;
+        //    }
 
-            try
-            {
-                _memoryCreator.SendMessage("ping");
+        //    try
+        //    {
+        //        _memoryCreator.SendMessage("ping");
 
-                // 等待回复
-                await Task.Delay(1000);
-                var (success, reply) = await _memoryCreator.WaitForReplyAsync(3000);
-                if (success)
-                {
-                    AppendLog($"[TEST] ping测试成功: {reply}");
-                }
-                else
-                {
-                    AppendLog($"[TEST] ping测试失败: {reply}");
-                }
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"[ERROR] 测试异常: {ex.Message}");
-            }
-        }
+        //        // 等待回复
+        //        await Task.Delay(1000);
+        //        var (success, reply) = await _memoryCreator.WaitForReplyAsync(3000);
+        //        if (success)
+        //        {
+        //            AppendLog($"[TEST] ping测试成功: {reply}");
+        //        }
+        //        else
+        //        {
+        //            AppendLog($"[TEST] ping测试失败: {reply}");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        AppendLog($"[ERROR] 测试异常: {ex.Message}");
+        //    }
+        //}
 
         private async void btnTestBatch_Click(object sender, RoutedEventArgs e)
         {
@@ -624,6 +624,12 @@ namespace g_mpm
             {
                 AppendLog($"[ERROR] 关闭时异常: {ex.Message}");
             }
+        }
+
+        private void btnTestPing_Click(object sender, RoutedEventArgs e)
+        {
+            CommandTestWindow testWindow = new CommandTestWindow();
+            testWindow.Show();
         }
     }
 }

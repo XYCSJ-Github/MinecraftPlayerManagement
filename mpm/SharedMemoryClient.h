@@ -52,6 +52,14 @@ struct ExtendedSharedData : public SharedDataBase {
 };
 #pragma pack(pop)
 
+#pragma pack(push, 1)
+struct CommandRunningData : public SharedDataBase
+{
+    int Command;
+    std::string input_path;
+};
+#pragma pack(pop)
+
 /**
  * @class SharedMemoryClient
  * @brief C++端共享内存客户端类，用于与C#进程通信

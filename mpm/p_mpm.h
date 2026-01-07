@@ -17,6 +17,7 @@
 #define COMMAND_DEL_JS 210
 #define COMMAND_NULL_BACK 211
 #define COMMAND_REFRESH 212
+#define PCOMMAND_SET_PATH 213
 
 class p_mpm
 {

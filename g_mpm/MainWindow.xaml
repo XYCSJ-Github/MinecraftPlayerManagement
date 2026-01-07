@@ -114,7 +114,7 @@
                 <!-- 右侧：测试按钮 -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Button x:Name="btnTestPing" 
-                            Content="测试 Ping" 
+                            Content="命令测试 " 
                             Click="btnTestPing_Click"
                             IsEnabled="False"
                             Background="#2196F3"
@@ -249,6 +249,10 @@
             <!-- 右侧：日志显示区 -->
             <Border Grid.Column="2">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="324*"/>
+                        <ColumnDefinition Width="175*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -256,7 +260,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- 日志标题 -->
-                    <Border Grid.Row="0" Background="#F5F5F5" Padding="10">
+                    <Border Grid.Row="0" Background="#F5F5F5" Padding="10" Grid.ColumnSpan="2" Margin="0,0,0,448" Grid.RowSpan="2">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📝 g_mpm 通信日志" FontWeight="Bold" FontSize="14"/>
                             <Button x:Name="btnClearLog" 
@@ -272,7 +276,7 @@
                     <!-- 日志内容 -->
                     <TextBox Grid.Row="1" 
                              x:Name="txtLog" 
-                             Margin="10"
+                             Margin="10,10,10,10"
                              IsReadOnly="True"
                              TextWrapping="Wrap"
                              FontFamily="Consolas"
@@ -281,10 +285,10 @@
                              Foreground="#D4D4D4"
                              BorderThickness="0"
                              VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Auto"/>
+                             HorizontalScrollBarVisibility="Auto" Grid.ColumnSpan="2"/>
 
                     <!-- 状态栏 -->
-                    <Border Grid.Row="2" Background="#333333" Padding="8">
+                    <Border Grid.Row="1" Background="#333333" Padding="8" Grid.ColumnSpan="2" Margin="0,448,0,0" Grid.RowSpan="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>

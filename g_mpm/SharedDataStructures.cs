@@ -59,6 +59,44 @@ namespace g_mpm
         public byte[] Reserved;
     }
 
+    ///<summary>
+    ///承载命令及内容的结构体
+    ///</summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
+    struct CommandRunningData
+    {
+        // 基础字段
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = Constants.BufferSize)]
+        public string MessageFromA;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = Constants.BufferSize)]
+        public string ReplyFromB;
+
+        [MarshalAs(UnmanagedType.Bool)]
+        public bool NewMessageFromA;
+
+        [MarshalAs(UnmanagedType.Bool)]
+        public bool NewReplyFromB;
+
+        [MarshalAs(UnmanagedType.Bool)]
+        public bool ExitFlag;
+
+        // 扩展字段
+        public int MessageCount;
+        public long Timestamp;
+        public int ProcessId;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
+        public byte[] Reserved;
+
+        //以上为继承字段
+
+        public int Command;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = Constants.BufferSize)]
+        public string input_path;
+    }
+
     /// <summary>
     /// 共享数据接口
     /// </summary>
@@ -82,6 +120,26 @@ namespace g_mpm
         public const string DefaultEventAToB = "EventFromAToB";
         public const string DefaultEventBToA = "EventFromBToA";
         public const string DefaultInitEvent = "SharedMemoryInitEvent";
+    }
+
+    ///<summary>
+    ///命令定义
+    ///</summary>
+    public static class DefCommand
+    {
+        public const int COMMAND_EXIT = 201;
+        public const int COMMAND_BREAK = 202;
+        public const int COMMAND_OPEN_WORLD = 203;
+        public const int COMMAND_OPEN_PLAYER = 204;
+        public const int COMMAND_LIST_WORLD = 205;
+        public const int COMMAND_LIST_PLAYER = 206;
+        public const int COMMAND_DEL_PLAYER = 207;
+        public const int COMMAND_DEL_WORLD = 208;
+        public const int COMMAND_DEL_PW = 209;
+        public const int COMMAND_DEL_JS = 210;
+        public const int COMMAND_NULL_BACK = 211;
+        public const int COMMAND_REFRESH = 212;
+        public const int PCOMMAND_SER_PATH = 213;
     }
 
     /// <summary>
