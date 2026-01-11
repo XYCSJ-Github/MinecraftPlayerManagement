@@ -71,9 +71,6 @@
     <ClCompile Include="Logout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="old_main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="p_mpm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -122,6 +119,9 @@
   <ItemGroup>
     <None Include="SMC.h">
       <Filter>头文件</Filter>
+    </None>
+    <None Include="old_main.cpp">
+      <Filter>源文件</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -11,7 +11,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="SDS.cs" />
+    <Compile Remove="SMC.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="SDS.cs" />
+    <None Include="SMC.cs" />
   </ItemGroup>
 
 </Project>

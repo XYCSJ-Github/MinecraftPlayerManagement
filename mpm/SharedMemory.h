@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "Struct.h"
 #include "p_mpm.h"
+#include "Struct.h"
 
 /*
 *连接状态
@@ -64,6 +64,74 @@ enum RunStatus
 	SUCCESSFUL,
 	//失败
 	FAILED
+};
+
+/*
+* 结构体类型
+* @param WDNL 存档路径列表与名称列表
+* @param WDN 存档路径与名称
+* @param UI 玩家信息
+* @param PI_AS 玩家信息（进度与统计）
+* @param PI_D 玩家信息（数据）
+* @param PIWI 一次性存储单个玩家的所有数据
+* @param PIWIL 存储玩家所有数据的容器结构体
+*/
+enum StructType
+{
+	/*
+	* WorldDirectoriesNameList 存档路径列表与名称列表
+	* @param world_directory_list 存档路径列表
+	* @param world_name_list 存档名称列表
+	*/
+	WDNL,
+	/*
+	* WorldDirectoriesName 存档路径与名称
+	* @param world_directory 存档路径
+	* @param world_name 存档名称
+	*/
+	WDN,
+	/*
+	* UserInfo 玩家信息
+	* @param user_name 玩家昵称
+	* @param uuid 玩家UUID
+	* @param expiresOn 玩家令牌过期时间
+	*/
+	UI,
+	/*
+	* PlayerInfo_AS 玩家信息（进度与统计）
+	* @param path 文件路径
+	* @param uuid 文件UUID（文件名）
+	*/
+	PI_AS,
+	/*
+	* PlayerInfo_Data 玩家信息（数据）
+	* @param dat_path 数据文件路径
+	* @param dat_old_path 旧数据文件路径
+	* @param cosarmor_path 装饰盔甲数据文件路径
+	* @param uuid 数据文件UUID
+	* @param old_uuid 旧数据文件UUID
+	* @param cosarmor_uuid 装饰盔甲数据文件UUID
+	*/
+	PI_D,
+	/*
+	* playerinworldinfo 一次性存储单个玩家的所有数据
+	* @param world_dir_name 存档信息
+	* @param player 玩家信息
+	* @param adv_path 进度文件路径
+	* @param pd_path 数据文件路径
+	* @param pd_old_path 旧数据文件路径
+	* @param cosarmor_path 装饰盔甲数据文件路径
+	* @param st_path 统计文件路径
+	*/
+	PIWI,
+	/*
+	* PlayerInWorldInfoList 存储玩家所有数据的容器结构体
+	* @param advancements_list 进度文件信息
+	* @param playerdata_list 玩家信息（数据）
+	* @param stats_list 进度文件信息
+	* @param playerinworldinfo_list 一次性存储单个玩家的所有数据
+	*/
+	PIWIL
 };
 
 //共享内存缓冲区大小
@@ -140,4 +208,3 @@ private:
 	SharedMemoryCommand* smc;
 };
 
- 

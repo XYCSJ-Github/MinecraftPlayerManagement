@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        
         <Style TargetType="TextBox">
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
@@ -35,5 +36,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
     </Application.Resources>
 </Application>

@@ -11,7 +11,7 @@ namespace g_mpm
     /// <summary>
     /// WPF共享内存创建者（服务端）
     /// </summary>
-    public class SharedMemoryCreator : IDisposable
+    public class SMC : IDisposable
     {
         // 配置
         private readonly SharedMemoryConfig _config;
@@ -93,7 +93,7 @@ namespace g_mpm
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 "required" 修饰符或声明为可为 null。
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 "required" 修饰符或声明为可为 null。
 #pragma warning disable IDE0290 // 使用主构造函数
-        public SharedMemoryCreator(SharedMemoryConfig? config = null)
+        public SMC(SharedMemoryConfig? config = null)
 #pragma warning restore IDE0290 // 使用主构造函数
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 "required" 修饰符或声明为可为 null。
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 "required" 修饰符或声明为可为 null。
@@ -1007,7 +1007,7 @@ namespace g_mpm
             GC.SuppressFinalize(this);
         }
 
-        ~SharedMemoryCreator()
+        ~SMC()
         {
             if (!_disposed)
             {

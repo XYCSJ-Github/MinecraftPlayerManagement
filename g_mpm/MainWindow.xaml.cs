@@ -11,7 +11,7 @@ namespace g_mpm
 {
     public partial class MainWindow : Window
     {
-        private SharedMemoryCreator? _memoryCreator;
+        private SMC? _memoryCreator;
         private DispatcherTimer? _statusTimer;
         private DispatcherTimer? _replyCheckTimer;
         private CancellationTokenSource? _cts;

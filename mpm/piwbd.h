@@ -33,7 +33,7 @@ private:
 	std::vector<PlayerInfo_AS> advancements_list;//Advancements结构体STL
 	std::vector<PlayerInfo_Data> playerdata_list;//Playerdata结构体STL
 	std::vector<PlayerInfo_AS> stats_list;//Stats结构体STL
-	std::vector<playerinworldinfo> piw_list;//单个玩家数据结构体STL
+	std::vector<PlayerInWorldInfo> piw_list;//单个玩家数据结构体STL
 	std::string show;//输出到控制台的字符串
 
 public:

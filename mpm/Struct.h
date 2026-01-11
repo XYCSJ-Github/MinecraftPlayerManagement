@@ -96,7 +96,7 @@ struct PlayerInfo_Data
 * @param cosarmor_path 装饰盔甲数据文件路径
 * @param st_path 统计文件路径
 */
-struct playerinworldinfo
+struct PlayerInWorldInfo
 {
 	/*
 	* 存档信息
@@ -123,7 +123,13 @@ struct playerinworldinfo
 	std::string st_path;
 };
 
-//存储玩家所有数据的容器结构体
+/*
+* 存储玩家所有数据的容器结构体
+* @param advancements_list 进度文件信息
+* @param playerdata_list 玩家信息（数据）
+* @param stats_list 进度文件信息
+* @param playerinworldinfo_list 一次性存储单个玩家的所有数据
+*/
 struct PlayerInWorldInfoList
 {
 	/*
@@ -158,7 +164,7 @@ struct PlayerInWorldInfoList
 	* @param cosarmor_path 装饰盔甲数据文件路径
 	* @param st_path 统计文件路径
 	*/
-	std::vector<playerinworldinfo> playerinworldinfo_list;
+	std::vector<PlayerInWorldInfo> playerinworldinfo_list;
 };
 
 /*
@@ -186,8 +192,8 @@ struct SharedMemoryCommand
 	//报错信息
 	std::string ErrorInfo;
 
-	//结构体数据类型
-	std::string StructDataType;
+	//结构体数据类型 枚举StructType
+	int StructDataType;
 	//用于存储非单一数据类型的结构体
 	//std::vector<std::any> DataStructs;
 };

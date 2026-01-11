@@ -19,7 +19,7 @@ namespace g_mpm
     /// </summary>
     public partial class CommandTestWindow : Window
     {
-        SharedMemoryCreator sharedMemoryCreator = new SharedMemoryCreator();
+        SMC sharedMemoryCreator = new SMC();
         public CommandTestWindow()
         {
             InitializeComponent();

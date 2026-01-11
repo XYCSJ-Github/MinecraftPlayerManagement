@@ -3,7 +3,7 @@
 #include "func.h"//功能
 #include "Logout.h"//日志输出
 
-int old_main(int argc, char* argv[])
+static int old_main(int argc, char* argv[])
 {
 #if _DEBUG//如果生成模式为debug则开启log_debug输出
 	LOG_DEBUG_OUT
@@ -242,7 +242,7 @@ int old_main(int argc, char* argv[])
 					std::vector<PlayerInfo_AS> c_advancements_list;
 					std::vector<PlayerInfo_Data> c_playerdata_list;
 					std::vector<PlayerInfo_AS> c_stats_list;
-					std::vector<playerinworldinfo> piw_list;
+					std::vector<PlayerInWorldInfo> piw_list;
 
 					for (const auto& user_info : user_info_list)
 					{
@@ -250,7 +250,7 @@ int old_main(int argc, char* argv[])
 						{
 							for (int i = 0; i < world_name_list.world_name_list.size(); ++i)//收集该玩家在本次循环世界中所有数据信息，并记录进playerinworldinfo piw_list
 							{
-								playerinworldinfo piw = { "否", "否", "否", "否", "否", "否", "否" };
+								PlayerInWorldInfo piw = { "否", "否", "否", "否", "否", "否", "否" };
 								piw.player.uuid = user_info.uuid;
 								piw.world_dir_name.world_name = world_name_list.world_name_list[i];
 								std::string open_path = world_name_list.world_directory_list[i];
@@ -468,7 +468,7 @@ int old_main(int argc, char* argv[])
 					std::vector<PlayerInfo_AS> d_advancements_list;
 					std::vector<PlayerInfo_Data> d_playerdata_list;
 					std::vector<PlayerInfo_AS> d_stats_list;
-					playerinworldinfo delete_file_list;
+					PlayerInWorldInfo delete_file_list;
 
 					std::string del_info = "\n从所有世界删除玩家：" + osss + "\nUUID：" + finded_player_uuid;
 
@@ -609,7 +609,7 @@ int old_main(int argc, char* argv[])
 					std::vector<PlayerInfo_AS> d_advancements_list;
 					std::vector<PlayerInfo_Data> d_playerdata_list;
 					std::vector<PlayerInfo_AS> d_stats_list;
-					playerinworldinfo delete_file_list;
+					PlayerInWorldInfo delete_file_list;
 					std::string del_info;
 
 					for (int i = 0; i < world_name_list.world_name_list.size(); ++i)
@@ -867,7 +867,7 @@ int old_main(int argc, char* argv[])
 					std::vector<PlayerInfo_AS> pw_ad_list;
 					std::vector<PlayerInfo_AS> pw_st_list;
 					std::vector<PlayerInfo_Data> pw_da_list;
-					playerinworldinfo piwi;
+					PlayerInWorldInfo piwi;
 					piwi.world_dir_name.world_name = world.world_name;
 					piwi.player.uuid = player.uuid;
 
