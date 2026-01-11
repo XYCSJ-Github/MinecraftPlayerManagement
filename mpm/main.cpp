@@ -1,7 +1,6 @@
 ﻿//main.cpp 人口点文件
 #include "CC.h"
 #include "Logout.h"
-#include "SharedMemoryClient.h"
 
 p_mpm mp;//所有CommandClass的父类
 
@@ -17,13 +16,13 @@ int main(int argc, char* argv[])
 
 	if (argc > 1)//如果有参启动，将StartwithArgv设为true，并提取输入参数
 	{
-		if (std::strcmp(argv[1],"bg") == 0)
-		{
-			SharedMemoryClient smc;
-			smc.Initialize();
-			smc.RunLoop();
-			return 0;
-		}
+		//if (std::strcmp(argv[1],"bg") == 0)
+		//{
+		//	SharedMemoryClient smc;
+		//	smc.Initialize();
+		//	smc.RunLoop();
+		//	return 0;
+		//}
 		LOG_DEBUG("使用命令行参数作为初始路径输入");
 		mp.SetInputPath(argv[1]);
 		StartWithArgv = true;
@@ -122,19 +121,19 @@ int main(int argc, char* argv[])
 
 			switch (Signal)//命令处理
 			{
-			case COMMAND_EXIT:
+			case Command::EXIT:
 			{
 				LOG_DEBUG("识别命令：exit");
 				return 0;
 			}
 
-			case COMMAND_BREAK:
+			case Command::BREAK:
 			{
 				LOG_DEBUG("识别命令：break");
 				goto MainWhile;
 			}
 
-			case COMMAND_OPEN_PLAYER:
+			case Command::OPEN_PLAYER:
 			{
 				LOG_DEBUG("识别命令：open player");
 				COP cop;
@@ -151,7 +150,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			case COMMAND_OPEN_WORLD:
+			case Command::OPEN_WORLD:
 			{
 				LOG_DEBUG("识别命令：open world");
 				COW cow;
@@ -168,7 +167,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			case COMMAND_LIST_PLAYER:
+			case Command::LIST_PLAYER:
 			{
 				LOG_DEBUG("识别命令：list player");
 				CLP clp;
@@ -185,7 +184,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			case COMMAND_LIST_WORLD:
+			case Command::LIST_WORLD:
 			{
 				LOG_DEBUG("识别命令：list world");
 				CLW clw;
@@ -202,7 +201,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			case COMMAND_DEL_PLAYER:
+			case Command::DEL_PLAYER:
 			{
 				LOG_DEBUG("识别命令：delete player");
 				CDP cdp;
@@ -219,7 +218,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			case COMMAND_DEL_WORLD:
+			case Command::DEL_WORLD:
 			{
 				LOG_DEBUG("识别命令：delete world");
 				CDW cdw;
@@ -236,7 +235,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			case COMMAND_DEL_PW:
+			case Command::DEL_PW:
 			{
 				LOG_DEBUG("识别命令：delete pw");
 				CDPW cdpw;
@@ -253,7 +252,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			case COMMAND_DEL_JS:
+			case Command::DEL_JS:
 			{
 				LOG_DEBUG("识别命令：delete js");
 				CDJS cdjs;
@@ -270,11 +269,11 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			case COMMAND_NULL_BACK:
+			case Command::NULL_BACK:
 				LOG_DEBUG("未识别命令");
 				break;
 
-			case COMMAND_REFRESH:
+			case Command::REFRESH:
 			{
 				LOG_DEBUG("识别命令：refresh");
 				try

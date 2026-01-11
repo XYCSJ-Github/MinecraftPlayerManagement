@@ -250,19 +250,19 @@ int p_mpm::ProcessCommand(const std::string _command)
 	l1 = _command.substr(0, 4);
 	if (_command == "exit")
 	{
-		return COMMAND_EXIT;
+		return Command::EXIT;
 	}
 
 	l1 = _command.substr(0, 5);
 	if (_command == "break")
 	{
-		return COMMAND_BREAK;
+		return Command::BREAK;
 	}
 
 	l1 = _command.substr(0, 7);
 	if (l1 == "refresh")
 	{
-		return COMMAND_REFRESH;
+		return Command::REFRESH;
 	}
 
 	l1 = _command.substr(0, 4);
@@ -287,7 +287,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_OPEN_WORLD;
+			return Command::OPEN_WORLD;
 		}
 
 		try
@@ -309,7 +309,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_OPEN_PLAYER;
+			return Command::OPEN_PLAYER;
 		}
 	}
 
@@ -326,7 +326,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 		}
 		if (l2 == "player")
 		{
-			return COMMAND_LIST_PLAYER;
+			return Command::LIST_PLAYER;
 		}
 
 		try
@@ -339,7 +339,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 		}
 		if (l2 == "world")
 		{
-			return COMMAND_LIST_WORLD;
+			return Command::LIST_WORLD;
 		}
 	}
 
@@ -365,7 +365,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_DEL_PLAYER;
+			return Command::DEL_PLAYER;
 		}
 
 		try
@@ -387,7 +387,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_DEL_WORLD;
+			return Command::DEL_WORLD;
 		}
 
 		try
@@ -409,7 +409,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_DEL_PW;
+			return Command::DEL_PW;
 		}
 
 		try
@@ -431,9 +431,9 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_DEL_JS;
+			return Command::DEL_JS;
 		}
 	}
 
-	return COMMAND_NULL_BACK;
+	return Command::NULL_BACK;
 }

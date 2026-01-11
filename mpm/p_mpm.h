@@ -4,20 +4,34 @@
 #include "func.h"
 #include "Logout.h"
 
-//所有命令
-#define COMMAND_EXIT 201
-#define COMMAND_BREAK 202
-#define COMMAND_OPEN_WORLD 203
-#define COMMAND_OPEN_PLAYER 204
-#define COMMAND_LIST_WORLD 205
-#define COMMAND_LIST_PLAYER 206
-#define COMMAND_DEL_PLAYER 207
-#define COMMAND_DEL_WORLD 208
-#define COMMAND_DEL_PW 209
-#define COMMAND_DEL_JS 210
-#define COMMAND_NULL_BACK 211
-#define COMMAND_REFRESH 212
-#define PCOMMAND_SET_PATH 213
+//命令
+enum Command
+{
+	//退出
+	EXIT,
+	//返回
+	BREAK,
+	//open world
+	OPEN_WORLD,
+	//open player
+	OPEN_PLAYER,
+	//list world
+	LIST_WORLD,
+	//list player
+	LIST_PLAYER,
+	//del player
+	DEL_PLAYER,
+	//del world
+	DEL_WORLD,
+	//del pw
+	DEL_PW,
+	//del js
+	DEL_JS,
+	//unknown command
+	NULL_BACK,
+	//refresh
+	REFRESH
+};
 
 class p_mpm
 {

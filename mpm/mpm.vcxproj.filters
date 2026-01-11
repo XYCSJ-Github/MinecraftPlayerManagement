@@ -60,7 +60,7 @@
     <ClInclude Include="CDJS.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SharedMemoryClient.h">
+    <ClInclude Include="SharedMemory.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,10 +110,18 @@
     <ClCompile Include="CC.h">
       <Filter>头文件</Filter>
     </ClCompile>
+    <ClCompile Include="SharedMemory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mpm.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SMC.h">
+      <Filter>头文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

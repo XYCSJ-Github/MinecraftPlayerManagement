@@ -170,7 +170,8 @@
     <ClInclude Include="Logout.h" />
     <ClInclude Include="p_mpm.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SharedMemoryClient.h" />
+    <None Include="SMC.h" />
+    <ClInclude Include="SharedMemory.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="throw_error.h" />
   </ItemGroup>
@@ -190,6 +191,7 @@
     <ClCompile Include="old_main.cpp" />
     <ClCompile Include="piwbd.cpp" />
     <ClCompile Include="p_mpm.cpp" />
+    <ClCompile Include="SharedMemory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mpm.rc" />
