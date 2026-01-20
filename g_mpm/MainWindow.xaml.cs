@@ -11,7 +11,7 @@ namespace g_mpm
 {
     public partial class MainWindow : Window
     {
-        private SMC? _memoryCreator;
+        private SharedMemory? _memoryCreator;
         private DispatcherTimer? _statusTimer;
         private DispatcherTimer? _replyCheckTimer;
         private CancellationTokenSource? _cts;
@@ -38,10 +38,10 @@ namespace g_mpm
                     InitTimeout = 10000
                 };
 
-                _memoryCreator = new SharedMemoryCreator(config);
+                _memoryCreator = new SharedMemory(config);
 
                 // 订阅事件
-                _memoryCreator.MessageSent += (s, e) =>
+                _memoryCreator.MessageSend += (s, e) =>
                 {
                     Dispatcher.Invoke(() =>
                     {
@@ -49,12 +49,12 @@ namespace g_mpm
                     });
                 };
 
-                _memoryCreator.ReplyReceived += (s, e) =>
+                _memoryCreator.MessageRecv += (s, e) =>
                 {
                     Dispatcher.Invoke(() =>
                     {
                         AppendLog($"[{e.Timestamp:HH:mm:ss.fff}] 📥 接收: {e.Message}");
-                        txtReceivedCount.Text = _memoryCreator.RepliesReceived.ToString();
+                        //txtReceivedCount.Text = _memoryCreator.RepliesReceived.ToString();
                         txtMessageInfo.Text = $"收到回复: {e.Message}";
                     });
                 };
@@ -73,10 +73,19 @@ namespace g_mpm
                     });
                 };
 
-                _memoryCreator.ConnectionStatusChanged += (s, isConnected) =>
+                _memoryCreator.ConnectStatusChanged += (s, isConnected) =>
                 {
                     Dispatcher.Invoke(() =>
                     {
+                        bool isConnected = false;
+                        if (_memoryCreator.ConnectStatus == ConnectStatus.NOT_CONNECTED)
+                        {
+                            isConnected = false;
+                        }
+                        else if(_memoryCreator.ConnectStatus == ConnectStatus.CONNECTED)
+                        {
+                            isConnected = true;
+                        }
                         txtConnectionStatus.Text = isConnected ? "🟢 已连接" : "🔴 未连接";
                         txtConnectionStatus.Foreground = isConnected ?
                             Brushes.LightGreen :
@@ -86,21 +95,21 @@ namespace g_mpm
                     });
                 };
 
-                _memoryCreator.CppProcessStatusChanged += (s, e) =>
+                _memoryCreator.MpmProcessStatusChanged += (s, e) =>
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        if (e.IsRunning)
+                        if (e.ProgramStatus == ProgramStatus.RUNNING)
                         {
-                            txtClientStatus.Text = $"运行中 (PID: {e.ProcessId})";
+                            txtClientStatus.Text = $"运行中 (PID: {e.processId})";
                             txtClientStatus.Foreground = Brushes.LightGreen;
                         }
                         else
                         {
-                            txtClientStatus.Text = $"已退出 (代码: {e.ExitCode})";
+                            txtClientStatus.Text = $"已退出 (代码: {e.Exitnum})";
                             txtClientStatus.Foreground = Brushes.LightCoral;
 
-                            if (_memoryCreator?.IsInitialized == true)
+                            if (_memoryCreator?.ConnectStatus == ConnectStatus.NOT_CONNECTED)
                             {
                                 txtConnectionStatus.Text = "🔴 未连接";
                                 txtConnectionStatus.Foreground = Brushes.LightCoral;
@@ -205,7 +214,7 @@ namespace g_mpm
             {
                 try
                 {
-                    if (_memoryCreator?.IsInitialized == true)
+                    if (_memoryCreator?.ConnectStatus == ConnectStatus.INITIALIZED)
                     {
                         // 使用CheckForReply检查消息
                         var (hasReply, reply) = _memoryCreator.CheckForReply();
@@ -386,7 +395,7 @@ namespace g_mpm
                 return;
             }
 
-            if (_memoryCreator == null || !_memoryCreator.IsInitialized)
+            if (_memoryCreator == null || _memoryCreator.ConnectStatus == ConnectStatus.INITIALIZED)
             {
                 MessageBox.Show("共享内存未初始化", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -397,7 +406,7 @@ namespace g_mpm
                 bool success = _memoryCreator.SendMessage(message);
                 if (success)
                 {
-                    txtSentCount.Text = _memoryCreator.MessagesSent.ToString();
+                    //txtSentCount.Text = _memoryCreator.MessagesSend.ToString();
                     txtMessage.Clear();
                     txtMessageInfo.Text = $"消息发送成功: {message}";
                 }
@@ -445,7 +454,7 @@ namespace g_mpm
 
         private async void btnTestBatch_Click(object sender, RoutedEventArgs e)
         {
-            if (_memoryCreator == null || !_memoryCreator.IsInitialized)
+            if (_memoryCreator == null || _memoryCreator.ConnectStatus == ConnectStatus.INITIALIZED)
             {
                 MessageBox.Show("请先初始化共享内存", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -484,7 +493,7 @@ namespace g_mpm
 
         private async void btnStopCpp_Click(object sender, RoutedEventArgs e)
         {
-            if (_memoryCreator == null || !_memoryCreator.IsInitialized)
+            if (_memoryCreator == null || _memoryCreator.ConnectStatus == ConnectStatus.INITIALIZED)
             {
                 MessageBox.Show("请先初始化共享内存", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -558,14 +567,14 @@ namespace g_mpm
             txtTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             // 更新运行时间
-            if (_memoryCreator?.IsInitialized == true)
+            if (_memoryCreator?.ConnectStatus == ConnectStatus.INITIALIZED)
             {
                 var uptime = _memoryCreator.Uptime;
                 txtUptime.Text = $"{uptime.Hours:00}:{uptime.Minutes:00}:{uptime.Seconds:00}";
             }
 
             // 更新状态信息
-            if (_memoryCreator?.IsInitialized == true)
+            if (_memoryCreator?.ConnectStatus == ConnectStatus.INITIALIZED)
             {
                 txtConnectionStatus.Text = "🟢 已连接";
                 txtConnectionStatus.Foreground = Brushes.LightGreen;
@@ -579,7 +588,7 @@ namespace g_mpm
 
         private void ReplyCheckTimer_Tick(object sender, EventArgs e)
         {
-            if (_memoryCreator == null || !_memoryCreator.IsInitialized || !_isRunning)
+            if (_memoryCreator == null || _memoryCreator.ConnectStatus == ConnectStatus.INITIALIZED || !_isRunning)
                 return;
 
             try

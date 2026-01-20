@@ -19,7 +19,7 @@ namespace g_mpm
     /// </summary>
     public partial class CommandTestWindow : Window
     {
-        SMC sharedMemoryCreator = new SMC();
+        SharedMemory sharedMemoryCreator;
         public CommandTestWindow()
         {
             InitializeComponent();
@@ -35,7 +35,7 @@ namespace g_mpm
             {
                 DirName.Text = dialog.FolderName;
                 path = dialog.FolderName;
-                sharedMemoryCreator.SendCommand("", DefCommand.PCOMMAND_SER_PATH, dialog.FolderName);
+                sharedMemoryCreator.SendCommand("", (int)MemoryCommand.SET_PATH, dialog.FolderName);
             }
         }
     }

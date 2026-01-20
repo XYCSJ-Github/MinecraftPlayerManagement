@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Xml;
 
 namespace g_mpm
 {
@@ -11,7 +12,96 @@ namespace g_mpm
         /// 内存大小
         /// </summary>
         public const int BufferSize = 1024;
+        /// <summary>
+        /// 共享内存名称
+        /// </summary>
+        public const string MemoryName = "SharedMemory";
+        /// <summary>
+        /// 互斥锁名称
+        /// </summary>
+        public const string MutexName = "MutexLock";
+        /// <summary>
+        /// 发送事件名称
+        /// </summary>
+        public const string EventSend = "EventSend";
+        /// <summary>
+        /// 接收事件名称
+        /// </summary>
+        public const string EventRecv = "EventRecv";
+        /// <summary>
+        /// 初始事件名称
+        /// </summary>
+        public const string InitEvent = "SharedMemoryInitEvent";
     }
+
+    /// <summary>
+    /// 共享内存配置
+    /// </summary>
+    public class SharedMemoryConfig
+    {
+        public string MemoryName { get; set; } = Constants.MemoryName;
+        public string MutexName { get; set; } = Constants.MutexName;
+        public string EventSend { get; set; } = Constants.EventSend;
+        public string EventRecv { get; set; } = Constants.EventRecv;
+        public string InitEvent { get; set; } = Constants.InitEvent;
+        public int MaxRetries { get; set; } = 10;
+        public int RetryInterval { get; set; } = 1000;
+        public int ReplyTimeout { get; set; } = 5000;
+        public int InitTimeout { get; set; } = 30000;
+        public bool EnableVerboseLogging { get; set; } = true;
+    }
+
+    #region 事件参数
+
+    /// <summary>
+    /// 消息事件参数
+    /// </summary>
+    public class MessageEventArgs : EventArgs
+    {
+        public MessageEventArgs(string message)
+        {
+            Message = message;
+            Timestamp = DateTime.Now;
+        }
+
+        public string Message { get; }
+        public DateTime Timestamp { get; }
+    }
+
+    /// <summary>
+    /// 错误事件参数
+    /// </summary>
+    public class ErrorEventArgs : EventArgs
+    {
+        public ErrorEventArgs(string errorMessage, Exception exception)
+        {
+            ErrorMessage = errorMessage;
+            Exception = exception;
+        }
+
+        public string ErrorMessage { get; }
+        public Exception Exception { get; }
+    }
+
+    ///<summary>
+    /// mpm进程事件参数
+    ///</summary>
+    public class MpmProcessEventArgs : EventArgs
+    {
+        public MpmProcessEventArgs(WriteStatus writeStatus, ProgramStatus programStatus, int exitnum, int processId = -1)
+        {
+            WriteStatus = writeStatus;
+            ProgramStatus = programStatus;
+            Exitnum = exitnum;
+        }
+
+        public int processId { get; }
+        public WriteStatus WriteStatus { get; }
+        public ProgramStatus ProgramStatus { get; } 
+        public int Exitnum { get; }
+    }
+
+    #endregion
 
     /// <summary>
     /// 共享内存命令传递结构体
@@ -31,7 +121,7 @@ namespace g_mpm
         ///附加命令
         ///</summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = Constants.BufferSize)]
-        public string AdditionaCcommand;
+        public string AdditionaCommand;
 
         /// <summary>
         /// 执行状态 枚举RunStatus
@@ -49,9 +139,7 @@ namespace g_mpm
         public int StructDataType;
     }
 
-    ///<summary>
-    ///枚举
-    ///</summary>
+    #region 枚举
 
     /// <summary>
     /// 连接状态
@@ -79,7 +167,7 @@ namespace g_mpm
     /// <summary>
     /// 写入状态
     /// </summary>
-    enum WriteStatus
+    public enum WriteStatus
     {
         /// <summary>
         /// 没有上一任写入者
@@ -105,6 +193,10 @@ namespace g_mpm
         /// </summary>
         EMPTY_COMMAND,
         /// <summary>
+        /// 就绪
+        /// </summary>
+        REDAY,
+        /// <summary>
         /// 设置加载路径
         /// </summary>
         SET_PATH
@@ -126,8 +218,7 @@ namespace g_mpm
     /// <summary>
     /// 结构体类型
     /// </summary>
-    /// <prarm name="WDNL">存档路径列表与名称列表</prarm>
-    enum StructType
+    public enum StructType
     {
         /// <summary>
         /// WorldDirectoriesNameList 存档路径列表与名称列表
@@ -160,8 +251,88 @@ namespace g_mpm
     };
 
     /// <summary>
-    /// 数据承载
+    /// 命令
     /// </summary>
+    public enum Command
+    {
+        /// <summary>
+        /// 退出
+        /// </summary>
+        EXIT,
+        /// <summary>
+        /// 返回
+        /// </summary>
+        BREAK,
+        /// <summary>
+        /// open world
+        /// </summary>
+        OPEN_WORLD,
+        /// <summary>
+        /// open player
+        /// </summary>
+        OPEN_PLAYER,
+        /// <summary>
+        /// list world
+        /// </summary>
+        LIST_WORLD,
+        /// <summary>
+        /// list player
+        /// </summary>
+        LIST_PLAYER,
+        /// <summary>
+        /// del player
+        /// </summary>
+        DEL_PLAYER,
+        /// <summary>
+        /// del world
+        /// </summary>
+        DEL_WORLD,
+        /// <summary>
+        /// del pw
+        /// </summary>
+        DEL_PW,
+        //del js
+        DEL_JS,
+        /// <summary>
+        /// unknown command
+        /// </summary>
+        NULL_BACK,
+        /// <summary>
+        /// refresh
+        /// </summary>
+        REFRESH
+    }
+
+    /// <summary>
+    /// C++程序状态
+    /// </summary>
+    public enum ProgramStatus
+    {
+        /// <summary>
+        /// 启动中
+        /// </summary>
+        STARTING,
+        /// <summary>
+        /// 运行中
+        /// </summary>
+        RUNNING,
+        /// <summary>
+        /// 就绪
+        /// </summary>
+        READY,
+        /// <summary>
+        /// 停止中
+        /// </summary>
+        STOPPING,
+        /// <summary>
+        /// 已停止
+        /// </summary>
+        STOP
+    }
+
+    #endregion
+
+    #region 数据承载
 
     /// <summary>
     /// 存档路径列表与名称列表
@@ -316,4 +487,6 @@ namespace g_mpm
         /// </summary>
         List<PlayerInWorldInfo> playerinworldinfo_list;
     };
+
+        #endregion
 }

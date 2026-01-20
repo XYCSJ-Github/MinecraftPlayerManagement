@@ -185,7 +185,7 @@ struct SharedMemoryCommand
 	//执行命令 枚举MemoryCommand
 	int DefCommand;
 	//附加命令
-	std::string AdditionaCcommand;
+	std::string AdditionaCommand;
 
 	//执行状态 枚举RunStatus
 	int RunStatus;

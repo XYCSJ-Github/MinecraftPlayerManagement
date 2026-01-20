@@ -46,6 +46,8 @@ enum MemoryCommand
 {
 	//无命令
 	EMPTY_COMMAND,
+	//就绪
+	READY,
 	//设置加载路径
 	SET_PATH
 };
