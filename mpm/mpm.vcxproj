@@ -157,12 +157,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BackgroundRunning.h" />
     <ClInclude Include="CDJS.h" />
     <ClInclude Include="CDP.h" />
     <ClInclude Include="CDPW.h" />
     <ClInclude Include="CDW.h" />
     <ClInclude Include="CLP.h" />
     <ClInclude Include="CLW.h" />
+    <ClInclude Include="CommandRunning.h" />
     <ClInclude Include="COP.h" />
     <ClInclude Include="COW.h" />
     <ClInclude Include="piwbd.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="throw_error.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BackgroundRunning.cpp" />
     <ClCompile Include="CC.h" />
     <ClCompile Include="CDJS.cpp" />
     <ClCompile Include="CDP.cpp" />
@@ -183,6 +186,7 @@
     <ClCompile Include="CDW.cpp" />
     <ClCompile Include="CLP.cpp" />
     <ClCompile Include="CLW.cpp" />
+    <ClCompile Include="CommandRunning.cpp" />
     <ClCompile Include="COP.cpp" />
     <ClCompile Include="COW.cpp" />
     <ClCompile Include="func.cpp" />

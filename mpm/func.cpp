@@ -3,14 +3,14 @@
 #pragma warning(disable : 4996)
 #include "func.h"
 
-WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mod)
+WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, LoadMode mod)
 {
 	LOG_CREATE_MODEL_NAME("GetWorldDirectoriesList");//设置logout模块名称
 
 	WorldDirectoriesNameList world_directories_name_list;
 	std::string base_path_copy = base_path;
 
-	if (mod == MOD_CLIENT)
+	if (mod == LoadMode::CLIENT)
 		base_path_copy += "\\saves\\";//如果传参路径为客户端文件夹则在路径后加\saves\去检查世界
 
 	LOG_DEBUG("最终路径为：" + base_path_copy);
@@ -24,7 +24,7 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 		LOG_DEBUG("发现世界目录：" + d.path().string());
 		world_directories_name_list.world_directory_list.push_back(d.path().string());
 		world_name = d.path().string();
-		if (mod == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
+		if (mod == LoadMode::SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
 		{
 			world_name.erase(0, base_path_copy.length() + 1);
 		}
@@ -39,7 +39,7 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 	return world_directories_name_list;//返回WorldDirectoriesNameList容器结构体
 }
 
-std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_path, int mod)
+std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_path, LoadMode mod)
 {
 	LOG_CREATE_MODEL_NAME("GetWorldDirectories");
 
@@ -47,7 +47,7 @@ std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_pat
 	std::vector<WorldDirectoriesName> wdnl;
 	std::string base_path_copy = base_path;
 
-	if (mod == MOD_CLIENT)
+	if (mod == LoadMode::CLIENT)
 		base_path_copy += "\\saves\\";//如果传参路径为客户端文件夹则在路径后加\saves\去检查世界
 
 	LOG_DEBUG("最终路径为：" + base_path_copy);
@@ -62,7 +62,7 @@ std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_pat
 		LOG_DEBUG("发现世界目录：" + d.path().string());
 		wdn.world_directory = d.path().string();
 		world_name = d.path().string();
-		if (mod == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
+		if (mod == LoadMode::SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
 		{
 			world_name.erase(0, base_path_copy.length() + 1);
 		}

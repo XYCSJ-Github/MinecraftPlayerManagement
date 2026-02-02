@@ -221,6 +221,10 @@ namespace g_mpm
     public enum StructType
     {
         /// <summary>
+        /// 无结构体
+        /// </summary>
+        EMPTY_STRUCT,
+        /// <summary>
         /// WorldDirectoriesNameList 存档路径列表与名称列表
         /// </summary>
         WDNL,

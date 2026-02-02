@@ -118,6 +118,66 @@ bool SharedMemory::OpenSyncObjects(int maxRetries, DWORD retryInterval)
 	return false;
 }
 
+void SharedMemory::RunLoop()
+{
+	LOG_CREATE_MODEL_NAME("Main");
+
+	if (connect_status == ConnectStatus::NOT_INITIALIZED)
+	{
+		LOG_WARNING("未初始化");
+		return;
+	}
+	if (connect_status == ConnectStatus::NOT_CONNECTED)
+	{
+		LOG_WARNING("未连接");
+	}
+
+	LOG_INFO("进入消息处理循环...");
+
+	while (connect_status == ConnectStatus::CONNECTED)
+	{
+		DWORD waitResult = WaitForSingleObject(m_hEvent_Send, INFINITE);
+
+		//判断互斥锁
+		if (waitResult == WAIT_OBJECT_0)
+		{
+			//判断写入者
+			if (smc->Writer == WriteStatus::WHITEWITHCS)
+			{
+				LOG_DEBUG("g_mpm已更改");
+
+				//判断命令不为空
+				if (smc->DefCommand != MemoryCommand::EMPTY_COMMAND)
+				{
+					LOG_DEBUG("指令不为空");
+
+					//重置命令执行状态
+					smc->RunStatus = RunStatus::EMPTY_STATUS;//重置执行状态
+					smc->ErrorInfo = "";//删除报错信息
+					smc->StructDataType = StructType::EMPTY_STRUCT;//重置回复结构体
+
+					//解析命令
+					//switch (p_mpm::ProcessCommand(smc->DefCommand));
+
+					//更改写入者
+					smc->Writer = WriteStatus::WHITEWITHCPP;
+					ReleaseMutex(m_hMutex);
+				}
+
+			}
+			else
+			{
+				ReleaseMutex(m_hMutex);
+			}
+		}
+		else
+		{
+			LOG_ERROR("等待失败");
+			break;
+		}
+	}
+}
+
 void SharedMemory::Clearup()
 {
 	LOG_CREATE_MODEL_NAME("Clearup");

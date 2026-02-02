@@ -63,6 +63,12 @@
     <ClInclude Include="SharedMemory.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CommandRunning.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundRunning.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
@@ -108,6 +114,12 @@
       <Filter>头文件</Filter>
     </ClCompile>
     <ClCompile Include="SharedMemory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandRunning.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundRunning.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

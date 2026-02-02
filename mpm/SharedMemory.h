@@ -70,6 +70,7 @@ enum RunStatus
 
 /*
 * 结构体类型
+* @param EMPTY_STRUCT 无结构体
 * @param WDNL 存档路径列表与名称列表
 * @param WDN 存档路径与名称
 * @param UI 玩家信息
@@ -80,6 +81,8 @@ enum RunStatus
 */
 enum StructType
 {
+	//无结构体
+	EMPTY_STRUCT,
 	/*
 	* WorldDirectoriesNameList 存档路径列表与名称列表
 	* @param world_directory_list 存档路径列表
@@ -153,8 +156,17 @@ enum StructType
 class SharedMemory
 {
 public:
-	inline SharedMemory() { this->smc->Writer = WriteStatus::EMPTY_WRITER; this->smc->DefCommand = MemoryCommand::EMPTY_COMMAND; this->smc->RunStatus = RunStatus::EMPTY_STATUS; }
+	inline SharedMemory() { this->smc = {}; } //{ this->smc->Writer = WriteStatus::EMPTY_WRITER; this->smc->DefCommand = MemoryCommand::EMPTY_COMMAND; this->smc->RunStatus = RunStatus::EMPTY_STATUS; }
 	inline ~SharedMemory() { Clearup(); }
+
+	/*
+	* 初始化
+	* @return false 
+	*/
+	bool Init()
+	{
+		return WaittingForCreateMemory() && ConnectMemory(5, 300) && OpenSyncObjects(5, 300);
+	}
 
 	/*
 	* 连接共享内存
@@ -180,6 +192,9 @@ public:
 	* @return true 成功打开同步
 	*/
 	bool OpenSyncObjects(int maxRetries, DWORD retryInterval);
+
+	//进入命令循环
+	void RunLoop();
 
 	//清理资源
 	void Clearup();
