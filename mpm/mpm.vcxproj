@@ -77,7 +77,7 @@
     <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\net10.0-windows\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -167,12 +167,15 @@
     <ClInclude Include="CommandRunning.h" />
     <ClInclude Include="COP.h" />
     <ClInclude Include="COW.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="piwbd.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="Logout.h" />
     <ClInclude Include="p_mpm.h" />
     <ClInclude Include="resource.h" />
-    <None Include="SMC.h" />
+    <None Include="SMC.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </None>
     <ClInclude Include="SharedMemory.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="throw_error.h" />

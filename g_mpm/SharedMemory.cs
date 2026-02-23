@@ -1,78 +1,23 @@
-﻿using System;
+﻿using g_mpm.Enums;
+using g_mpm.Structs;
+using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using SMC = g_mpm.SharedMemoryConfig.SharedMemoryConfig;
+using Wapi = g_mpm.WinAPI.WinAPI;
 
 namespace g_mpm
 {
-    public class SharedMemory(SharedMemoryConfig sharedMemoryConfig)
+    public class SharedMemory(SMC sharedMemoryConfig)
     {
         /// <summary>
         /// 配置
         /// </summary>
-        private SharedMemoryConfig _config => sharedMemoryConfig;
-
-
-
-        #region Windows API
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool CloseHandle(IntPtr hObject);
-
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern IntPtr CreateMutex(
-            IntPtr lpMutexAttributes,
-            [MarshalAs(UnmanagedType.Bool)] bool bInitialOwner,
-            string lpName);
-
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern IntPtr CreateEvent(
-            IntPtr lpEventAttributes,
-            [MarshalAs(UnmanagedType.Bool)] bool bManualReset,
-            [MarshalAs(UnmanagedType.Bool)] bool bInitialState,
-            string lpName);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ReleaseMutex(IntPtr hMutex);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetEvent(IntPtr hEvent);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ResetEvent(IntPtr hEvent);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool UnmapViewOfFile(IntPtr lpBaseAddress);
-
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern IntPtr CreateFileMapping(
-            IntPtr hFile,
-            IntPtr lpFileMappingAttributes,
-            uint flProtect,
-            uint dwMaximumSizeHigh,
-            uint dwMaximumSizeLow,
-            string lpName);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr MapViewOfFile(
-            IntPtr hFileMappingObject,
-            uint dwDesiredAccess,
-            uint dwFileOffsetHigh,
-            uint dwFileOffsetLow,
-            uint dwNumberOfBytesToMap);
-
-        #endregion
+        private SMC _config => sharedMemoryConfig;
 
         #region 句柄定义
 
@@ -124,128 +69,6 @@ namespace g_mpm
 
         #endregion
 
-        #region 事件定义
-
-        /// <summary>
-        /// 发送事件
-        /// </summary>
-        public event EventHandler<MessageEventArgs>? MessageSend;
-        /// <summary>
-        /// 接收事件
-        /// </summary>
-        public event EventHandler<MessageEventArgs>? MessageRecv;
-        /// <summary>
-        /// 错误事件
-        /// </summary>
-        public event EventHandler<ErrorEventArgs>? ErrorOccurred;
-        /// <summary>
-        /// 连接状态改变事件
-        /// </summary>
-        public event EventHandler<ConnectStatus>? ConnectStatusChanged;
-        /// <summary>
-        /// 输出日志事件
-        /// </summary>
-        public event EventHandler<string>? StatusMessage;
-        /// <summary>
-        /// mpm程序运行状态改变事件
-        /// </summary>
-        public event EventHandler<MpmProcessEventArgs>? MpmProcessStatusChanged;
-
-        #endregion
-
-        #region 事件触发方法
-
-        /// <summary>
-        /// 触发mpm程序状态改变
-        /// </summary>
-        protected virtual void OnCppProcessStatusChanged(MpmProcessEventArgs e)
-        {
-            MpmProcessStatusChanged?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// 触发消息事件
-        /// </summary>
-        protected virtual void OnStatusMessage(string message)
-        {
-            StatusMessage?.Invoke(this, message);
-        }
-
-        /// <summary>
-        /// 触发错误
-        /// </summary>
-        protected virtual void OnError(string message, Exception? ex = null)
-        {
-#pragma warning disable CS8604 // 引用类型参数可能为 null。
-            ErrorOccurred?.Invoke(this, new ErrorEventArgs(message, ex));
-#pragma warning restore CS8604 // 引用类型参数可能为 null。
-        }
-
-        /// <summary>
-        /// 触发警告
-        /// </summary>
-        protected virtual void OnWarning(string message)
-        {
-            AppendLog($"[WARN] {message}", "Orange");
-        }
-
-        /// <summary>
-        /// 收到回复事件触发
-        /// </summary>
-        protected virtual void OnReplyRecv(MessageEventArgs e)
-        {
-            MessageRecv?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// 连接状态事件触发
-        /// </summary>
-        protected virtual void OnConnectionStatusChanged(ConnectStatus isConnected)
-        {
-            ConnectStatusChanged?.Invoke(this, isConnected);
-        }
-
-        /// <summary>
-        /// 发送事件触发
-        /// </summary>
-        protected virtual void OnMessageSent(MessageEventArgs e)
-        {
-            MessageSend?.Invoke(this, e);
-        }
-
-        #endregion
-
-        #region 其他
-
-        /// <summary>
-        /// 是否已处理
-        /// </summary>
-        private bool _disposed = false;
-
-        /// <summary>
-        /// 状态监视
-        /// </summary>
-        private CancellationTokenSource? _monitorCts;
-
-        /// <summary>
-        /// 就绪信号处理
-        /// </summary>
-        private readonly ManualResetEventSlim _readySignal = new ManualResetEventSlim(false);
-        private string _initialReadyMessage = string.Empty;
-        private readonly object _readyLock = new object();
-
-
-        /// <summary>
-        /// 运行时间
-        /// </summary>
-        public TimeSpan Uptime => DateTime.Now - _startTime;
-
-        private DateTime _startTime;
-
-        #endregion
-
-        #region 方法
-
         public async Task<bool> InitializeAsync()
         {
             return await InitializeSharedMemory() && await StratmpmProcessAsync();
@@ -260,20 +83,15 @@ namespace g_mpm
             {
                 try
                 {
-                    OnStatusMessage("正在初始化共享内存...");
-
                     // 创建初始化事件
-                    _hInitEvent = CreateEvent(IntPtr.Zero, true, false, _config.InitEvent);
+                    _hInitEvent = Wapi.CreateEvent(IntPtr.Zero, true, false, _config.InitEvent);
                     if (_hInitEvent == IntPtr.Zero)
                     {
-                        OnError("创建初始化事件失败");
                         return false;
                     }
 
-                    OnStatusMessage("正在创建共享内存...");
-
                     // 创建共享内存
-                    _hMapFile = CreateFileMapping(
+                    _hMapFile = Wapi.CreateFileMapping(
                         new IntPtr(-1),
                         IntPtr.Zero,
                         0x04, // PAGE_READWRITE
@@ -283,16 +101,13 @@ namespace g_mpm
 
                     if (_hMapFile == IntPtr.Zero)
                     {
-                        OnError("创建共享内存失败");
-                        CloseHandle(_hInitEvent);
+                        Wapi.CloseHandle(_hInitEvent);
                         _hInitEvent = IntPtr.Zero;
                         return false;
                     }
 
-                    OnStatusMessage("正在映射共享内存...");
-
                     // 映射共享内存
-                    sharedMemoryCommand = MapViewOfFile(
+                    sharedMemoryCommand = Wapi.MapViewOfFile(
                         _hMapFile,
                         0xF001F, // FILE_MAP_ALL_ACCESS
                         0,
@@ -301,46 +116,35 @@ namespace g_mpm
 
                     if (sharedMemoryCommand == IntPtr.Zero)
                     {
-                        OnError("映射共享内存失败");
                         Cleanup();
                         return false;
                     }
 
-                    OnStatusMessage("正在初始化共享数据...");
 
                     // 初始化共享数据
                     var initData = new SharedMemoryCommand
                     {
-
+                        Writer = 0,
+                        DefCommand = 0,
+                        RunStatus = 0,
+                        StructDataType = 0,
                     };
 
                     Marshal.StructureToPtr(initData, sharedMemoryCommand, false);
 
-                    OnStatusMessage("正在创建同步对象...");
-
-                    // 创建同步对象
-                    _hMutex = CreateMutex(IntPtr.Zero, false, _config.MutexName);
-                    _hEvent_Send = CreateEvent(IntPtr.Zero, false, false, _config.EventSend);
-                    _hEvent_Recv = CreateEvent(IntPtr.Zero, false, false, _config.EventRecv);
-
                     if (_hMutex == IntPtr.Zero || _hEvent_Send == IntPtr.Zero || _hEvent_Recv == IntPtr.Zero)
                     {
-                        OnError("创建同步对象失败");
                         Cleanup();
                         return false;
                     }
 
                     ConnectStatus = ConnectStatus.INITIALIZED;
 
-                    OnStatusMessage("共享内存初始化完成");
-                    OnConnectionStatusChanged(ConnectStatus);
-
 
                     return true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    OnError($"初始化异常: {ex.Message}", ex);
                     ConnectStatus = ConnectStatus.NOT_INITIALIZED;
                     Cleanup();
                     return false;
@@ -386,8 +190,6 @@ namespace g_mpm
                 mpmProcess.Exited += (sender, args) =>
                 {
                     ProgramStatus = ProgramStatus.STOP;
-                    OnStatusMessage($"mpm进程已退出，退出代码: {mpmProcess.ExitCode}");
-                    OnCppProcessStatusChanged(new MpmProcessEventArgs(WriteStatus.EMPTY_WRITER, ProgramStatus.STOP, mpmProcess.ExitCode));
 
                     mpmProcess?.Dispose();
                     mpmProcess = null;
@@ -398,14 +200,12 @@ namespace g_mpm
                 {
                     if (!string.IsNullOrEmpty(args.Data))
                     {
-                        OnStatusMessage($"mpm输出: {args.Data}");
                     }
                 };
                 mpmProcess.ErrorDataReceived += (sender, args) =>
                 {
                     if (!string.IsNullOrEmpty(args.Data))
                     {
-                        OnError($"mpm错误: {args.Data}");
                     }
                 };
 
@@ -416,7 +216,6 @@ namespace g_mpm
                 bool started = mpmProcess.Start();
                 if (!started)
                 {
-                    OnError("无法启动mpm进程");
                     ProgramStatus = ProgramStatus.STOP;
                     return false;
                 }
@@ -427,44 +226,34 @@ namespace g_mpm
                 mpmProcess.BeginOutputReadLine();
                 mpmProcess.BeginErrorReadLine();
 
-                OnStatusMessage($"mpm进程已启动 (PID: {mpmProcess.Id})");
-                OnCppProcessStatusChanged(new MpmProcessEventArgs(WriteStatus.EMPTY_WRITER, ProgramStatus.RUNNING, mpmProcess.Id));
-
                 // 等待进程初始化
                 await Task.Delay(2000);
 
                 // 通知C++进程初始化完成
-                OnStatusMessage("通知mpm进程初始化完成...");
                 bool signaled = SignalInitializationComplete();
 
                 if (!signaled)
                 {
-                    OnWarning("发送初始化信号失败，但进程已启动");
                 }
                 else
                 {
-                    OnStatusMessage("已发送初始化完成信号给C++进程");
                 }
 
                 // 等待C++进程就绪回复（使用新的就绪检测方法）
-                OnStatusMessage("等待mpm进程就绪...");
                 var (readySuccess, readyReply) = await WaitForInitialReadyAsync(10000);
 
                 if (readySuccess)
                 {
-                    OnStatusMessage($"mpm进程已就绪: {readyReply}");
                     return true;
                 }
                 else
                 {
-                    OnWarning($"等待mpm进程就绪失败: {readyReply}");
                     // 即使没有收到就绪回复，进程也可能正在运行
                     return ProgramStatus == ProgramStatus.RUNNING && !mpmProcess.HasExited;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                OnError($"启动mpm进程异常: {ex.Message}", ex);
                 return false;
             }
         }
@@ -474,15 +263,14 @@ namespace g_mpm
         /// </summary>
         public bool SignalInitializationComplete()
         {
-            if(ConnectStatus == ConnectStatus.INITIALIZED || _hInitEvent == IntPtr.Zero)
+            if (ConnectStatus == ConnectStatus.INITIALIZED || _hInitEvent == IntPtr.Zero)
             {
-                OnError("无法发送初始化信号: 未初始化");
                 return false;
             }
 
             try
             {
-                bool success = SetEvent(_hInitEvent);
+                bool success = Wapi.SetEvent(_hInitEvent);
                 if (success)
                 {
                     OnStatusMessage("已发送初始化完成信号给客户端");
@@ -1104,7 +892,7 @@ namespace g_mpm
             GC.SuppressFinalize(this);
         }
 
-        #endregion
+#endregion
 
     }
 }

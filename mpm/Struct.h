@@ -1,8 +1,10 @@
 ﻿//Struct.h 声明结构体
 #pragma once
 
+#include "Enums.h"
 #include <string>
 #include <vector>
+#include <Windows.h>
 
 /*
 * 存档路径列表与名称列表
@@ -180,7 +182,7 @@ struct PlayerInWorldInfoList
 struct SharedMemoryCommand
 {
 	//写入者状态 枚举WriteStatus
-	int Writer;
+	WriteStatus Writer;
 
 	//执行命令 枚举MemoryCommand
 	int DefCommand;
@@ -195,5 +197,5 @@ struct SharedMemoryCommand
 	//结构体数据类型 枚举StructType
 	int StructDataType;
 	//用于存储非单一数据类型的结构体
-	//std::vector<std::any> DataStructs;
+	BYTE StructData;
 };
