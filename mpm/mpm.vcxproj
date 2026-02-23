@@ -77,7 +77,7 @@
     <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
