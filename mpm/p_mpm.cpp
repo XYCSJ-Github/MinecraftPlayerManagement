@@ -41,11 +41,11 @@ void p_mpm::PathLoadTpye()
 	{
 		if (folderExists(GetProcessingPath(), "saves"))
 		{
-			this->SetPathLoadType(MOD_CLIENT);
+			this->SetPathLoadType(LoadMode::CLIENT);
 		}
 		else
 		{
-			this->SetPathLoadType(MOD_SERVER);
+			this->SetPathLoadType(LoadMode::SERVER);
 		}
 	}
 	catch (const std::exception& e)
@@ -65,11 +65,11 @@ void p_mpm::PathLoadTpye(const std::string _warld_path)
 	{
 		if (folderExists(_warld_path, "saves"))
 		{
-			this->SetPathLoadType(MOD_CLIENT);
+			this->SetPathLoadType(LoadMode::CLIENT);
 		}
 		else
 		{
-			this->SetPathLoadType(MOD_SERVER);
+			this->SetPathLoadType(LoadMode::SERVER);
 		}
 	}
 	catch (const std::exception& e)
@@ -84,13 +84,13 @@ void p_mpm::LoadWorldList(void)
 
 	try
 	{
-		if (GetPathLoadType() == MOD_CLIENT)
+		if (GetPathLoadType() == LoadMode::CLIENT)
 		{
-			wnl = GetWorldDirectoriesList(GetProcessingPath(), MOD_CLIENT);
+			wnl = GetWorldDirectoriesList(GetProcessingPath(), LoadMode::CLIENT);
 		}
 		else
 		{
-			wnl = GetWorldDirectoriesList(GetProcessingPath(), MOD_SERVER);
+			wnl = GetWorldDirectoriesList(GetProcessingPath(), LoadMode::SERVER);
 		}
 	}
 	catch (const std::exception& e)
@@ -116,13 +116,13 @@ void p_mpm::LoadWorldList(const std::string _world_path)
 
 	WorldDirectoriesNameList wnl = {};
 
-	if (GetPathLoadType() == MOD_CLIENT)
+	if (GetPathLoadType() == LoadMode::CLIENT)
 	{
-		wnl = GetWorldDirectoriesList(_world_path, MOD_CLIENT);
+		wnl = GetWorldDirectoriesList(_world_path, LoadMode::CLIENT);
 	}
 	else
 	{
-		wnl = GetWorldDirectoriesList(_world_path, MOD_SERVER);
+		wnl = GetWorldDirectoriesList(_world_path, LoadMode::SERVER);
 	}
 
 	if (wnl.world_directory_list.size() == 0 && wnl.world_name_list.size() == 0)
@@ -141,13 +141,13 @@ void p_mpm::LoadWorldListSTL(void)
 	{
 		if (true)
 		{
-			if (GetPathLoadType() == MOD_CLIENT)
+			if (GetPathLoadType() == LoadMode::CLIENT)
 			{
-				wdnl = GetWorldDirectories(GetProcessingPath(), MOD_CLIENT);
+				wdnl = GetWorldDirectories(GetProcessingPath(), LoadMode::CLIENT);
 			}
 			else
 			{
-				wdnl = GetWorldDirectories(GetProcessingPath(), MOD_SERVER);
+				wdnl = GetWorldDirectories(GetProcessingPath(), LoadMode::SERVER);
 			}
 		}
 	}
@@ -167,13 +167,13 @@ void p_mpm::LoadWorldListSTL(const std::string _world_path)
 	{
 		if (true)
 		{
-			if (GetPathLoadType() == MOD_CLIENT)
+			if (GetPathLoadType() == LoadMode::CLIENT)
 			{
-				wdnl = GetWorldDirectories(_world_path, MOD_CLIENT);
+				wdnl = GetWorldDirectories(_world_path, LoadMode::CLIENT);
 			}
 			else
 			{
-				wdnl = GetWorldDirectories(_world_path, MOD_SERVER);
+				wdnl = GetWorldDirectories(_world_path, LoadMode::SERVER);
 			}
 		}
 	}
@@ -216,7 +216,7 @@ void p_mpm::LoadUserList(const std::string _JSON_path)
 
 	try
 	{
-		uil = GetUserInfo(GetProcessingPath());
+		uil = GetUserInfo(_JSON_path);
 		if (uil.empty())
 		{
 			throw NoUserInfo();
@@ -250,19 +250,19 @@ int p_mpm::ProcessCommand(const std::string _command)
 	l1 = _command.substr(0, 4);
 	if (_command == "exit")
 	{
-		return COMMAND_EXIT;
+		return Command::EXIT;
 	}
 
 	l1 = _command.substr(0, 5);
 	if (_command == "break")
 	{
-		return COMMAND_BREAK;
+		return Command::BREAK;
 	}
 
 	l1 = _command.substr(0, 7);
 	if (l1 == "refresh")
 	{
-		return COMMAND_REFRESH;
+		return Command::REFRESH;
 	}
 
 	l1 = _command.substr(0, 4);
@@ -287,7 +287,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_OPEN_WORLD;
+			return Command::OPEN_WORLD;
 		}
 
 		try
@@ -309,7 +309,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_OPEN_PLAYER;
+			return Command::OPEN_PLAYER;
 		}
 	}
 
@@ -326,7 +326,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 		}
 		if (l2 == "player")
 		{
-			return COMMAND_LIST_PLAYER;
+			return Command::LIST_PLAYER;
 		}
 
 		try
@@ -339,7 +339,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 		}
 		if (l2 == "world")
 		{
-			return COMMAND_LIST_WORLD;
+			return Command::LIST_WORLD;
 		}
 	}
 
@@ -365,7 +365,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_DEL_PLAYER;
+			return Command::DEL_PLAYER;
 		}
 
 		try
@@ -387,7 +387,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_DEL_WORLD;
+			return Command::DEL_WORLD;
 		}
 
 		try
@@ -409,7 +409,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_DEL_PW;
+			return Command::DEL_PW;
 		}
 
 		try
@@ -431,9 +431,9 @@ int p_mpm::ProcessCommand(const std::string _command)
 				throw CommandError();
 			}
 
-			return COMMAND_DEL_JS;
+			return Command::DEL_JS;
 		}
 	}
 
-	return COMMAND_NULL_BACK;
+	return Command::NULL_BACK;
 }

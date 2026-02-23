@@ -163,6 +163,7 @@
     <ClInclude Include="CLW.h" />
     <ClInclude Include="COP.h" />
     <ClInclude Include="COW.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="piwbd.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="Logout.h" />

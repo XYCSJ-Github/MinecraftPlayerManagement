@@ -1,36 +1,10 @@
-﻿//main.cpp 人口点文件
-#include "CC.h"
-#include "Enums.h"
-#include "Logout.h"
+﻿#include "CommandRunning.h"
 
-p_mpm mp;//所有CommandClass的父类
+bool mRun = true;
 
-int main(int argc, char* argv[])
+int ComRun(bool StartWithArgv, p_mpm mp)
 {
-#if _DEBUG//如果生成模式为debug则开启log_debug输出
-	LOG_DEBUG_OUT
-#endif
-		;//保持正常缩进
-	LOG_CREATE_MODEL_NAME("Main");//设置logout模块名称
-
-	bool StartWithArgv = false;
-
-	if (argc > 1)//如果有参启动，将StartwithArgv设为true，并提取输入参数
-	{
-		for (size_t i = 0; i < argc; i++)
-		{
-			if (std::strcmp(argv[i], "debug") == 0)
-			{
-				LOG_DEBUG_OUT;
-			}
-		}
-
-		LOG_DEBUG("使用命令行参数作为初始路径输入");
-		mp.SetInputPath(argv[1]);
-		StartWithArgv = true;
-	}
-
-	bool mRun = true;
+	LOG_CREATE_MODEL_NAME("ComRun");
 
 	while (mRun)
 	{
@@ -57,7 +31,7 @@ int main(int argc, char* argv[])
 		try//检测路径类型
 		{
 			mp.PathLoadTpye();
-			if (mp.GetPathLoadType() == LoadMode::CLIENT)
+			if (mp.GetPathLoadType() == LoadMode::SERVER)
 			{
 				LOG_INFO("打开(服务端)" + getLastComponent(mp.GetProcessingPath()));
 			}

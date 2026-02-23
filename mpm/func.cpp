@@ -3,14 +3,20 @@
 #pragma warning(disable : 4996)
 #include "func.h"
 
-WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, int mod)
+/*
+* 获取存档路径列表
+* @param base_path 包含存档的文件夹路径
+* @param mod 加载模式
+* @return 包含存档路径和名称的容器结构体
+*/
+WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, LoadMode mod)
 {
 	LOG_CREATE_MODEL_NAME("GetWorldDirectoriesList");//设置logout模块名称
 
 	WorldDirectoriesNameList world_directories_name_list;
 	std::string base_path_copy = base_path;
 
-	if (mod == MOD_CLIENT)
+	if (mod == LoadMode::CLIENT)
 		base_path_copy += "\\saves\\";//如果传参路径为客户端文件夹则在路径后加\saves\去检查世界
 
 	LOG_DEBUG("最终路径为：" + base_path_copy);
@@ -24,7 +30,7 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 		LOG_DEBUG("发现世界目录：" + d.path().string());
 		world_directories_name_list.world_directory_list.push_back(d.path().string());
 		world_name = d.path().string();
-		if (mod == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
+		if (mod == LoadMode::SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
 		{
 			world_name.erase(0, base_path_copy.length() + 1);
 		}
@@ -36,10 +42,16 @@ WorldDirectoriesNameList GetWorldDirectoriesList(const std::string base_path, in
 		world_directories_name_list.world_name_list.push_back(world_name);//将世界名称装入WorldDirectoriesNameList
 	}
 
-	return world_directories_name_list;//返回WorldDirectoriesNameList容器结构体
+	return world_directories_name_list;
 }
 
-std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_path, int mod)
+/*
+* 获取存档路径列表（容器）
+* @param base_path 包含存档的文件夹路径
+* @param mod 加载模式
+* @return 包含存档路径和名称的结构体容器
+*/
+std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_path, LoadMode mod)
 {
 	LOG_CREATE_MODEL_NAME("GetWorldDirectories");
 
@@ -47,7 +59,7 @@ std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_pat
 	std::vector<WorldDirectoriesName> wdnl;
 	std::string base_path_copy = base_path;
 
-	if (mod == MOD_CLIENT)
+	if (mod == LoadMode::CLIENT)
 		base_path_copy += "\\saves\\";//如果传参路径为客户端文件夹则在路径后加\saves\去检查世界
 
 	LOG_DEBUG("最终路径为：" + base_path_copy);
@@ -62,7 +74,7 @@ std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_pat
 		LOG_DEBUG("发现世界目录：" + d.path().string());
 		wdn.world_directory = d.path().string();
 		world_name = d.path().string();
-		if (mod == MOD_SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
+		if (mod == LoadMode::SERVER)//如果是服务器目录，切出目录名会多切一个字符。所以作出判断
 		{
 			world_name.erase(0, base_path_copy.length() + 1);
 		}
@@ -78,6 +90,11 @@ std::vector<WorldDirectoriesName> GetWorldDirectories(const std::string base_pat
 	return wdnl;
 }
 
+/*
+* 处理路径字符串-去除“”
+* @param input_path 未处理的路径
+* @return 处理后的路径
+*/
 std::string ProcessingInputPath(const std::string input_path)
 {
 	LOG_CREATE_MODEL_NAME("PathInput");
@@ -100,6 +117,11 @@ std::string ProcessingInputPath(const std::string input_path)
 	return input_path_copy;
 }
 
+/*
+* 从usercache.json中获取玩家信息
+* @param base_path 由ProcessingInputPath()处理后的路径
+* @return 包含玩家信息的结构体容器
+*/
 std::vector<UserInfo> GetUserInfo(const std::string base_path)
 {
 	LOG_CREATE_MODEL_NAME("GetUserInfo");
@@ -162,6 +184,11 @@ std::vector<UserInfo> GetUserInfo(const std::string base_path)
 	return userslist;
 }
 
+/*
+* 从Advancements中获取玩家信息
+* @param base_path 由ProcessingInputPath()处理后的路径
+* @return 包含玩家信息的结构体容器
+*/
 std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_path)
 {
 	LOG_CREATE_MODEL_NAME("GetWorldPlayerAdvancements");
@@ -191,6 +218,11 @@ std::vector<PlayerInfo_AS> GetWorldPlayerAdvancements(const std::string base_pat
 	return pa_list;//返回包含数据结构体的容器
 }
 
+/*
+* 从PlayerData中获取玩家信息
+* @param base_path 由ProcessingInputPath()处理后的路径
+* @return 包含玩家信息的结构体容器
+*/
 std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 {
 	LOG_CREATE_MODEL_NAME("GetWorldPlayerData");
@@ -254,6 +286,11 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 	return pd_list;
 }
 
+/*
+* 从Stats中获取玩家信息
+* @param base_path 由ProcessingInputPath()处理后的路径
+* @return 包含玩家信息的结构体容器
+*/
 std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 {
 	LOG_CREATE_MODEL_NAME("GetWorldPlayerStats");
@@ -283,6 +320,11 @@ std::vector<PlayerInfo_AS> GetWorldPlayerStats(const std::string base_path)
 	return ps_list;
 }
 
+/*
+* 获取路径最后一级名称
+* @param path 需要处理的路径
+* @return 最后一级名称
+*/
 std::string getLastComponent(const std::string& path)
 {
 	// 处理空路径
@@ -303,12 +345,21 @@ std::string getLastComponent(const std::string& path)
 	return clean_path.substr(pos + 1);
 }
 
+/*
+* 检测路径下某文件夹是否存在
+* @param base_path 需要寻找的文件夹的上一级路径
+* @param folder_name 需要寻找的文件夹名称
+*/
 bool folderExists(const fs::path& base_path, const std::string& folder_name)
 {
 	fs::path full_path = base_path / folder_name;
 	return fs::exists(full_path) && fs::is_directory(full_path);
 }
 
+/*
+* 用PowerShell删除文件
+* @param filepath 文件路径
+*/
 bool MoveToRecycleBinWithPS(const std::string& filepath)
 {
 	// PowerShell 命令
@@ -324,6 +375,10 @@ bool MoveToRecycleBinWithPS(const std::string& filepath)
 	return ExecuteCommand(finalCommand.c_str());
 }
 
+/*
+* 执行命令 MoveToRecycleBinWithPS()附属
+* @param cmd 命令
+*/
 bool ExecuteCommand(const std::string& cmd)
 {
 	LOG_DEBUG_M("执行shell命令：" + cmd + "\n", "DeleteFile");
@@ -331,6 +386,12 @@ bool ExecuteCommand(const std::string& cmd)
 	return (result == 0);
 }
 
+/*
+* 将字符串分割并存入容器
+* @param str 待处理的字符串
+* @param delimiter 分割参考
+* @return 分割好的字符串打包到容器
+*/
 std::vector<std::string> splitString(const std::string& str, char delimiter)
 {
 	std::vector<std::string> parts;
@@ -347,6 +408,11 @@ std::vector<std::string> splitString(const std::string& str, char delimiter)
 	return parts;
 }
 
+/*
+* 从两个json中删除数据
+* @param JSON_path json文件路径
+* @param playerName 玩家名字
+*/
 bool DeletePlayerJSON(std::string JSON_path, std::string playerName)
 {
 	if (DeletePlayerInUserCache(JSON_path + "\\usercache.json", playerName) && DeletePlayerInUserNmaeCache(JSON_path + "\\usernamecache.json", playerName))
@@ -357,6 +423,11 @@ bool DeletePlayerJSON(std::string JSON_path, std::string playerName)
 	return false;
 }
 
+/*
+* 从UserCache json中删除数据
+* @param JSON_path json文件路径
+* @param playerName 玩家名字
+*/
 bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 {
 	LOG_CREATE_MODEL_NAME("DeletePlayerJSON");
@@ -421,6 +492,11 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName)
 
 }
 
+/*
+* 从UserNmaeCache json中删除数据
+* @param JSON_path json文件路径
+* @param playerName 玩家名字
+*/
 bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 {
 	LOG_CREATE_MODEL_NAME("DeletePlayerJSON");
