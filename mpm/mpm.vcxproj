@@ -184,7 +184,9 @@
     <ClCompile Include="func.cpp" />
     <ClCompile Include="Logout.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="old_main.cpp" />
+    <ClCompile Include="old_main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="piwbd.cpp" />
     <ClCompile Include="p_mpm.cpp" />
   </ItemGroup>
