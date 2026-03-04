@@ -45,25 +45,6 @@ namespace g_mpm.Enums
     };
 
     /// <summary>
-    /// 通信命令
-    /// </summary>
-    public enum MemoryCommand
-    {
-        /// <summary>
-        /// 无命令
-        /// </summary>
-        EMPTY_COMMAND,
-        /// <summary>
-        /// 就绪
-        /// </summary>
-        REDAY,
-        /// <summary>
-        /// 设置加载路径
-        /// </summary>
-        SET_PATH
-    };
-
-    /// <summary>
     /// 执行状态
     /// </summary>
     public enum RunStatus
@@ -121,6 +102,14 @@ namespace g_mpm.Enums
     public enum Command
     {
         /// <summary>
+        /// 空命令
+        /// </summary>
+        EMPTY_COMMAND,
+        /// <summary>
+        /// 设置路径
+        /// </summary>
+        M_SET_PATH,
+        /// <summary>
         /// 退出
         /// </summary>
         EXIT,
@@ -156,7 +145,9 @@ namespace g_mpm.Enums
         /// del pw
         /// </summary>
         DEL_PW,
-        //del js
+        /// <summary>
+        /// del js
+        /// </summary>
         DEL_JS,
         /// <summary>
         /// unknown command

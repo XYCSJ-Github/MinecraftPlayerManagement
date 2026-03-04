@@ -13,9 +13,14 @@ namespace g_mpm.Structs
         /// </summary>
         public WriteStatus Writer;
         /// <summary>
+        /// 程序状态 枚举ProgramStatus
+        /// </summary>
+        public ProgramStatus Program;
+
+        /// <summary>
         /// 执行命令 枚举MemoryCommand
         /// </summary>
-        public int DefCommand;
+        public Command DefCommand;
         ///<summary>
         ///附加命令
         ///</summary>
@@ -33,7 +38,7 @@ namespace g_mpm.Structs
         public string ErrorInfo;
 
         /// <summary>
-        /// 结构体数据类型 枚举StructType
+        /// 结构体数据类型 枚举StructDataType
         /// </summary>
         public StructDataType StructDataType;
 

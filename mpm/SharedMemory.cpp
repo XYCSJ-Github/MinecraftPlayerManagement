@@ -147,7 +147,7 @@ void SharedMemory::RunLoop()
 				LOG_DEBUG("g_mpm已更改");
 
 				//判断命令不为空
-				if (smc->DefCommand != MemoryCommand::EMPTY_COMMAND)
+				if (smc->DefCommand != Command::EMPTY_COMMAND)
 				{
 					LOG_DEBUG("指令不为空");
 

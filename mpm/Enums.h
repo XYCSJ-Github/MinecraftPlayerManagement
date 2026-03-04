@@ -36,21 +36,6 @@ enum WriteStatus
 };
 
 /*
-* 通信命令
-* @param EMPTY 无命令
-* @param SET_PATH 设置加载路径
-*/
-enum MemoryCommand
-{
-	//无命令
-	EMPTY_COMMAND,
-	//就绪
-	READY,
-	//设置加载路径
-	SET_PATH
-};
-
-/*
 * 执行状态
 * @param EMPTY_STATUS 无状态
 * @param SUCCESSFUL 成功
@@ -135,4 +120,74 @@ enum StructType
 	* @param playerinworldinfo_list 一次性存储单个玩家的所有数据
 	*/
 	PIWIL
+};
+
+/*
+* 命令
+* @param EMPTY 空命令
+* @param EXIT 退出
+* @param BREAK 返回
+* @param OPEN_WORLD
+* @param OPEN_PLAYER
+* @param LIST_WORLD
+* @param LIST_PLAYER
+* @param DEL_PLAYER
+* @param DEL_WORLD
+* @param DEL_PW
+* @param DEL_JS
+* @param NULL_BACK
+* @param REFRESH
+*/
+enum Command
+{
+	//空命令
+	EMPTY_COMMAND,
+	//设置路径
+	M_SET_PATH,
+	//退出
+	EXIT,
+	//返回
+	BREAK,
+	//open world
+	OPEN_WORLD,
+	//open player
+	OPEN_PLAYER,
+	//list world
+	LIST_WORLD,
+	//list player
+	LIST_PLAYER,
+	//del player
+	DEL_PLAYER,
+	//del world
+	DEL_WORLD,
+	//del pw
+	DEL_PW,
+	//del js
+	DEL_JS,
+	//unknown command
+	NULL_BACK,
+	//refresh
+	REFRESH
+};
+
+/*
+* 程序状态
+* @param STARTING 启动中
+* @param RUNNING 运行中
+* @param READY 就绪
+* @param STOPPING 停止中
+* @param STOP 停止
+*/
+enum ProgramStatus
+{
+	//启动中
+	STARTING,
+	//运行中
+	RUNNING,
+	//就绪
+	READY,
+	//停止中
+	STOPPING,
+	//停止
+	STOP
 };

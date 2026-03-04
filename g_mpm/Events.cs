@@ -7,11 +7,7 @@ namespace g_mpm
         public class ProgramStatusChangeed : EventArgs
         {
             public ProgramStatus ProgramStatus { get; set; }
-
-            public ProgramStatusChangeed(ProgramStatus programStatus)
-            {
-                ProgramStatus = programStatus;
-            }
+            public ProgramStatus ProgramStatus1 { get; set; }
         }
     }
 }

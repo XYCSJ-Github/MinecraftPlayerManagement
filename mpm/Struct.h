@@ -183,9 +183,11 @@ struct SharedMemoryCommand
 {
 	//写入者状态 枚举WriteStatus
 	WriteStatus Writer;
+	//程序状态 枚举ProgramStatus
+	ProgramStatus Program;
 
 	//执行命令 枚举MemoryCommand
-	int DefCommand;
+	Command DefCommand;
 	//附加命令
 	std::string AdditionaCommand;
 

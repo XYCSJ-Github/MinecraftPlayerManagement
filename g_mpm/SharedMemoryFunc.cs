@@ -47,7 +47,7 @@ namespace g_mpm
                     var InitData = new SharedMemoryCommand
                     {
                         Writer = WriteStatus.EMPTY_WRITER,
-                        DefCommand = (int)MemoryCommand.EMPTY_COMMAND,
+                        DefCommand = Command.EMPTY_COMMAND,
                         RunStatus = RunStatus.EMPTY_STATUS,
                         StructDataType = StructDataType.EMPTY_STRUCT
                     };
@@ -141,7 +141,7 @@ namespace g_mpm
                         var NewData = new SharedMemoryCommand
                         {
                             Writer = WriteStatus.WHITEWITHCS,
-                            DefCommand = (int)Command.EXIT
+                            DefCommand = Command.EXIT
                         };
 
                         Marshal.StructureToPtr(NewData, handlePtr.sharedMemoryCommand, false);
@@ -173,7 +173,7 @@ namespace g_mpm
         ///<summary>
         /// 发送指令
         ///</summary>
-        public static bool CSend(int Command, string additionaCommand, ConnectStatus connectStatus, HandlePtr handlePtr)
+        public static bool CSend(Command Command, string additionaCommand, ConnectStatus connectStatus, HandlePtr handlePtr)
         {
             if (connectStatus == ConnectStatus.CONNECTED)
             {
@@ -191,7 +191,7 @@ namespace g_mpm
                         var NData = new SharedMemoryCommand
                         {
                             Writer = WriteStatus.WHITEWITHCS,
-                            DefCommand = (int)Command,
+                            DefCommand = Command,
                             AdditionaCommand = additionaCommand
                         };
 
@@ -224,11 +224,50 @@ namespace g_mpm
         }
 
         ///<summary>
-        /// 接受指令
+        /// 回复监听
         ///</summary>
-        public static string CRecv(ConnectStatus connectStatus, HandlePtr handlePtr)
+        public static (StructDataType, byte[]) CheckReply(ConnectStatus connectStatus, HandlePtr handlePtr, SharedMemoryCommand sharedMemoryCommand)
         {
-            return String.Empty;
+            StructDataType type = StructDataType.EMPTY_STRUCT;
+            byte[] sd = { };
+
+            if (connectStatus == ConnectStatus.CONNECTED)
+            {
+                uint waitResult = Wapi.WaitForSingleObject(handlePtr._hEvent_Send, 0);
+                if (waitResult == 0)
+                {
+                    Wapi.ResetEvent(handlePtr._hEvent_Send);
+
+                    if (Wapi.WaitForSingleObject(handlePtr._hMutex, 0xFFFFFFFF) != 0)
+                    {
+                        return (type, sd);
+                    }
+
+                    try
+                    {
+                        var data = Marshal.PtrToStructure<SharedMemoryCommand>(handlePtr.sharedMemoryCommand);
+
+                        if (data.Writer == WriteStatus.WHITEWITHCPP)
+                        {
+                            if (data.RunStatus == RunStatus.SUCCESSFUL)
+                            {
+                                type = data.StructDataType;
+                                sd = data.StructData;
+
+                                ResetSM(ref data);
+                                Marshal.StructureToPtr(data, handlePtr.sharedMemoryCommand, false);
+
+                                return (type, sd);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        return (type, sd);
+                    }
+                }
+            }
+            return (type, sd);
         }
 
         /// <summary>
@@ -290,6 +329,40 @@ namespace g_mpm
         {
             Cleanup(ref handlePtr, ref connectStatus);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 清空结构体数据
+        /// </summary>
+        public static void ResetSM(ref SharedMemoryCommand sharedMemoryCommand)
+        {
+            sharedMemoryCommand.Writer = WriteStatus.WHITEWITHCS;
+            sharedMemoryCommand.DefCommand = Command.EMPTY_COMMAND;
+            sharedMemoryCommand.AdditionaCommand = "";
+            sharedMemoryCommand.RunStatus = RunStatus.EMPTY_STATUS;
+            sharedMemoryCommand.ErrorInfo = "";
+            sharedMemoryCommand.StructDataType = StructDataType.EMPTY_STRUCT;
+            Array.Clear(sharedMemoryCommand.StructData, 0, sharedMemoryCommand.StructData.Length);
+        }
+
+        /// <summary>
+        /// 强制终止C++进程
+        /// </summary>
+        public bool ForceTerminateCppProcess(Process? process)
+        {
+            try
+            {
+                if (process == null) return true;
+
+                process.Kill();
+                process.WaitForExit(3000);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
