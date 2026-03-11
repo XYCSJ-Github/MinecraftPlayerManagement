@@ -47,5 +47,6 @@ namespace g_mpm.SharedMemoryConfig
         public int ReplyTimeout { get; set; } = 5000;
         public int InitTimeout { get; set; } = 30000;
         public bool EnableVerboseLogging { get; set; } = true;
+        public int BufSize { get; set; } = Constants.BufferSize;
     }
 }

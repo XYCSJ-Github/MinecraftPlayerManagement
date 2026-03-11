@@ -1,4 +1,5 @@
 ﻿using g_mpm.Enums;
+using g_mpm.SharedMemoryConfig;
 using System.Runtime.InteropServices;
 
 namespace g_mpm.Structs
@@ -45,6 +46,7 @@ namespace g_mpm.Structs
         ///<summary>
         /// 序列化数据缓冲区
         ///</summary>
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.BufferSize)]
         public byte[] StructData;
     }
 

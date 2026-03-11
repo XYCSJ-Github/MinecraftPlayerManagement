@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <PackageOutputPath>$(ProjectPath)</PackageOutputPath>
-    <BaseOutputPath>E:\Visual Studio Work\MinecraftPlayerManagement\x64</BaseOutputPath>
+    <BaseOutputPath>D:\Visual Studio Work\MinecraftPlayerManagement\x64</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,11 +17,6 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="参考\SDS.cs" />
-    <None Include="参考\SMC.cs" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
 ﻿#include "SharedMemory.h"
+#include <sstream>
+#include <string>
 
 bool SharedMemory::WaittingForCreateMemory()
 {
@@ -8,7 +10,7 @@ bool SharedMemory::WaittingForCreateMemory()
 	m_hInitEvent = CreateEvent(NULL, TRUE, FALSE, EVENT_INIT);
 	if (m_hInitEvent == NULL)
 	{
-		LOG_ERROR("互斥锁创建失败失败");
+		LOG_ERROR("初始化事件创建失败");
 		return false;
 	}
 
@@ -41,14 +43,12 @@ bool SharedMemory::ConnectMemory(int maxRetries, DWORD retryInterval)
 	LOG_INFO("开始连接内存");
 	for (int i = 0; i < maxRetries; i++)
 	{
-
 		m_hMapFlie = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, MEMORY_NAME);
-		if (m_hMapFlie == NULL)
+		if (m_hMapFlie != NULL)  // 修正：成功打开则退出循环
 			break;
 
-		std::string out = "第" + i;
-		out += "次连接内存失败，在" + retryInterval;
-		out += "（ms）后重试";
+		std::string out = "第" + std::to_string(i + 1) + "次连接内存失败，在" +
+			std::to_string(retryInterval) + "ms后重试";  // 修正字符串拼接
 		LOG_INFO(out);
 
 		Sleep(retryInterval);
@@ -86,8 +86,9 @@ bool SharedMemory::OpenSyncObjects(int maxRetries, DWORD retryInterval)
 	for (int i = 0; i < maxRetries; i++)
 	{
 		m_hMutex = OpenMutex(MUTEX_MODIFY_STATE | SYNCHRONIZE, FALSE, MUTEX_NAME);
-		m_hEvent_Send = OpenMutex(MUTEX_MODIFY_STATE | SYNCHRONIZE, FALSE, EVENT_SEND);
-		m_hEvent_Recv = OpenMutex(MUTEX_MODIFY_STATE | SYNCHRONIZE, FALSE, EVENT_RECV);
+		// 修正：将OpenMutex改为OpenEvent
+		m_hEvent_Send = OpenEvent(EVENT_MODIFY_STATE | SYNCHRONIZE, FALSE, EVENT_SEND);
+		m_hEvent_Recv = OpenEvent(EVENT_MODIFY_STATE | SYNCHRONIZE, FALSE, EVENT_RECV);
 
 		if (m_hMutex != NULL && m_hEvent_Send != NULL && m_hEvent_Recv != NULL)
 			break;
@@ -98,10 +99,12 @@ bool SharedMemory::OpenSyncObjects(int maxRetries, DWORD retryInterval)
 
 		m_hMutex = m_hEvent_Send = m_hEvent_Recv = NULL;
 
-		std::string out = "第" + i;
-		out += "次连接内存失败，在" + retryInterval;
-		out += "（ms）后重试";
+		// 修正字符串拼接
+		std::string out = "第" + std::to_string(i + 1) + "次打开同步对象失败，在" +
+			std::to_string(retryInterval) + "ms后重试";
 		LOG_WARNING(out);
+
+		Sleep(retryInterval);
 	}
 
 	if (m_hMutex == NULL || m_hEvent_Send == NULL || m_hEvent_Recv == NULL)
@@ -138,9 +141,12 @@ void SharedMemory::RunLoop()
 	{
 		DWORD waitResult = WaitForSingleObject(m_hEvent_Send, INFINITE);
 
-		//判断互斥锁
+		//判断事件信号
 		if (waitResult == WAIT_OBJECT_0)
 		{
+			// 添加互斥锁等待
+			WaitForSingleObject(m_hMutex, INFINITE);
+
 			//判断写入者
 			if (smc->Writer == WriteStatus::WHITEWITHCS)
 			{
@@ -161,14 +167,14 @@ void SharedMemory::RunLoop()
 
 					//更改写入者
 					smc->Writer = WriteStatus::WHITEWITHCPP;
-					ReleaseMutex(m_hMutex);
-				}
 
+					// 添加：通知接收事件
+					SetEvent(m_hEvent_Recv);
+				}
 			}
-			else
-			{
-				ReleaseMutex(m_hMutex);
-			}
+
+			// 释放互斥锁
+			ReleaseMutex(m_hMutex);
 		}
 		else
 		{
@@ -217,6 +223,6 @@ void SharedMemory::Clearup()
 	if (smc != NULL)
 	{
 		UnmapViewOfFile(smc);
-		m_hMutex = NULL;
+		smc = NULL;  // 修正：应该重置smc而不是m_hMutex
 	}
 }
