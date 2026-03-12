@@ -1,6 +1,7 @@
 ﻿//func.h 声明主要功能函数
 #pragma once
 
+#include "Enums.h"
 #include "include/nlohmann/json.hpp"
 #include "Logout.h"
 #include "Struct.h"
@@ -9,22 +10,6 @@
 #include <fstream>
 #include <shellapi.h>
 #include <windows.h>
-
-
-/*
-* 加载模式
-* @param CLIENT 客户端模式
-* @param SERVER 服务器模式
-*/
-enum LoadMode
-{
-	//无
-	EMPTY,
-	//客户端模式
-	CLIENT,
-	//服务器模式
-	SERVER
-};
 
 //JSON读写对象重定义
 using json = nlohmann::json;

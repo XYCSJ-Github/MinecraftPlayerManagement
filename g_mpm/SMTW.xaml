@@ -1,8 +1,23 @@
-﻿<Window x:Class="g_mpm.SMTW"
+﻿<!-- SMTW.xaml - 界面优化 -->
+<Window x:Class="g_mpm.SMTW"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="共享内存调试" Height="600" Width="830"
-        WindowStartupLocation="CenterScreen">
+        Title="共享内存调试工具" Height="730" Width="900"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -11,72 +26,146 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- 标题 -->
+        <TextBlock Grid.Row="0" Text="共享内存调试工具" 
+                   FontSize="16" FontWeight="Bold" 
+                   HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
         <!-- 状态栏 -->
-        <Border Grid.Row="0" Background="#F0F0F0" Padding="10" CornerRadius="5" Margin="0,0,0,10">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="连接状态:" Margin="0,0,10,0"/>
-                <TextBlock x:Name="txtConnectStatus" Text="未初始化" Foreground="Gray" Margin="0,0,30,0"/>
-                <TextBlock Text="程序状态:" Margin="0,0,10,0"/>
-                <TextBlock x:Name="txtProgramStatus" Text="停止" Foreground="Gray"/>
-            </StackPanel>
+        <Border Grid.Row="1" Background="#E8E8E8" Padding="10" CornerRadius="5" Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,30,0">
+                    <TextBlock Text="连接状态:" Margin="0,0,5,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtConnectStatus" Text="未初始化" Foreground="Gray" FontWeight="Bold"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,30,0">
+                    <TextBlock Text="程序状态:" Margin="0,0,5,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtProgramStatus" Text="停止" Foreground="Gray" FontWeight="Bold"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <TextBlock Text="运行状态:" Margin="0,0,5,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtRunningStatus" Text="未运行" Foreground="Gray" FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
         </Border>
 
         <!-- 控制按钮区 -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-            <Button x:Name="btnLaunch" Content="启动完整流程" Width="120" Height="30" 
-                    Click="BtnLaunch_Click" Background="ForestGreen" Foreground="White" Margin="0,0,10,0"/>
-            <Button x:Name="btnStage1" Content="阶段1:初始化内存" Width="130" Height="30" 
-                    Click="BtnStage1_Click" Margin="0,0,10,0"/>
-            <Button x:Name="btnStage3" Content="阶段3:启动进程" Width="130" Height="30" 
-                    Click="BtnStage3_Click" Margin="0,0,10,0"/>
-            <Button x:Name="btnStage2" Content="阶段2:等待就绪" Width="130" Height="30" 
-                    Click="BtnStage2_Click" Margin="0,0,10,0"/>
-            <Button x:Name="btnStage4" Content="阶段4:启动监听" Width="130" Height="30" 
-                    Click="BtnStage4_Click" Margin="0,0,10,0"/>
-            <Button x:Name="btnShutdown" Content="关闭清理" Width="100" Height="30" 
-                    Click="BtnShutdown_Click" Background="DarkRed" Foreground="White"/>
-        </StackPanel>
+        <WrapPanel Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Center">
+            <Button x:Name="btnLaunch" Content="🚀 完整启动" Width="100" 
+                    Click="BtnLaunch_Click" Background="#4CAF50" Foreground="White"/>
+            <Button x:Name="btnStage1" Content="① 初始化内存" Width="110" 
+                    Click="BtnStage1_Click" Background="#2196F3" Foreground="White"/>
+            <Button x:Name="btnStage2" Content="② 启动进程" Width="100" 
+                    Click="BtnStage2_Click" Background="#2196F3" Foreground="White"/>
+            <Button x:Name="btnStage3" Content="③ 等待就绪" Width="100" 
+                    Click="BtnStage3_Click" Background="#2196F3" Foreground="White"/>
+            <Button x:Name="btnStage4" Content="④ 启动监听" Width="100" 
+                    Click="BtnStage4_Click" Background="#2196F3" Foreground="White"/>
+            <Button x:Name="btnShutdown" Content="⏹️ 关闭清理" Width="100" 
+                    Click="BtnShutdown_Click" Background="#F44336" Foreground="White"/>
+        </WrapPanel>
 
         <!-- 命令发送区 -->
-        <Border Grid.Row="2" Background="#F0F0F0" Padding="10" CornerRadius="5" Margin="0,0,0,10">
+        <Border Grid.Row="3" Background="White" Padding="10" CornerRadius="5" Margin="0,0,0,10">
             <StackPanel>
-                <TextBlock Text="发送命令" FontWeight="Bold" Margin="0,0,0,5"/>
-                <StackPanel Orientation="Horizontal">
-                    <ComboBox x:Name="cmbCommands" Width="150" Margin="0,0,10,0" 
-                              ItemsSource="{Binding}" DisplayMemberPath="Key" SelectedValuePath="Value"/>
-                    <TextBox x:Name="txtAdditional" Width="200" Margin="0,0,10,0" 
-                             Text="附加命令参数"/>
-                    <Button x:Name="btnSend" Content="发送命令" Width="100" 
-                            Click="BtnSend_Click" Margin="0,0,10,0"/>
-                    <Button x:Name="btnSendAndWait" Content="发送并等待回复" Width="120" 
-                            Click="BtnSendAndWait_Click"/>
-                </StackPanel>
+                <TextBlock Text="命令发送" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="命令:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <ComboBox x:Name="cmbCommands" Grid.Column="1" Height="30" Margin="0,0,10,0"/>
+
+                    <TextBlock Grid.Column="2" Text="参数:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBox x:Name="txtAdditional" Grid.Column="3" Height="30" Margin="0,0,10,0"
+                             Text=""/>
+                    
+                    <Button Grid.Column="4" Content="..." Click="Pathchoose"/>
+
+                    <Button x:Name="btnSend" Grid.Column="5" Content="发送" Width="60" Height="30"
+                            Click="BtnSend_Click" Background="#9C27B0" Foreground="White" Margin="0,0,5,0"/>
+
+                    <Button x:Name="btnSendAndWait" Grid.Column="6" Content="发送并等待" Width="90" Height="30"
+                            Click="BtnSendAndWait_Click" Background="#FF9800" Foreground="White"/>
+                </Grid>
+
+                <TextBlock Text="提示: 参数框可用于输入附加命令或启动参数" 
+                           FontSize="10" Foreground="Gray" Margin="0,5,0,0"/>
             </StackPanel>
         </Border>
 
         <!-- 日志输出区 -->
-        <GroupBox Grid.Row="3" Header="日志输出" Margin="0,0,0,10">
-            <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Auto">
-                <TextBox x:Name="txtLog" IsReadOnly="True" TextWrapping="Wrap" 
-                         FontFamily="Consolas" FontSize="11" Padding="5"
-                         VerticalContentAlignment="Top" MinHeight="300"/>
-            </ScrollViewer>
+        <GroupBox Grid.Row="4" Header="日志输出" Margin="0,0,0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
+                    <Button Content="清空日志" Width="70" Height="25" 
+                            Click="BtnClearLog_Click" Margin="0,0,5,0"/>
+                    <CheckBox x:Name="chkAutoScroll" Content="自动滚动" IsChecked="True" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <ScrollViewer x:Name="scrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <TextBox x:Name="txtLog" IsReadOnly="True" TextWrapping="Wrap" 
+                             FontFamily="Consolas" FontSize="11" Padding="5"
+                             VerticalContentAlignment="Top" MinHeight="300" MaxHeight="300"
+                             Background="#1E1E1E" Foreground="#D4D4D4" />
+                </ScrollViewer>
+            </Grid>
         </GroupBox>
 
         <!-- 回复数据显示区 -->
-        <Border Grid.Row="4" Background="#F0F0F0" Padding="10" CornerRadius="5">
+        <Border Grid.Row="5" Background="White" Padding="10" CornerRadius="5">
             <StackPanel>
-                <TextBlock Text="最新回复" FontWeight="Bold" Margin="0,0,0,5"/>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="数据类型:" Margin="0,0,10,0"/>
-                    <TextBlock x:Name="txtReplyType" Text="无" Margin="0,0,30,0"/>
-                    <TextBlock Text="数据大小:" Margin="0,0,10,0"/>
-                    <TextBlock x:Name="txtReplySize" Text="0" Margin="0,0,30,0"/>
-                    <TextBlock Text="错误信息:" Margin="0,0,10,0"/>
-                    <TextBlock x:Name="txtReplyError" Text="无" Foreground="Green"/>
-                </StackPanel>
+                <TextBlock Text="最新回复" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="数据类型:" Margin="0,0,5,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtReplyType" Grid.Column="1" Text="无" Foreground="#2196F3"/>
+
+                    <TextBlock Grid.Column="2" Text="数据大小:" Margin="20,0,5,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtReplySize" Grid.Column="3" Text="0" Foreground="#4CAF50"/>
+
+                    <TextBlock Grid.Column="4" Text="错误:" Margin="20,0,5,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtReplyError" Grid.Column="5" Text="无" Foreground="Green" MinWidth="100"/>
+                    
+                    <TextBlock Grid.Column="6" Text="加载模式:" Margin="20,0,5,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtLoadMode" Grid.Column="7" Text="无" Foreground="Green"/>
+                </Grid>
             </StackPanel>
         </Border>
     </Grid>

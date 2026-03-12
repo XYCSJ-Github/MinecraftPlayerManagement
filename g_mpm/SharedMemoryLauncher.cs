@@ -1,29 +1,146 @@
-﻿using g_mpm.Enums;
+﻿// SharedMemoryLauncher.cs - 修复启动器和事件处理
+using g_mpm.Enums;
 using g_mpm.Structs;
 using System.Diagnostics;
 using Smc = g_mpm.SharedMemoryConfig.SharedMemoryConfig;
 
 namespace g_mpm
 {
-    public class SharedMemoryLauncher(Smc? config = null)
+    public class SharedMemoryLauncher : IDisposable
     {
-        private readonly Smc _config = config ?? new Smc();
-        private readonly SharedMemoryFunc _func = new SharedMemoryFunc();
+        private readonly Smc _config;
+        private readonly SharedMemoryFunc _func;
         private Process? _cppProcess;
         private ConnectStatus _connectStatus = ConnectStatus.NOT_INITIALIZED;
-        private HandlePtr _handles = new HandlePtr();
+        private HandlePtr _handles;
         private ProgramStatus _programStatus = ProgramStatus.STOP;
+
+        // 公开事件
+        public event EventHandler<SharedMemoryFunc.ReplyReceivedEventArgs>? ReplyReceived;
+        public event EventHandler<SharedMemoryFunc.ConnectionStatusChangedEventArgs>? ConnectionStatusChanged;
+        public event EventHandler<ErrorEventArgs>? ErrorOccurred;
+        public event EventHandler<SharedMemoryFunc.OutputReceivedEventArgs>? OutputReceived;
+        public event EventHandler<SharedMemoryFunc.ProgramStatusChangedEventArgs>? ProgramStatusChanged;
 
         // 状态属性
         public ConnectStatus ConnectStatus => _connectStatus;
         public ProgramStatus ProgramStatus => _programStatus;
         public bool IsRunning => _cppProcess != null && !_cppProcess.HasExited;
+        public HandlePtr Handles => _handles;
+        public SharedMemoryFunc Func => _func;
 
-        /// <summary>
-        /// 额外的辅助方法
-        /// </summary>
-        public HandlePtr GetHandles() => _handles;
-        public SharedMemoryFunc GetFunc() => _func;
+        public SharedMemoryLauncher(Smc? config = null)
+        {
+            _config = config ?? new Smc();
+            _func = new SharedMemoryFunc();
+            _handles = new HandlePtr();
+
+            // 订阅内部事件
+            _func.ReplyReceived += OnReplyReceived;
+            _func.ConnectionStatusChanged += OnConnectionStatusChanged;
+            _func.ErrorOccurred += OnErrorOccurred;
+            _func.OutputReceived += OnOutputReceived;
+            _func.ProgramStatusChanged += OnProgramStatusChanged; // 确保这行存在
+        }
+
+        private void OnProgramStatusChanged(object? sender, SharedMemoryFunc.ProgramStatusChangedEventArgs e)
+        {
+            _programStatus = e.NewStatus;
+
+            // 当程序状态变为 STOP 时，更新连接状态
+            if (e.NewStatus == ProgramStatus.STOP)
+            {
+                // 如果是正常退出，将连接状态设为 NOT_CONNECTED 而不是 NOT_INITIALIZED
+                _connectStatus = ConnectStatus.NOT_CONNECTED;
+
+                // 触发连接状态变更事件
+                ConnectionStatusChanged?.Invoke(this, new SharedMemoryFunc.ConnectionStatusChangedEventArgs
+                {
+                    OldStatus = e.OldStatus == ProgramStatus.RUNNING ? ConnectStatus.CONNECTED : _connectStatus,
+                    NewStatus = ConnectStatus.NOT_CONNECTED
+                });
+            }
+
+            ProgramStatusChanged?.Invoke(this, e);
+        }
+
+        // 修改 Shutdown 方法，添加正常退出标记
+        public void Shutdown(bool isNormalShutdown = true)
+        {
+            // 停止监听
+            _func.StopReplyListener();
+
+            // 发送退出命令
+            if (_connectStatus == ConnectStatus.CONNECTED)
+            {
+                SharedMemoryFunc.SendExitCommand(ref _connectStatus, ref _handles);
+
+                if (isNormalShutdown)
+                {
+                    // 正常关闭：等待进程自己退出
+                    Thread.Sleep(1000); // 给进程一点时间退出
+                }
+            }
+
+            // 强制终止进程（如果还在运行）
+            if (_cppProcess != null && !_cppProcess.HasExited)
+            {
+                if (isNormalShutdown)
+                {
+                    // 正常关闭时，再给一点时间
+                    if (!_cppProcess.WaitForExit(2000))
+                    {
+                        _func.ForceTerminateCppProcess(_cppProcess);
+                    }
+                }
+                else
+                {
+                    // 非正常关闭时直接强制终止
+                    _func.ForceTerminateCppProcess(_cppProcess);
+                }
+
+                _cppProcess?.Dispose();
+                _cppProcess = null;
+            }
+
+            // 只有在非正常关闭时才清理共享内存资源
+            // 正常关闭时，C++已经清理过了
+            if (!isNormalShutdown)
+            {
+                SharedMemoryFunc.Cleanup(ref _handles, ref _connectStatus);
+            }
+            else
+            {
+                // 只是重置状态，不清理Windows内核对象（因为C++已经清理了）
+                _handles.sharedMemoryCommand = IntPtr.Zero;
+                _connectStatus = ConnectStatus.NOT_CONNECTED;
+            }
+        }
+
+        #region 事件转发
+
+        private void OnReplyReceived(object? sender, SharedMemoryFunc.ReplyReceivedEventArgs e)
+        {
+            ReplyReceived?.Invoke(this, e);
+        }
+
+        private void OnConnectionStatusChanged(object? sender, SharedMemoryFunc.ConnectionStatusChangedEventArgs e)
+        {
+            _connectStatus = e.NewStatus;
+            ConnectionStatusChanged?.Invoke(this, e);
+        }
+
+        private void OnErrorOccurred(object? sender, ErrorEventArgs e)
+        {
+            ErrorOccurred?.Invoke(this, e);
+        }
+
+        private void OnOutputReceived(object? sender, SharedMemoryFunc.OutputReceivedEventArgs e)
+        {
+            OutputReceived?.Invoke(this, e);
+        }
+
+        #endregion
 
         /// <summary>
         /// 阶段1：初始化共享内存
@@ -32,70 +149,22 @@ namespace g_mpm
         {
             try
             {
-                Console.WriteLine("[Stage1] 初始化共享内存...");
-
-                bool result = SharedMemoryFunc.InitializeSharedMemory(
-                    _config, ref _connectStatus, ref _handles);
-
-                if (result)
-                {
-                    Console.WriteLine("[Stage1] 共享内存初始化成功");
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("[Stage1] 共享内存初始化失败");
-                    return false;
-                }
+                return SharedMemoryFunc.InitializeSharedMemory(_config, ref _connectStatus, ref _handles);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Stage1] 异常: {ex.Message}");
+                OnErrorOccurred(this, new ErrorEventArgs { ErrorMessage = $"Stage1 failed: {ex.Message}", Exception = ex });
                 return false;
             }
         }
 
         /// <summary>
-        /// 阶段2：等待C++程序就绪
+        /// 阶段2：启动C++进程
         /// </summary>
-        public async Task<bool> Stage2_WaitForCppReadyAsync()
+        public bool Stage2_StartCppProcess(string? arguments = null)
         {
             try
             {
-                Console.WriteLine("[Stage2] 等待C++程序就绪...");
-
-                // 等待初始化事件
-                uint waitResult = WinAPI.WinAPI.WaitForSingleObject(
-                    _handles._hInitEvent, (uint)_config.InitTimeout);
-
-                if (waitResult == 0)
-                {
-                    _connectStatus = ConnectStatus.CONNECTED;
-                    Console.WriteLine("[Stage2] C++程序就绪");
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("[Stage2] C++程序就绪超时");
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Stage2] 异常: {ex.Message}");
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 阶段3：启动C++进程
-        /// </summary>
-        public bool Stage3_StartCppProcess()
-        {
-            try
-            {
-                Console.WriteLine("[Stage3] 启动C++进程...");
-
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = "mpm.exe",
@@ -103,35 +172,38 @@ namespace g_mpm
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
-                    RedirectStandardError = true
+                    RedirectStandardError = true,
                 };
 
-                _cppProcess = SharedMemoryFunc.StartProcess(
-                    ref _programStatus, startInfo);
+                _cppProcess = _func.StartProcess(ref _programStatus, startInfo);
 
                 if (_cppProcess != null)
                 {
-                    // 订阅输出
-                    _cppProcess.OutputDataReceived += (s, e) =>
-                        Console.WriteLine($"[C++输出] {e.Data}");
-                    _cppProcess.BeginOutputReadLine();
-
-                    _cppProcess.ErrorDataReceived += (s, e) =>
-                        Console.WriteLine($"[C++错误] {e.Data}");
-                    _cppProcess.BeginErrorReadLine();
-
-                    Console.WriteLine("[Stage3] C++进程启动成功");
+                    _func.StartProcessMonitor(_cppProcess);
                     return true;
                 }
-                else
-                {
-                    Console.WriteLine("[Stage3] C++进程启动失败");
-                    return false;
-                }
+
+                return false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Stage3] 异常: {ex.Message}");
+                OnErrorOccurred(this, new ErrorEventArgs { ErrorMessage = $"Stage2 failed: {ex.Message}", Exception = ex });
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 阶段3：等待C++程序就绪
+        /// </summary>
+        public async Task<bool> Stage3_WaitForCppReadyAsync()
+        {
+            try
+            {
+                return await _func.WaitForCppReadyAsync(_handles, _config.InitTimeout);
+            }
+            catch (Exception ex)
+            {
+                OnErrorOccurred(this, new ErrorEventArgs { ErrorMessage = $"Stage3 failed: {ex.Message}", Exception = ex });
                 return false;
             }
         }
@@ -143,38 +215,30 @@ namespace g_mpm
         {
             try
             {
-                Console.WriteLine("[Stage4] 启动回复监听...");
-
+                _connectStatus = ConnectStatus.CONNECTED;
                 _func.StartReplyListener(_connectStatus, _handles);
-
-                // 订阅事件
-                _func.ReplyReceived += OnReplyReceived;
-                _func.ErrorOccurred += OnErrorOccurred;
-                _func.ConnectionStatusChanged += OnConnectionStatusChanged;
-
-                Console.WriteLine("[Stage4] 回复监听启动成功");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Stage4] 异常: {ex.Message}");
+                OnErrorOccurred(this, new ErrorEventArgs { ErrorMessage = $"Stage4 failed: {ex.Message}", Exception = ex });
             }
         }
 
         /// <summary>
         /// 完整启动流程
         /// </summary>
-        public async Task<bool> LaunchAsync()
+        public async Task<bool> LaunchAsync(string? processArguments = null)
         {
             // 阶段1：初始化共享内存
             if (!Stage1_InitializeSharedMemory())
                 return false;
 
-            // 阶段3：启动C++进程（阶段2需要C++进程启动后才能完成）
-            if (!Stage3_StartCppProcess())
+            // 阶段2：启动C++进程
+            if (!Stage2_StartCppProcess(processArguments))
                 return false;
 
-            // 阶段2：等待C++就绪
-            if (!await Stage2_WaitForCppReadyAsync())
+            // 阶段3：等待C++就绪
+            if (!await Stage3_WaitForCppReadyAsync())
                 return false;
 
             // 阶段4：启动监听
@@ -184,12 +248,64 @@ namespace g_mpm
         }
 
         /// <summary>
+        /// 发送命令
+        /// </summary>
+        public bool SendCommand(Command command, string additional = "")
+        {
+            return SharedMemoryFunc.CSend(command, additional, _connectStatus, _handles);
+        }
+
+        /// <summary>
+        /// 发送命令并等待回复
+        /// </summary>
+        public async Task<(bool Success, StructDataType DataType, byte[]? Data, string? Error)>
+            SendCommandAndWaitAsync(Command command, string additional = "", int timeoutMs = 5000)
+        {
+            var tcs = new TaskCompletionSource<(StructDataType, byte[]?, string?)>();
+
+            EventHandler<SharedMemoryFunc.ReplyReceivedEventArgs>? handler = null;
+            handler = (s, e) =>
+            {
+                _func.ReplyReceived -= handler;
+                tcs.TrySetResult((e.DataType, e.Data, e.ErrorInfo));
+            };
+
+            _func.ReplyReceived += handler;
+
+            try
+            {
+                if (!SendCommand(command, additional))
+                {
+                    _func.ReplyReceived -= handler;
+                    return (false, StructDataType.EMPTY_STRUCT, null, "Send failed");
+                }
+
+                var timeoutTask = Task.Delay(timeoutMs);
+                var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
+
+                if (completedTask == tcs.Task)
+                {
+                    var (type, data, error) = await tcs.Task;
+                    return (true, type, data, error);
+                }
+                else
+                {
+                    _func.ReplyReceived -= handler;
+                    return (false, StructDataType.EMPTY_STRUCT, null, "Timeout");
+                }
+            }
+            catch (Exception ex)
+            {
+                _func.ReplyReceived -= handler;
+                return (false, StructDataType.EMPTY_STRUCT, null, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 关闭清理
         /// </summary>
         public void Shutdown()
         {
-            Console.WriteLine("[Shutdown] 开始清理...");
-
             // 停止监听
             _func.StopReplyListener();
 
@@ -197,35 +313,25 @@ namespace g_mpm
             if (_connectStatus == ConnectStatus.CONNECTED)
             {
                 SharedMemoryFunc.SendExitCommand(ref _connectStatus, ref _handles);
+                Thread.Sleep(800); // 给进程一点时间退出
             }
 
             // 强制终止进程
             if (_cppProcess != null && !_cppProcess.HasExited)
             {
                 _func.ForceTerminateCppProcess(_cppProcess);
+                _cppProcess?.Dispose();
+                _cppProcess = null;
             }
 
             // 清理资源
             SharedMemoryFunc.Cleanup(ref _handles, ref _connectStatus);
-
-            Console.WriteLine("[Shutdown] 清理完成");
         }
 
-        // 事件处理方法
-        private void OnReplyReceived(object sender, SharedMemoryFunc.ReplyReceivedEventArgs e)
+        public void Dispose()
         {
-            Console.WriteLine($"[事件] 收到回复: 类型={e.DataType}, 数据大小={e.Data?.Length ?? 0}");
-        }
-
-        private void OnErrorOccurred(object sender, ErrorEventArgs e)
-        {
-            Console.WriteLine($"[事件] 错误: {e.ErrorMessage}");
-        }
-
-        private void OnConnectionStatusChanged(object sender, SharedMemoryFunc.ConnectionStatusChangedEventArgs e)
-        {
-            Console.WriteLine($"[事件] 状态变更: {e.OldStatus} -> {e.NewStatus}");
-            _connectStatus = e.NewStatus;
+            Shutdown();
+            GC.SuppressFinalize(this);
         }
     }
 }

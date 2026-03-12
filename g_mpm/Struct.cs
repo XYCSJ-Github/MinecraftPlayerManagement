@@ -16,7 +16,7 @@ namespace g_mpm.Structs
         /// <summary>
         /// 程序状态 枚举ProgramStatus
         /// </summary>
-        public ProgramStatus Program;
+        public LoadMode LoadMod;
 
         /// <summary>
         /// 执行命令 枚举MemoryCommand

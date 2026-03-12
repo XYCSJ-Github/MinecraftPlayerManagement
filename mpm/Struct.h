@@ -6,6 +6,11 @@
 #include <vector>
 #include <Windows.h>
 
+//共享内存缓冲区大小
+#ifndef SHARED_MEMORY_BUF_SIZE
+#define SHARED_MEMORY_BUF_SIZE 1024
+#endif
+
 /*
 * 存档路径列表与名称列表
 * @param world_directory_list 存档路径列表
@@ -172,32 +177,33 @@ struct PlayerInWorldInfoList
 /*
 * 共享内存命令传递结构体
 * @param Writer 写入者状态
+* @param Program 程序状态
 * @param DefCommand 执行命令
-* @param AdditionaCcommand 附加命令
+* @param AdditionaCommand 附加命令
 * @param RunStatus 执行状态
 * @param ErrorInfo 报错信息
 * @param StructDataType 结构体数据类型
-* @param DataStructs 用于存储非单一数据类型的结构体
+* @param StructData 数据缓冲区
 */
 struct SharedMemoryCommand
 {
-	//写入者状态 枚举WriteStatus
+	// 写入者状态 枚举WriteStatus
 	WriteStatus Writer;
-	//程序状态 枚举ProgramStatus
-	ProgramStatus Program;
+	// 程序状态 枚举ProgramStatus
+	LoadMode LoadMode;
 
-	//执行命令 枚举MemoryCommand
+	// 执行命令 枚举Command
 	Command DefCommand;
-	//附加命令
-	std::string AdditionaCommand;
+	// 附加命令
+	char AdditionaCommand[SHARED_MEMORY_BUF_SIZE];
 
-	//执行状态 枚举RunStatus
-	int RunStatus;
-	//报错信息
-	std::string ErrorInfo;
+	// 执行状态 枚举RunStatus
+	RunStatus RunStatus;
+	// 报错信息
+	char ErrorInfo[SHARED_MEMORY_BUF_SIZE];
 
-	//结构体数据类型 枚举StructType
-	int StructDataType;
-	//用于存储非单一数据类型的结构体
-	BYTE StructData;
+	// 结构体数据类型 枚举StructType
+	StructType StructDataType;
+	// 数据缓冲区
+	BYTE StructData[SHARED_MEMORY_BUF_SIZE];
 };

@@ -1,4 +1,5 @@
-﻿using g_mpm.Enums;
+﻿// SharedMemoryFunc.cs - 修复事件触发逻辑
+using g_mpm.Enums;
 using g_mpm.Structs;
 using System.Diagnostics;
 using System.IO;
@@ -8,9 +9,11 @@ using Wapi = g_mpm.WinAPI.WinAPI;
 
 namespace g_mpm
 {
+
     public class ErrorEventArgs : EventArgs
     {
         public string? ErrorMessage { get; set; }
+        public Exception? Exception { get; set; }
     }
 
     public class SharedMemoryFunc
@@ -20,25 +23,43 @@ namespace g_mpm
         public event EventHandler<ReplyReceivedEventArgs>? ReplyReceived;
         public event EventHandler<ConnectionStatusChangedEventArgs>? ConnectionStatusChanged;
         public event EventHandler<ErrorEventArgs>? ErrorOccurred;
+        public event EventHandler<OutputReceivedEventArgs>? OutputReceived;
+        public event EventHandler<ProgramStatusChangedEventArgs>? ProgramStatusChanged;
 
         private CancellationTokenSource? _listenerCts;
         private Task? _listenerTask;
+        private Process? _monitoredProcess;
 
         #endregion
 
         #region 事件参数
-        // 事件参数类
+
         public class ReplyReceivedEventArgs : EventArgs
         {
             public StructDataType DataType { get; set; }
             public byte[]? Data { get; set; }
             public Command OriginalCommand { get; set; }
+            public string? ErrorInfo { get; set; }
+            public bool IsSuccess { get; set; }
+            public LoadMode mode { get; set; }
+        }
+
+        public class OutputReceivedEventArgs : EventArgs
+        {
+            public string? Data { get; set; }
+            public bool IsError { get; set; }
         }
 
         public class ConnectionStatusChangedEventArgs : EventArgs
         {
             public ConnectStatus OldStatus { get; set; }
             public ConnectStatus NewStatus { get; set; }
+        }
+
+        public class ProgramStatusChangedEventArgs : EventArgs
+        {
+            public ProgramStatus OldStatus { get; set; }
+            public ProgramStatus NewStatus { get; set; }
         }
 
         #endregion
@@ -50,29 +71,50 @@ namespace g_mpm
         /// </summary>
         public void StartReplyListener(ConnectStatus status, HandlePtr handles)
         {
+            StopReplyListener(); // 确保先停止现有的监听
+
             _listenerCts = new CancellationTokenSource();
             _listenerTask = Task.Run(async () =>
             {
+                int errorCount = 0;
                 while (!_listenerCts.Token.IsCancellationRequested)
                 {
                     try
                     {
-                        var (type, data, error) = CheckReply(status, handles);
+                        var (type, data, error, command, runStatus, errorInfo, loadmode) = CheckReply(status, handles);
 
-                        if (error != null)
+                        if (!string.IsNullOrEmpty(error))
                         {
+                            errorCount++;
                             ErrorOccurred?.Invoke(this, new ErrorEventArgs
                             {
                                 ErrorMessage = error
                             });
-                        }
-                        else if (type != StructDataType.EMPTY_STRUCT)
-                        {
-                            ReplyReceived?.Invoke(this, new ReplyReceivedEventArgs
+
+                            if (errorCount > 10)
                             {
-                                DataType = type,
-                                Data = data
-                            });
+                                ErrorOccurred?.Invoke(this, new ErrorEventArgs
+                                {
+                                    ErrorMessage = "Too many consecutive errors, stopping listener"
+                                });
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            errorCount = 0; // 重置错误计数
+
+                            if (type != StructDataType.EMPTY_STRUCT || !string.IsNullOrEmpty(errorInfo))
+                            {
+                                ReplyReceived?.Invoke(this, new ReplyReceivedEventArgs
+                                {
+                                    DataType = type,
+                                    Data = data,
+                                    ErrorInfo = errorInfo,
+                                    IsSuccess = runStatus == RunStatus.SUCCESSFUL,
+                                    mode = loadmode
+                                });
+                            }
                         }
 
                         await Task.Delay(10, _listenerCts.Token);
@@ -85,8 +127,10 @@ namespace g_mpm
                     {
                         ErrorOccurred?.Invoke(this, new ErrorEventArgs
                         {
-                            ErrorMessage = $"Listener error: {ex.Message}"
+                            ErrorMessage = $"Listener error: {ex.Message}",
+                            Exception = ex
                         });
+                        await Task.Delay(100, _listenerCts.Token); // 出错后稍等再试
                     }
                 }
             }, _listenerCts.Token);
@@ -97,8 +141,78 @@ namespace g_mpm
         /// </summary>
         public void StopReplyListener()
         {
-            _listenerCts?.Cancel();
-            _listenerTask?.Wait(1000);
+            try
+            {
+                _listenerCts?.Cancel();
+                _listenerTask?.Wait(1000);
+            }
+            catch (AggregateException)
+            {
+                // 忽略取消时的异常
+            }
+            finally
+            {
+                _listenerCts?.Dispose();
+                _listenerCts = null;
+                _listenerTask = null;
+            }
+        }
+
+        /// <summary>
+        /// 开始监控进程输出
+        /// </summary>
+        public void StartProcessMonitor(Process process)
+        {
+            _monitoredProcess = process;
+
+            process.OutputDataReceived += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(e.Data))
+                {
+                    OutputReceived?.Invoke(this, new OutputReceivedEventArgs
+                    {
+                        Data = e.Data,
+                        IsError = false
+                    });
+                }
+            };
+
+            process.ErrorDataReceived += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(e.Data))
+                {
+                    OutputReceived?.Invoke(this, new OutputReceivedEventArgs
+                    {
+                        Data = e.Data,
+                        IsError = true
+                    });
+                }
+            };
+
+            process.Exited += (s, e) =>
+            {
+                // 检查退出代码，判断是正常退出还是异常退出
+                int exitCode = process.ExitCode;
+                bool isNormalExit = exitCode == 0; // 假设正常退出返回0
+
+                ProgramStatusChanged?.Invoke(this, new ProgramStatusChangedEventArgs
+                {
+                    OldStatus = ProgramStatus.RUNNING,
+                    NewStatus = ProgramStatus.STOP
+                });
+
+                // 根据退出代码决定日志级别
+                OutputReceived?.Invoke(this, new OutputReceivedEventArgs
+                {
+                    Data = isNormalExit
+                        ? "C++ process exited normally"
+                        : $"C++ process exited with code {exitCode}",
+                    IsError = !isNormalExit // 只有非正常退出才标为错误
+                });
+            };
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
         }
 
         #endregion
@@ -114,71 +228,83 @@ namespace g_mpm
             {
                 try
                 {
-                    //创建初始化事件
-                    handlePtr._hInitEvent = Wapi.CreateEvent(IntPtr.Zero, true, true, sharedMemoryConfig.InitEvent);
+                    // 创建初始化事件
+                    handlePtr._hInitEvent = Wapi.CreateEvent(IntPtr.Zero, true, false, sharedMemoryConfig.InitEvent);
                     if (handlePtr._hInitEvent == IntPtr.Zero)
                     {
+                        int error = Marshal.GetLastWin32Error();
+                        Debug.WriteLine($"CreateEvent failed: {error}");
                         return false;
                     }
 
-                    //创建互斥锁
+                    // 创建互斥锁
                     handlePtr._hMutex = Wapi.CreateMutex(IntPtr.Zero, false, sharedMemoryConfig.MutexName);
                     if (handlePtr._hMutex == IntPtr.Zero)
                     {
+                        int error = Marshal.GetLastWin32Error();
+                        Debug.WriteLine($"CreateMutex failed: {error}");
                         Cleanup(ref handlePtr, ref connectStatus);
                         return false;
                     }
 
-                    // 3. 创建事件
+                    // 创建事件
                     handlePtr._hEvent_Send = Wapi.CreateEvent(IntPtr.Zero, false, false, sharedMemoryConfig.EventSend);
                     handlePtr._hEvent_Recv = Wapi.CreateEvent(IntPtr.Zero, false, false, sharedMemoryConfig.EventRecv);
 
                     if (handlePtr._hEvent_Send == IntPtr.Zero || handlePtr._hEvent_Recv == IntPtr.Zero)
                     {
+                        int error = Marshal.GetLastWin32Error();
+                        Debug.WriteLine($"CreateEvent failed: {error}");
                         Cleanup(ref handlePtr, ref connectStatus);
                         return false;
                     }
 
-                    //创建共享内存
-                    handlePtr._hMapFile = Wapi.CreateFileMapping(new IntPtr(-1), IntPtr.Zero, 0x04, 0, (uint)Marshal.SizeOf<SharedMemoryCommand>(), sharedMemoryConfig.MemoryName);
+                    // 创建共享内存
+                    handlePtr._hMapFile = Wapi.CreateFileMapping(new IntPtr(-1), IntPtr.Zero,
+                        0x04, 0, (uint)Marshal.SizeOf<SharedMemoryCommand>(), sharedMemoryConfig.MemoryName);
+
                     if (handlePtr._hMapFile == IntPtr.Zero)
                     {
-                        Wapi.CloseHandle(handlePtr._hInitEvent);
-                        handlePtr._hInitEvent = IntPtr.Zero;
-                        return false;
-                    }
-
-                    //映射共享内存
-                    handlePtr.sharedMemoryCommand = Wapi.MapViewOfFile(handlePtr._hMapFile, 0xF001F, 0, 0, (uint)Marshal.SizeOf<SharedMemoryCommand>());
-                    if (handlePtr.sharedMemoryCommand == IntPtr.Zero)
-                    {
+                        int error = Marshal.GetLastWin32Error();
+                        Debug.WriteLine($"CreateFileMapping failed: {error}");
                         Cleanup(ref handlePtr, ref connectStatus);
                         return false;
                     }
 
-                    //初始化结构体数据
+                    // 映射共享内存
+                    handlePtr.sharedMemoryCommand = Wapi.MapViewOfFile(handlePtr._hMapFile,
+                        0xF001F, 0, 0, (uint)Marshal.SizeOf<SharedMemoryCommand>());
+
+                    if (handlePtr.sharedMemoryCommand == IntPtr.Zero)
+                    {
+                        int error = Marshal.GetLastWin32Error();
+                        Debug.WriteLine($"MapViewOfFile failed: {error}");
+                        Cleanup(ref handlePtr, ref connectStatus);
+                        return false;
+                    }
+
+                    // 初始化结构体数据
                     var InitData = new SharedMemoryCommand
                     {
                         Writer = WriteStatus.EMPTY_WRITER,
                         DefCommand = Command.EMPTY_COMMAND,
                         RunStatus = RunStatus.EMPTY_STATUS,
+                        LoadMod = LoadMode.EMPTY_MOD,
                         StructDataType = StructDataType.EMPTY_STRUCT,
+                        AdditionaCommand = "",
+                        ErrorInfo = "",
                         StructData = new byte[sharedMemoryConfig.BufSize]
                     };
 
-                    //应用更改
+                    // 应用更改
                     Marshal.StructureToPtr(InitData, handlePtr.sharedMemoryCommand, false);
-                    if (handlePtr._hMutex == IntPtr.Zero || handlePtr._hEvent_Send == IntPtr.Zero || handlePtr._hEvent_Recv == IntPtr.Zero)
-                    {
-                        Cleanup(ref handlePtr, ref connectStatus);
-                        return false;
-                    }
 
                     connectStatus = ConnectStatus.INITIALIZED;
                     return true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Debug.WriteLine($"InitializeSharedMemory exception: {ex}");
                     Cleanup(ref handlePtr, ref connectStatus);
                     return false;
                 }
@@ -192,7 +318,7 @@ namespace g_mpm
         /// <summary>
         /// 启动mpm
         /// </summary>
-        public static Process? StartProcess(ref ProgramStatus programStatus, ProcessStartInfo processStartInfo)
+        public Process? StartProcess(ref ProgramStatus programStatus, ProcessStartInfo processStartInfo)
         {
             Process? process = null;
 
@@ -200,6 +326,7 @@ namespace g_mpm
             {
                 if (!File.Exists("mpm.exe"))
                 {
+                    Debug.WriteLine("mpm.exe not found");
                     return process;
                 }
 
@@ -209,29 +336,23 @@ namespace g_mpm
                 process.StartInfo = processStartInfo;
                 process.EnableRaisingEvents = true;
 
-                //订阅进程事件
-                process.Exited += (sender, args) =>
-                {
-                    process?.Dispose();
-                    process = null;
-                };
-
-
-                //启动进程
+                // 启动进程
                 bool is_su = process.Start();
                 if (!is_su)
                 {
                     programStatus = ProgramStatus.STOP;
-                    return process;
+                    return null;
                 }
+
                 programStatus = ProgramStatus.RUNNING;
-            }
-            catch (Exception)
-            {
                 return process;
             }
-
-            return process;
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"StartProcess exception: {ex}");
+                programStatus = ProgramStatus.STOP;
+                return null;
+            }
         }
 
         ///<summary>
@@ -239,47 +360,48 @@ namespace g_mpm
         ///</summary>
         public static bool SendExitCommand(ref ConnectStatus connectStatus, ref HandlePtr handlePtr)
         {
-            if (connectStatus == ConnectStatus.CONNECTED)
+            if (connectStatus != ConnectStatus.CONNECTED)
+                return false;
+
+            try
             {
-                try
+                uint waitResult = Wapi.WaitForSingleObject(handlePtr._hMutex, 5000);
+                if (waitResult != 0)
                 {
-                    if (Wapi.WaitForSingleObject(handlePtr._hMutex, 0xFFFFFFFF) != 0)
-                    {
-                        return false;
-                    }
-
-                    try
-                    {
-                        var ExitData = Marshal.PtrToStructure<SharedMemoryCommand>(handlePtr.sharedMemoryCommand);
-
-                        var NewData = new SharedMemoryCommand
-                        {
-                            Writer = WriteStatus.WHITEWITHCS,
-                            DefCommand = Command.EXIT
-                        };
-
-                        Marshal.StructureToPtr(NewData, handlePtr.sharedMemoryCommand, false);
-
-                        bool is_suc = Wapi.SetEvent(handlePtr._hEvent_Send);
-                        if (!is_suc)
-                        {
-                            return false;
-                        }
-
-                        return true;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
-                catch (Exception)
-                {
+                    Debug.WriteLine($"WaitForSingleObject failed: {waitResult}");
                     return false;
                 }
+
+                try
+                {
+                    var NewData = new SharedMemoryCommand
+                    {
+                        Writer = WriteStatus.WHITEWITHCS,
+                        DefCommand = Command.EXIT,
+                        RunStatus = RunStatus.EMPTY_STATUS,
+                        StructDataType = StructDataType.EMPTY_STRUCT,
+                        AdditionaCommand = "",
+                        ErrorInfo = "",
+                        StructData = new byte[SharedMemoryConfig.Constants.BufferSize]
+                    };
+
+                    Marshal.StructureToPtr(NewData, handlePtr.sharedMemoryCommand, false);
+
+                    bool is_suc = Wapi.SetEvent(handlePtr._hEvent_Send);
+
+                    // 立即更新连接状态为断开中
+                    connectStatus = ConnectStatus.NOT_CONNECTED;
+
+                    return is_suc;
+                }
+                finally
+                {
+                    Wapi.ReleaseMutex(handlePtr._hMutex);
+                }
             }
-            else
+            catch (Exception ex)
             {
+                Debug.WriteLine($"SendExitCommand exception: {ex}");
                 return false;
             }
         }
@@ -287,11 +409,13 @@ namespace g_mpm
         ///<summary>
         /// 发送指令
         ///</summary>
-        public static bool CSend(Command Command, string additionaCommand, ConnectStatus connectStatus, HandlePtr handlePtr)
+        public static bool CSend(Command command, string additionaCommand, ConnectStatus connectStatus, HandlePtr handlePtr)
         {
             if (connectStatus != ConnectStatus.CONNECTED)
                 return false;
-            if (Wapi.WaitForSingleObject(handlePtr._hMutex, 0xFFFFFFFF) != 0)
+
+            uint waitResult = Wapi.WaitForSingleObject(handlePtr._hMutex, 5000);
+            if (waitResult != 0)
                 return false;
 
             try
@@ -299,8 +423,12 @@ namespace g_mpm
                 var NData = new SharedMemoryCommand
                 {
                     Writer = WriteStatus.WHITEWITHCS,
-                    DefCommand = Command,
-                    AdditionaCommand = additionaCommand ?? ""
+                    DefCommand = command,
+                    AdditionaCommand = additionaCommand ?? "",
+                    RunStatus = RunStatus.EMPTY_STATUS,
+                    StructDataType = StructDataType.EMPTY_STRUCT,
+                    ErrorInfo = "",
+                    StructData = new byte[SharedMemoryConfig.Constants.BufferSize]
                 };
 
                 Marshal.StructureToPtr(NData, handlePtr.sharedMemoryCommand, false);
@@ -315,21 +443,20 @@ namespace g_mpm
         ///<summary>
         /// 回复监听
         ///</summary>
-        public static (StructDataType, byte[], String Error) CheckReply(ConnectStatus connectStatus, HandlePtr handlePtr)
+        public static (StructDataType, byte[], string Error, Command, RunStatus, string, LoadMode) CheckReply(ConnectStatus connectStatus, HandlePtr handlePtr)
         {
-            StructDataType type = StructDataType.EMPTY_STRUCT;
-            byte[] sd = { };
-
             if (connectStatus != ConnectStatus.CONNECTED)
-                return (StructDataType.EMPTY_STRUCT, sd, "Not Connect");
-            uint waitResult = Wapi.WaitForSingleObject(handlePtr._hEvent_Send, 0);
+                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "Not Connected", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD);
+
+            uint waitResult = Wapi.WaitForSingleObject(handlePtr._hEvent_Recv, 0); // 使用 Recv 事件
             if (waitResult != 0)
-                return (StructDataType.EMPTY_STRUCT, sd, "");
+                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD);
 
-            Wapi.ResetEvent(handlePtr._hEvent_Send);
+            Wapi.ResetEvent(handlePtr._hEvent_Recv);
 
-            if (Wapi.WaitForSingleObject(handlePtr._hMutex, 0xFFFFFFFF) != 0)
-                return (type, sd, "Mutex timeout");
+            waitResult = Wapi.WaitForSingleObject(handlePtr._hMutex, 5000);
+            if (waitResult != 0)
+                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "Mutex timeout", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD);
 
             try
             {
@@ -337,29 +464,35 @@ namespace g_mpm
 
                 if (data.Writer == WriteStatus.WHITEWITHCPP)
                 {
-                    if (data.RunStatus == RunStatus.SUCCESSFUL)
-                    {
-                        type = data.StructDataType;
-                        sd = data.StructData;
+                    StructDataType type = data.StructDataType;
+                    byte[] sd = data.StructData ?? Array.Empty<byte>();
+                    Command cmd = data.DefCommand;
+                    LoadMode loadMode = data.LoadMod;
+                    RunStatus status = data.RunStatus;
+                    string errorInfo = data.ErrorInfo ?? "";
 
-                        ResetSM(ref data);
-                        Marshal.StructureToPtr(data, handlePtr.sharedMemoryCommand, false);
-
-                        return (type, sd, "");
-                    }
-                    else if (data.RunStatus == RunStatus.FAILED)
+                    // 重置结构体
+                    var resetData = new SharedMemoryCommand
                     {
-                        return (type, sd, "");
-                    }
+                        Writer = WriteStatus.WHITEWITHCS,
+                        DefCommand = Command.EMPTY_COMMAND,
+                        RunStatus = RunStatus.EMPTY_STATUS,
+                        StructDataType = StructDataType.EMPTY_STRUCT,
+                        AdditionaCommand = "",
+                        ErrorInfo = "",
+                        StructData = new byte[SharedMemoryConfig.Constants.BufferSize]
+                    };
+                    Marshal.StructureToPtr(resetData, handlePtr.sharedMemoryCommand, false);
+
+                    return (type, sd, "", cmd, status, errorInfo, loadMode);
                 }
-
             }
             finally
             {
                 Wapi.ReleaseMutex(handlePtr._hMutex);
             }
 
-            return (type, sd, "");
+            return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD);
         }
 
         /// <summary>
@@ -408,33 +541,11 @@ namespace g_mpm
                 connectStatus = ConnectStatus.NOT_INITIALIZED;
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Cleanup exception: {ex}");
                 return false;
             }
-        }
-
-        /// <summary>
-        /// 释放资源
-        /// </summary>
-        public void Dispose(ref HandlePtr handlePtr, ref ConnectStatus connectStatus)
-        {
-            Cleanup(ref handlePtr, ref connectStatus);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// 清空结构体数据
-        /// </summary>
-        public static void ResetSM(ref SharedMemoryCommand sharedMemoryCommand)
-        {
-            sharedMemoryCommand.Writer = WriteStatus.WHITEWITHCS;
-            sharedMemoryCommand.DefCommand = Command.EMPTY_COMMAND;
-            sharedMemoryCommand.AdditionaCommand = "";
-            sharedMemoryCommand.RunStatus = RunStatus.EMPTY_STATUS;
-            sharedMemoryCommand.ErrorInfo = "";
-            sharedMemoryCommand.StructDataType = StructDataType.EMPTY_STRUCT;
-            Array.Clear(sharedMemoryCommand.StructData, 0, sharedMemoryCommand.StructData.Length);
         }
 
         /// <summary>
@@ -444,12 +555,30 @@ namespace g_mpm
         {
             try
             {
-                if (process == null) return true;
+                if (process == null || process.HasExited)
+                    return true;
 
                 process.Kill();
-                process.WaitForExit(3000);
+                return process.WaitForExit(3000);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ForceTerminateCppProcess exception: {ex}");
+                return false;
+            }
+        }
 
-                return true;
+        /// <summary>
+        /// 等待C++程序就绪
+        /// </summary>
+        public async Task<bool> WaitForCppReadyAsync(HandlePtr handlePtr, int timeoutMs)
+        {
+            try
+            {
+                uint waitResult = await Task.Run(() =>
+                    Wapi.WaitForSingleObject(handlePtr._hInitEvent, (uint)timeoutMs));
+
+                return waitResult == 0;
             }
             catch
             {

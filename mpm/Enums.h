@@ -171,23 +171,18 @@ enum Command
 };
 
 /*
-* 程序状态
-* @param STARTING 启动中
-* @param RUNNING 运行中
-* @param READY 就绪
-* @param STOPPING 停止中
-* @param STOP 停止
+* 加载模式
+* @param CLIENT 客户端模式
+* @param SERVER 服务器模式
 */
-enum ProgramStatus
+enum LoadMode
 {
-	//启动中
-	STARTING,
-	//运行中
-	RUNNING,
-	//就绪
-	READY,
-	//停止中
-	STOPPING,
-	//停止
-	STOP
+	//保持
+	KEEP,
+	//无
+	EMPTY,
+	//客户端模式
+	CLIENT,
+	//服务器模式
+	SERVER
 };

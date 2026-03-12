@@ -185,4 +185,27 @@ namespace g_mpm.Enums
         /// </summary>
         STOP
     }
+
+    /// <summary>
+    /// 路径加载模式
+    /// </summary>
+    public enum LoadMode
+    {
+        /// <summary>
+        /// 保持
+        /// </summary>
+        KEEP,
+        /// <summary>
+        /// 无
+        /// </summary>
+        EMPTY_MOD,
+        /// <summary>
+        /// 客户端
+        /// </summary>
+        CLIENT,
+        /// <summary>
+        /// 服务端
+        /// </summary>
+        SERVER,
+    }
 }

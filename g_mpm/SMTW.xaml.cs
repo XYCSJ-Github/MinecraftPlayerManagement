@@ -1,5 +1,9 @@
-﻿using g_mpm.Enums;
+﻿// SMTW.xaml.cs - 完整的GUI实现
+using g_mpm.Enums;
+using Microsoft.Win32;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Smc = g_mpm.SharedMemoryConfig.SharedMemoryConfig;
 
@@ -10,6 +14,7 @@ namespace g_mpm
         private SharedMemoryLauncher _launcher;
         private DispatcherTimer _statusTimer;
         private Dictionary<string, Command> _commandDict;
+        private readonly object _logLock = new object();
 
         public SMTW()
         {
@@ -17,6 +22,8 @@ namespace g_mpm
             InitializeCommands();
             InitializeLauncher();
             SetupStatusTimer();
+            ParseCommandLineArgs();
+            this.Closing += Window_Closing;
         }
 
         private void InitializeCommands()
@@ -50,7 +57,25 @@ namespace g_mpm
                 InitTimeout = 30000,
                 ReplyTimeout = 5000
             };
+
             _launcher = new SharedMemoryLauncher(config);
+
+            // 订阅所有事件
+            _launcher.ReplyReceived += OnReplyReceived;
+            _launcher.ErrorOccurred += OnErrorOccurred;
+            _launcher.OutputReceived += OnOutputReceived;
+            _launcher.ProgramStatusChanged += OnProgramStatusChanged;
+            _launcher.ConnectionStatusChanged += OnConnectionStatusChanged;
+        }
+
+        private void ParseCommandLineArgs()
+        {
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                Log($"[启动参数] {string.Join(" ", args.Skip(1))}");
+                txtAdditional.Text = string.Join(" ", args.Skip(1));
+            }
         }
 
         private void SetupStatusTimer()
@@ -65,48 +90,154 @@ namespace g_mpm
 
         private void UpdateStatusDisplay()
         {
-            txtConnectStatus.Text = _launcher?.ConnectStatus.ToString() ?? "未知";
-            txtProgramStatus.Text = _launcher?.ProgramStatus.ToString() ?? "未知";
-
-            switch (_launcher?.ConnectStatus)
-            {
-                case ConnectStatus.NOT_INITIALIZED:
-                    txtConnectStatus.Foreground = System.Windows.Media.Brushes.Gray;
-                    break;
-                case ConnectStatus.INITIALIZED:
-                    txtConnectStatus.Foreground = System.Windows.Media.Brushes.Orange;
-                    break;
-                case ConnectStatus.CONNECTED:
-                    txtConnectStatus.Foreground = System.Windows.Media.Brushes.Green;
-                    break;
-            }
-
-            txtProgramStatus.Foreground = _launcher?.IsRunning == true
-                ? System.Windows.Media.Brushes.Green
-                : System.Windows.Media.Brushes.Red;
-        }
-
-        private void Log(string message)
-        {
             Dispatcher.Invoke(() =>
             {
-                txtLog.AppendText($"[{DateTime.Now:HH:mm:ss.fff}] {message}\n");
-                scrollViewer.ScrollToBottom();
+                txtConnectStatus.Text = _launcher?.ConnectStatus.ToString() ?? "未知";
+                txtProgramStatus.Text = _launcher?.ProgramStatus.ToString() ?? "未知";
+
+                txtConnectStatus.Foreground = _launcher?.ConnectStatus switch
+                {
+                    ConnectStatus.NOT_INITIALIZED => Brushes.Gray,
+                    ConnectStatus.INITIALIZED => Brushes.Orange,
+                    ConnectStatus.CONNECTED => Brushes.Green,
+                    _ => Brushes.Gray
+                };
+
+                txtProgramStatus.Foreground = _launcher?.IsRunning == true ? Brushes.Green : Brushes.Red;
             });
         }
 
-        // 按钮事件处理
+        // SMTW.xaml.cs - 增强日志显示，支持中文字符
+        /// <summary>
+        /// 日志输出（修复乱码显示）
+        /// </summary>
+        private void Log(string message, bool isError = false)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                lock (_logLock)
+                {
+                    try
+                    {
+                        string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+                        string prefix = isError ? "❌ " : "";
+
+                        // 确保消息不为空
+                        message = message ?? "";
+
+                        // 构建完整日志行
+                        string logLine = $"[{timestamp}] {prefix}{message}\n";
+
+                        // 添加到文本框
+                        txtLog.AppendText(logLine);
+
+                        // 自动滚动
+                        if (chkAutoScroll.IsChecked == true)
+                        {
+                            scrollViewer.ScrollToBottom();
+                        }
+
+                        // 同时输出到调试窗口（便于调试）
+                        Debug.WriteLine(logLine.TrimEnd());
+                    }
+                    catch (Exception ex)
+                    {
+                        // 如果日志写入失败，至少尝试写入错误信息
+                        try
+                        {
+                            txtLog.AppendText($"[{DateTime.Now:HH:mm:ss.fff}] [日志错误] {ex.Message}\n");
+                        }
+                        catch { }
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// 处理进程输出（增强版）
+        /// </summary>
+        private void OnOutputReceived(object? sender, SharedMemoryFunc.OutputReceivedEventArgs e)
+        {
+            string prefix = e.IsError ? "[C++错误]" : "[C++输出]";
+
+            // 处理可能的乱码
+            string displayData = e.Data ?? "";
+
+            // 如果是字节数组形式，尝试转换
+            if (displayData.StartsWith("System.Byte[]"))
+            {
+                displayData = "接收到二进制数据";
+            }
+
+            Log($"{prefix} {displayData}", e.IsError);
+        }
+
+        #region 事件处理
+
+        private void OnReplyReceived(object? sender, SharedMemoryFunc.ReplyReceivedEventArgs e)
+        {
+            Log($"[回复] 类型={e.DataType}, 成功={e.IsSuccess}, 错误={e.ErrorInfo ?? "无"}。加载模式={e.mode}");
+
+            Dispatcher.Invoke(() =>
+            {
+                txtReplyType.Text = e.DataType.ToString();
+                txtReplySize.Text = e.Data?.Length.ToString() ?? "0";
+                txtReplyError.Text = e.ErrorInfo ?? (e.IsSuccess ? "成功" : "失败");
+                txtReplyError.Foreground = e.IsSuccess ? Brushes.Green : Brushes.Red;
+                if (e.mode != LoadMode.KEEP)
+                {
+                    txtLoadMode.Text = e.mode.ToString();
+                }
+            });
+
+            if (e.Data != null && e.Data.Length > 0 && _launcher.Func != null)
+            {
+                Log($"[数据] 前64字节: {BitConverter.ToString(e.Data.Take(64).ToArray()).Replace("-", " ")}");
+            }
+        }
+
+        private void OnErrorOccurred(object? sender, ErrorEventArgs e)
+        {
+            Log($"[错误] {e.ErrorMessage}", true);
+            if (e.Exception != null)
+            {
+                Log($"[异常详情] {e.Exception}", true);
+            }
+        }
+
+        private void OnProgramStatusChanged(object? sender, SharedMemoryFunc.ProgramStatusChangedEventArgs e)
+        {
+            Log($"[程序状态] {e.OldStatus} -> {e.NewStatus}");
+        }
+
+        private void OnConnectionStatusChanged(object? sender, SharedMemoryFunc.ConnectionStatusChangedEventArgs e)
+        {
+            Log($"[连接状态] {e.OldStatus} -> {e.NewStatus}");
+        }
+
+        #endregion
+
+        #region 按钮事件
+
         private async void BtnLaunch_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 Log("=== 开始完整启动流程 ===");
-                bool success = await _launcher.LaunchAsync();
+                btnLaunch.IsEnabled = false;
+
+                string? args = !string.IsNullOrWhiteSpace(txtAdditional.Text) ? txtAdditional.Text : null;
+                bool success = await _launcher.LaunchAsync(args);
+
                 Log(success ? "✓ 完整启动流程完成" : "✗ 完整启动流程失败");
             }
             catch (Exception ex)
             {
-                Log($"✗ 启动异常: {ex.Message}");
+                Log($"✗ 启动异常: {ex.Message}", true);
+            }
+            finally
+            {
+                btnLaunch.IsEnabled = true;
             }
         }
 
@@ -120,35 +251,36 @@ namespace g_mpm
             }
             catch (Exception ex)
             {
-                Log($"✗ 阶段1异常: {ex.Message}");
+                Log($"✗ 阶段1异常: {ex.Message}", true);
             }
         }
 
-        private void BtnStage3_Click(object sender, RoutedEventArgs e)
+        private void BtnStage2_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                Log("[阶段3] 启动C++进程...");
-                bool success = _launcher.Stage3_StartCppProcess();
-                Log(success ? "✓ 阶段3完成" : "✗ 阶段3失败");
-            }
-            catch (Exception ex)
-            {
-                Log($"✗ 阶段3异常: {ex.Message}");
-            }
-        }
-
-        private async void BtnStage2_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Log("[阶段2] 等待C++就绪...");
-                bool success = await _launcher.Stage2_WaitForCppReadyAsync();
+                Log("[阶段2] 启动C++进程...");
+                string? args = !string.IsNullOrWhiteSpace(txtAdditional.Text) ? txtAdditional.Text : null;
+                bool success = _launcher.Stage2_StartCppProcess(args);
                 Log(success ? "✓ 阶段2完成" : "✗ 阶段2失败");
             }
             catch (Exception ex)
             {
-                Log($"✗ 阶段2异常: {ex.Message}");
+                Log($"✗ 阶段2异常: {ex.Message}", true);
+            }
+        }
+
+        private async void BtnStage3_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Log("[阶段3] 等待C++就绪...");
+                bool success = await _launcher.Stage3_WaitForCppReadyAsync();
+                Log(success ? "✓ 阶段3完成" : "✗ 阶段3失败");
+            }
+            catch (Exception ex)
+            {
+                Log($"✗ 阶段3异常: {ex.Message}", true);
             }
         }
 
@@ -162,7 +294,7 @@ namespace g_mpm
             }
             catch (Exception ex)
             {
-                Log($"✗ 阶段4异常: {ex.Message}");
+                Log($"✗ 阶段4异常: {ex.Message}", true);
             }
         }
 
@@ -176,7 +308,7 @@ namespace g_mpm
             }
             catch (Exception ex)
             {
-                Log($"✗ 清理异常: {ex.Message}");
+                Log($"✗ 清理异常: {ex.Message}", true);
             }
         }
 
@@ -191,21 +323,17 @@ namespace g_mpm
                 }
 
                 var selected = (KeyValuePair<string, Command>)cmbCommands.SelectedItem;
-                Command cmd = selected.Value;
                 string additional = txtAdditional.Text;
 
                 Log($"➤ 发送命令: {selected.Key} ({additional})");
 
-                bool success = SharedMemoryFunc.CSend(
-                    cmd, additional,
-                    _launcher.ConnectStatus,
-                    _launcher.GetHandles());  // 需要添加GetHandles方法
-
+                bool success = _launcher.SendCommand(selected.Value, additional);
                 Log(success ? "✓ 命令发送成功" : "✗ 命令发送失败");
+                txtAdditional.Text = "";
             }
             catch (Exception ex)
             {
-                Log($"✗ 发送异常: {ex.Message}");
+                Log($"✗ 发送异常: {ex.Message}", true);
             }
         }
 
@@ -220,60 +348,72 @@ namespace g_mpm
                 }
 
                 var selected = (KeyValuePair<string, Command>)cmbCommands.SelectedItem;
-                Command cmd = selected.Value;
                 string additional = txtAdditional.Text;
 
                 Log($"➤ 发送命令并等待回复: {selected.Key}");
 
-                // 使用TaskCompletionSource等待回复
-                var tcs = new TaskCompletionSource<(StructDataType, byte[])>();
+                var (success, type, data, error) = await _launcher.SendCommandAndWaitAsync(
+                    selected.Value, additional, 5000);
 
-                EventHandler<SharedMemoryFunc.ReplyReceivedEventArgs>? handler = null;
-                handler = (s, args) =>
+                if (success)
                 {
-                    _ = tcs.TrySetResult((args.DataType, args.Data));
-                    _launcher.GetFunc().ReplyReceived -= handler;
-                };
-
-                _launcher.GetFunc().ReplyReceived += handler;
-
-                bool sendSuccess = SharedMemoryFunc.CSend(
-                    cmd, additional,
-                    _launcher.ConnectStatus,
-                    _launcher.GetHandles());
-
-                if (!sendSuccess)
-                {
-                    _launcher.GetFunc().ReplyReceived -= handler;
-                    Log("✗ 命令发送失败");
-                    return;
-                }
-
-                // 等待回复（5秒超时）
-                var timeoutTask = Task.Delay(5000);
-                var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
-
-                if (completedTask == tcs.Task)
-                {
-                    var (type, data) = await tcs.Task;
-                    Log($"✓ 收到回复: 类型={type}, 数据大小={data?.Length ?? 0}");
-
-                    // 显示回复信息
-                    txtReplyType.Text = type.ToString();
-                    txtReplySize.Text = data?.Length.ToString() ?? "0";
-                    txtReplyError.Text = "无";
+                    Log($"✓ 收到回复: 类型={type}, 数据大小={data?.Length ?? 0}, 错误={error ?? "无"}");
                 }
                 else
                 {
-                    _launcher.GetFunc().ReplyReceived -= handler;
-                    Log("✗ 等待回复超时");
-                    txtReplyError.Text = "超时";
+                    Log($"✗ 发送并等待失败: {error ?? "未知错误"}");
                 }
             }
             catch (Exception ex)
             {
-                Log($"✗ 发送并等待异常: {ex.Message}");
+                Log($"✗ 发送并等待异常: {ex.Message}", true);
             }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            _statusTimer?.Stop();
+            _launcher?.Dispose();
+            base.OnClosed(e);
+        }
+
+        private void BtnClearLog_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // 清空日志文本框
+                txtLog.Clear();
+
+                // 添加清空记录
+                Log("=== 日志已清空 ===");
+
+                // 可选：同时清空回复显示区的数据
+                txtReplyType.Text = "无";
+                txtReplySize.Text = "0";
+                txtReplyError.Text = "无";
+                txtReplyError.Foreground = System.Windows.Media.Brushes.Green;
+            }
+            catch (Exception ex)
+            {
+                // 异常处理
+                MessageBox.Show($"清空日志时发生错误: {ex.Message}", "错误",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #endregion
+
+        private void Pathchoose(object sender, RoutedEventArgs e)
+        {
+            OpenFolderDialog openFolderDialog = new OpenFolderDialog();
+            openFolderDialog.RootDirectory = "C:\\Desktop\\";
+            openFolderDialog.ShowDialog();
+            txtAdditional.Text = openFolderDialog.FolderName;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _launcher.Dispose();
         }
     }
 }
