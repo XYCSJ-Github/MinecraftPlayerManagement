@@ -22,6 +22,45 @@ struct WorldDirectoriesNameList
 	std::vector<std::string> world_directory_list;
 	//存档名称列表
 	std::vector<std::string> world_name_list;
+
+	int SerializeToFixedArray(BYTE StructData[SHARED_MEMORY_BUF_SIZE]) const
+	{
+		const size_t buffer_size = SHARED_MEMORY_BUF_SIZE;
+		size_t offset = 0;
+
+		// 1. 写入两个列表的大小
+		uint32_t dir_count = static_cast<uint32_t>(world_directory_list.size());
+		uint32_t name_count = static_cast<uint32_t>(world_name_list.size());
+
+		// 检查是否有足够空间写入列表大小
+		if (offset + sizeof(dir_count) + sizeof(name_count) > buffer_size)
+			return 0;
+
+		std::memcpy(StructData + offset, &dir_count, sizeof(dir_count));
+		offset += sizeof(dir_count);
+
+		std::memcpy(StructData + offset, &name_count, sizeof(name_count));
+		offset += sizeof(name_count);
+
+		// 2. 写入存档路径列表
+		for (const auto& dir : world_directory_list)
+		{
+			uint32_t str_len = static_cast<uint32_t>(dir.length());
+
+			// 检查是否有足够空间写入字符串长度和内容
+			if (offset + sizeof(str_len) + str_len > buffer_size)
+				return 0;
+
+			std::memcpy(StructData + offset, &str_len, sizeof(str_len));
+			offset += sizeof(str_len);
+
+			if (str_len > 0)
+			{
+				std::memcpy(StructData + offset, dir.c_str(), str_len);
+				offset += str_len;
+			}
+		}
+	}
 };
 
 /*

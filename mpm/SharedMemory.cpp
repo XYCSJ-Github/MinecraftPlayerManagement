@@ -1,4 +1,5 @@
 ﻿// SharedMemory.cpp - 修改后的实现
+#include "CC.h"
 #include "SharedMemory.h"
 #include <sstream>
 #include <string>
@@ -201,6 +202,29 @@ void SharedMemory::ProcessCommand()
 	case Command::LIST_WORLD:
 		LOG_INFO("列出存档");
 		// 处理列出存档逻辑
+		try
+		{
+			CLW clw;
+			mp.ReloadList();
+			clw >> mp;
+			BYTE tmp[1024];
+			memcpy_s(tmp, SHARED_MEMORY_BUF_SIZE, clw.SerializeToFixedArray(), SHARED_MEMORY_BUF_SIZE);
+			if (tmp == nullptr)
+			{
+				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE, clw.SerializeToFixedArray(), SHARED_MEMORY_BUF_SIZE);
+			}
+			else
+			{
+				WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数据集是空的");
+				break;
+			}
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数据序列化转换时出现错误");
+			break;
+		}
+
 		WriteInSMC(smc, StructType::WDNL);
 		break;
 

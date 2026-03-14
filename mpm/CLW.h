@@ -8,5 +8,6 @@ public:
 	~CLW() = default;
 
 	virtual void RunCommand() override;
+	virtual BYTE* SerializeToFixedArray() override;
 };
 
