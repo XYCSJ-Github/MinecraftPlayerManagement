@@ -419,5 +419,21 @@ namespace g_mpm
         {
             _launcher.Dispose();
         }
+
+        private void IsEnable_Checked(object sender, RoutedEventArgs e)
+        {
+            btnStage1.IsEnabled = false;
+            btnStage2.IsEnabled = false;
+            btnStage3.IsEnabled = false;
+            btnStage4.IsEnabled = false;
+        }
+
+        private void IsEnable_Unchecked(object sender, RoutedEventArgs e)
+        {
+            btnStage1.IsEnabled = true;
+            btnStage2.IsEnabled = true;
+            btnStage3.IsEnabled = true;
+            btnStage4.IsEnabled = true;
+        }
     }
 }
