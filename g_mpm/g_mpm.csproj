@@ -8,6 +8,8 @@
     <UseWPF>true</UseWPF>
     <PackageOutputPath>$(ProjectPath)</PackageOutputPath>
     <BaseOutputPath>D:\Visual Studio Work\MinecraftPlayerManagement\x64</BaseOutputPath>
+    <UseWindowsForms>False</UseWindowsForms>
+    <ApplicationIcon>Res\MC_ICON.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <Content Include="Res\MC_ICON.ico" />
   </ItemGroup>
 
 </Project>
