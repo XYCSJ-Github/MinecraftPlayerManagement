@@ -9,7 +9,7 @@
 #include <thread>
 
 //共享内存缓冲区大小
-#define SHARED_MEMORY_BUF_SIZE 1024
+#define SHARED_MEMORY_BUF_SIZE 10240
 
 //共享内存名称
 constexpr const wchar_t MEMORY_NAME[14] = L"SharedMemory";

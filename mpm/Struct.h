@@ -7,7 +7,7 @@
 #include <Windows.h>
 
 //共享内存缓冲区大小
-#define SHARED_MEMORY_BUF_SIZE 1024
+#define SHARED_MEMORY_BUF_SIZE 10240
 
 /*
 * 存档路径列表与名称列表
@@ -50,7 +50,6 @@ struct WorldDirectoriesNameList
 		{
 			uint32_t str_len = static_cast<uint32_t>(dir.length());
 
-			// 检查是否有足够空间写入字符串长度和内容
 			if (offset + sizeof(str_len) + str_len > buffer_size)
 				return (size_t)0;
 
@@ -63,6 +62,25 @@ struct WorldDirectoriesNameList
 				offset += str_len;
 			}
 		}
+
+		// 3. **重要：写入存档名称列表**（之前缺失的部分）
+		for (const auto& name : world_name_list)
+		{
+			uint32_t str_len = static_cast<uint32_t>(name.length());
+
+			if (offset + sizeof(str_len) + str_len > buffer_size)
+				return (size_t)0;
+
+			std::memcpy(StructData + offset, &str_len, sizeof(str_len));
+			offset += sizeof(str_len);
+
+			if (str_len > 0)
+			{
+				std::memcpy(StructData + offset, name.c_str(), str_len);
+				offset += str_len;
+			}
+		}
+
 		return offset;
 	}
 };
@@ -197,6 +215,83 @@ struct UserInfo
 		{
 			std::memcpy(StructData + offset, expiresOn.c_str(), expire_len);
 			offset += expire_len;
+		}
+
+		return offset;
+	}
+
+	// 新增：从指定位置开始序列化
+	size_t SerializeToBuffer(BYTE* buffer, size_t buffer_size, size_t start_offset = 0) const
+	{
+		size_t offset = start_offset;
+
+		// 序列化玩家昵称
+		uint32_t name_len = static_cast<uint32_t>(user_name.length());
+		if (offset + sizeof(name_len) + name_len > buffer_size)
+			return 0;
+
+		std::memcpy(buffer + offset, &name_len, sizeof(name_len));
+		offset += sizeof(name_len);
+
+		if (name_len > 0)
+		{
+			std::memcpy(buffer + offset, user_name.c_str(), name_len);
+			offset += name_len;
+		}
+
+		// 序列化UUID
+		uint32_t uuid_len = static_cast<uint32_t>(uuid.length());
+		if (offset + sizeof(uuid_len) + uuid_len > buffer_size)
+			return 0;
+
+		std::memcpy(buffer + offset, &uuid_len, sizeof(uuid_len));
+		offset += sizeof(uuid_len);
+
+		if (uuid_len > 0)
+		{
+			std::memcpy(buffer + offset, uuid.c_str(), uuid_len);
+			offset += uuid_len;
+		}
+
+		// 序列化过期时间
+		uint32_t expire_len = static_cast<uint32_t>(expiresOn.length());
+		if (offset + sizeof(expire_len) + expire_len > buffer_size)
+			return 0;
+
+		std::memcpy(buffer + offset, &expire_len, sizeof(expire_len));
+		offset += sizeof(expire_len);
+
+		if (expire_len > 0)
+		{
+			std::memcpy(buffer + offset, expiresOn.c_str(), expire_len);
+			offset += expire_len;
+		}
+
+		return offset - start_offset;  // 返回写入的字节数
+	}
+
+	// 序列化vector的便捷函数
+	static size_t SerializeVector(const std::vector<UserInfo>& users, BYTE buffer[SHARED_MEMORY_BUF_SIZE])
+	{
+		const size_t buffer_size = SHARED_MEMORY_BUF_SIZE;
+		size_t offset = 0;
+
+		// 写入元素个数
+		uint32_t count = static_cast<uint32_t>(users.size());
+		if (offset + sizeof(count) > buffer_size)
+			return 0;
+
+		std::memcpy(buffer + offset, &count, sizeof(count));
+		offset += sizeof(count);
+
+		// 写入每个元素
+		for (const auto& user : users)
+		{
+			size_t written = user.SerializeToBuffer(buffer, buffer_size, offset);
+			if (written == 0)
+				return 0;  // 空间不足
+
+			offset += written;
 		}
 
 		return offset;

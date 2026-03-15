@@ -1,5 +1,6 @@
 ﻿// SMTW.xaml.cs - 完整的GUI实现
 using g_mpm.Enums;
+using g_mpm.Structs;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Windows;
@@ -24,6 +25,8 @@ namespace g_mpm
             SetupStatusTimer();
             ParseCommandLineArgs();
             this.Closing += Window_Closing;
+            WorldComdo.IsEnabled = false;
+            PlayerComdo.IsEnabled = false;
         }
 
         private void InitializeCommands()
@@ -38,6 +41,8 @@ namespace g_mpm
                 ["列出玩家"] = Command.LIST_PLAYER,
                 ["删除玩家"] = Command.DEL_PLAYER,
                 ["删除存档"] = Command.DEL_WORLD,
+                ["删除JSON记录"] = Command.DEL_JS,
+                ["删除指定世界玩家"] = Command.DEL_PW,
                 ["刷新"] = Command.REFRESH
             };
 
@@ -190,12 +195,75 @@ namespace g_mpm
                 {
                     txtTitleName.Text = e.Title.ToString();
                 }
+
+
+                switch (e.DataType)
+                {
+                    case StructDataType.WDNL:
+                        if (e.Data != null)
+                        {
+                            WorldDirectoriesNameList wunl = WorldDirectoriesNameList.FromBytes(e.Data);
+                            Dictionary<string, string> _WorldList = new Dictionary<string, string>();
+                            for (int i = 0; i < wunl.world_name_list.Count; i++)
+                            {
+                                _WorldList.Add(wunl.world_name_list[i], wunl.world_directory_list[i]);
+                            }
+
+                            WorldComdo.ItemsSource = _WorldList;
+                            WorldComdo.DisplayMemberPath = "Key";
+                            WorldComdo.SelectedValuePath = "Value";
+                            WorldComdo.SelectedIndex = 0;
+
+                            WorldComdo.IsEnabled = true;
+                        }
+                        else
+                        {
+                            Log("传来的数组是空的", true);
+                        }
+
+                        break;
+
+                    case StructDataType.UI:
+                        if (e.Data != null)
+                        {
+                            List<UserInfo> ui = UserInfoListSerializer.FromBytes(e.Data);
+                            Dictionary<string, string> _PlayerList = new Dictionary<string, string>();
+                            for (int i = 0; i < ui.Count; i++)
+                            {
+                                _PlayerList.Add(ui[i].user_name, ui[i].uuid);
+                            }
+                            PlayerComdo.ItemsSource = _PlayerList;
+                            PlayerComdo.DisplayMemberPath = "Key";
+                            PlayerComdo.SelectedValuePath = "Value";
+                            PlayerComdo.SelectedIndex = 0;
+
+                            PlayerComdo.IsEnabled = true;
+                        }
+                        else
+                        {
+                            Log("传来的数组是空的", true);
+                        }
+
+                        break;
+
+                    case StructDataType.PIWIL:
+                        if (e.Data != null)
+                        {
+                            PlayerInWorldInfoList piwil = PlayerInWorldInfoList.FromBytes(e.Data);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+
             });
 
             if (e.Data != null && e.Data.Length > 0 && _launcher.Func != null)
             {
                 Log($"[数据] 前64字节: {BitConverter.ToString(e.Data.Take(64).ToArray()).Replace("-", " ")}");
             }
+
         }
 
         private void OnErrorOccurred(object? sender, ErrorEventArgs e)
@@ -432,6 +500,63 @@ namespace g_mpm
             btnStage2.IsEnabled = true;
             btnStage3.IsEnabled = true;
             btnStage4.IsEnabled = true;
+        }
+
+        private void cmbCommands_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            Command command = (Command)cmbCommands.SelectedValue;
+            switch (command)
+            {
+                case Command.DEL_PLAYER:
+                    {
+                        KeyValuePair<string, string> key = (KeyValuePair<string, string>)PlayerComdo.SelectedItem;
+                        txtAdditional.Text = key.Key;
+                        break;
+                    }
+
+                case Command.DEL_WORLD:
+                    {
+                        KeyValuePair<string, string> key = (KeyValuePair<string, string>)WorldComdo.SelectedItem;
+                        txtAdditional.Text = key.Key;
+                        break;
+                    }
+
+                case Command.DEL_JS:
+                    {
+                        KeyValuePair<string, string> key = (KeyValuePair<string, string>)PlayerComdo.SelectedItem;
+                        txtAdditional.Text = key.Key;
+                        break;
+                    }
+
+                case Command.DEL_PW:
+                    {
+                        string tmp;
+                        KeyValuePair<string, string> key = (KeyValuePair<string, string>)PlayerComdo.SelectedItem;
+                        tmp = key.Key;
+                        tmp += " ";
+                        KeyValuePair<string, string> keya = (KeyValuePair<string, string>)WorldComdo.SelectedItem;
+                        tmp += keya.Key;
+
+                        txtAdditional.Text = tmp;
+
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+        }
+
+        private void PlayerComdo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            KeyValuePair<string, string> key = (KeyValuePair<string, string>)PlayerComdo.SelectedItem;
+            txtAdditional.Text = key.Key;
+        }
+
+        private void WorldComdo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            KeyValuePair<string, string> key = (KeyValuePair<string, string>)WorldComdo.SelectedItem;
+            txtAdditional.Text = key.Key;
         }
     }
 }

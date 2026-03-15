@@ -242,25 +242,25 @@ void SharedMemory::ProcessCommand()
 			CLP cl;
 			cl >> mp;
 			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
-			size_t buf_size = cl.GetWorldList().SerializeToFixedArray(buf);
+			size_t buf_size = cl.GetUserInfoList()[0].SerializeVector(cl.GetUserInfoList(), buf);
 			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
 			{
 				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE - 1, buf, buf_size);
 			}
 			else
 			{
-				WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数组超限");
+				WriteInSMC(smc, StructType::UI, RunStatus::FAILED, "数组超限");
 				break;
 			}
 		}
 		catch (const std::exception&)
 		{
-			WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数据序列化转换时出现错误");
+			WriteInSMC(smc, StructType::UI, RunStatus::FAILED, "数据序列化转换时出现错误");
 			break;
 		}
 
 
-		WriteInSMC(smc, StructType::PIWIL);
+		WriteInSMC(smc, StructType::UI);
 		break;
 
 	case Command::REFRESH:

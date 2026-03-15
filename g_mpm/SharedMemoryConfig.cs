@@ -9,7 +9,7 @@ namespace g_mpm.SharedMemoryConfig
         /// <summary>
         /// 内存大小
         /// </summary>
-        public const int BufferSize = 1024;
+        public const int BufferSize = 10240;
         /// <summary>
         /// 共享内存名称
         /// </summary>
