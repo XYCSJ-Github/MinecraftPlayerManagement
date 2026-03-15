@@ -188,6 +188,10 @@ namespace g_mpm
                 {
                     txtLoadMode.Text = e.mode.ToString();
                 }
+                if (e.Title != "")
+                {
+                    txtTitleName.Text = e.Title.ToString();
+                }
             });
 
             if (e.Data != null && e.Data.Length > 0 && _launcher.Func != null)

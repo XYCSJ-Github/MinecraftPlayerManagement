@@ -7,9 +7,7 @@
 #include <Windows.h>
 
 //共享内存缓冲区大小
-#ifndef SHARED_MEMORY_BUF_SIZE
 #define SHARED_MEMORY_BUF_SIZE 1024
-#endif
 
 /*
 * 存档路径列表与名称列表
@@ -23,7 +21,12 @@ struct WorldDirectoriesNameList
 	//存档名称列表
 	std::vector<std::string> world_name_list;
 
-	int SerializeToFixedArray(BYTE StructData[SHARED_MEMORY_BUF_SIZE]) const
+	/*
+	* 用于序列化WorldDirectoriesNameList结构体的函数
+	* @param StructData 传入缓冲区
+	* @return 缓冲区大小
+	*/
+	size_t SerializeToFixedArray(BYTE StructData[SHARED_MEMORY_BUF_SIZE]) const
 	{
 		const size_t buffer_size = SHARED_MEMORY_BUF_SIZE;
 		size_t offset = 0;
@@ -34,7 +37,7 @@ struct WorldDirectoriesNameList
 
 		// 检查是否有足够空间写入列表大小
 		if (offset + sizeof(dir_count) + sizeof(name_count) > buffer_size)
-			return 0;
+			return (size_t)0;
 
 		std::memcpy(StructData + offset, &dir_count, sizeof(dir_count));
 		offset += sizeof(dir_count);
@@ -49,7 +52,7 @@ struct WorldDirectoriesNameList
 
 			// 检查是否有足够空间写入字符串长度和内容
 			if (offset + sizeof(str_len) + str_len > buffer_size)
-				return 0;
+				return (size_t)0;
 
 			std::memcpy(StructData + offset, &str_len, sizeof(str_len));
 			offset += sizeof(str_len);
@@ -60,6 +63,7 @@ struct WorldDirectoriesNameList
 				offset += str_len;
 			}
 		}
+		return offset;
 	}
 };
 
@@ -240,6 +244,9 @@ struct SharedMemoryCommand
 	RunStatus RunStatus;
 	// 报错信息
 	char ErrorInfo[SHARED_MEMORY_BUF_SIZE];
+
+	//标题名称
+	char TitleName[SHARED_MEMORY_BUF_SIZE];
 
 	// 结构体数据类型 枚举StructType
 	StructType StructDataType;

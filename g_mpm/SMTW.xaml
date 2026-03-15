@@ -55,8 +55,8 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <TextBlock Text="运行状态:" Margin="0,0,5,0" FontWeight="Bold"/>
-                    <TextBlock x:Name="txtRunningStatus" Text="未运行" Foreground="Gray" FontWeight="Bold"/>
+                    <TextBlock Text="标题名称:" Margin="0,0,5,0" FontWeight="Bold"/>
+                    <TextBlock x:Name="txtTitleName" Text="无" Foreground="Gray" FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
         </Border>

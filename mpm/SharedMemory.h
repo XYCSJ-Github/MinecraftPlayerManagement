@@ -12,15 +12,15 @@
 #define SHARED_MEMORY_BUF_SIZE 1024
 
 //共享内存名称
-#define MEMORY_NAME L"SharedMemory"
+constexpr const wchar_t MEMORY_NAME[14] = L"SharedMemory";
 //主互斥锁名称
-#define MUTEX_NAME L"MutexLock"
+constexpr const wchar_t MUTEX_NAME[11] = L"MutexLock";
 //初始事件名称
-#define EVENT_INIT L"SharedMemoryInitEvent"
+constexpr const wchar_t EVENT_INIT[23] = L"SharedMemoryInitEvent";
 //发送事件名称
-#define EVENT_SEND L"EventSend"
+constexpr const wchar_t EVENT_SEND[11] = L"EventSend";
 //接收事件名称
-#define EVENT_RECV L"EventRecv"
+constexpr const wchar_t EVENT_RECV[11] = L"EventRecv";
 
 class SharedMemory
 {
@@ -65,7 +65,7 @@ public:
 	bool WaitForCSharpReady();
 
 	//设置初始化事件（通知C#端C++已就绪）
-	void SetInitEvent();
+	void SetInitEvent() const;
 
 	//进入命令循环
 	void RunLoop();

@@ -30,15 +30,3 @@ void CLW::RunCommand()
 	SetShow(out + "\n");
 	return;
 }
-
-BYTE* CLW::SerializeToFixedArray()
-{
-	WorldDirectoriesNameList ta = this->GetWorldList();
-	BYTE tmp[1024];
-	if (ta.SerializeToFixedArray(tmp) == 0)
-	{
-		throw;
-	}
-
-	return tmp;
-}

@@ -39,6 +39,12 @@ namespace g_mpm.Structs
         public string ErrorInfo;
 
         /// <summary>
+        /// 标题名称
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = Constants.BufferSize)]
+        public string TitleName;
+
+        /// <summary>
         /// 结构体数据类型 枚举StructDataType
         /// </summary>
         public StructDataType StructDataType;

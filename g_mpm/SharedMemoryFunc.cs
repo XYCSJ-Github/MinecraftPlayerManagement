@@ -42,6 +42,7 @@ namespace g_mpm
             public string? ErrorInfo { get; set; }
             public bool IsSuccess { get; set; }
             public LoadMode mode { get; set; }
+            public string Title { get; set; }
         }
 
         public class OutputReceivedEventArgs : EventArgs
@@ -81,7 +82,7 @@ namespace g_mpm
                 {
                     try
                     {
-                        var (type, data, error, command, runStatus, errorInfo, loadmode) = CheckReply(status, handles);
+                        var (type, data, error, command, runStatus, errorInfo, loadmode, title) = CheckReply(status, handles);
 
                         if (!string.IsNullOrEmpty(error))
                         {
@@ -112,7 +113,8 @@ namespace g_mpm
                                     Data = data,
                                     ErrorInfo = errorInfo,
                                     IsSuccess = runStatus == RunStatus.SUCCESSFUL,
-                                    mode = loadmode
+                                    mode = loadmode,
+                                    Title = title
                                 });
                             }
                         }
@@ -290,6 +292,7 @@ namespace g_mpm
                         DefCommand = Command.EMPTY_COMMAND,
                         RunStatus = RunStatus.EMPTY_STATUS,
                         LoadMod = LoadMode.EMPTY_MOD,
+                        TitleName = "",
                         StructDataType = StructDataType.EMPTY_STRUCT,
                         AdditionaCommand = "",
                         ErrorInfo = "",
@@ -443,20 +446,20 @@ namespace g_mpm
         ///<summary>
         /// 回复监听
         ///</summary>
-        public static (StructDataType, byte[], string Error, Command, RunStatus, string, LoadMode) CheckReply(ConnectStatus connectStatus, HandlePtr handlePtr)
+        public static (StructDataType, byte[], string Error, Command, RunStatus, string, LoadMode,string) CheckReply(ConnectStatus connectStatus, HandlePtr handlePtr)
         {
             if (connectStatus != ConnectStatus.CONNECTED)
-                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "Not Connected", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD);
+                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "Not Connected", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD, "");
 
             uint waitResult = Wapi.WaitForSingleObject(handlePtr._hEvent_Recv, 0); // 使用 Recv 事件
             if (waitResult != 0)
-                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD);
+                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD, "");
 
             Wapi.ResetEvent(handlePtr._hEvent_Recv);
 
             waitResult = Wapi.WaitForSingleObject(handlePtr._hMutex, 5000);
             if (waitResult != 0)
-                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "Mutex timeout", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD);
+                return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "Mutex timeout", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD, "");
 
             try
             {
@@ -470,6 +473,7 @@ namespace g_mpm
                     LoadMode loadMode = data.LoadMod;
                     RunStatus status = data.RunStatus;
                     string errorInfo = data.ErrorInfo ?? "";
+                    string title = data.TitleName;
 
                     // 重置结构体
                     var resetData = new SharedMemoryCommand
@@ -479,12 +483,13 @@ namespace g_mpm
                         RunStatus = RunStatus.EMPTY_STATUS,
                         StructDataType = StructDataType.EMPTY_STRUCT,
                         AdditionaCommand = "",
+                        TitleName = "",
                         ErrorInfo = "",
                         StructData = new byte[SharedMemoryConfig.Constants.BufferSize]
                     };
                     Marshal.StructureToPtr(resetData, handlePtr.sharedMemoryCommand, false);
 
-                    return (type, sd, "", cmd, status, errorInfo, loadMode);
+                    return (type, sd, "", cmd, status, errorInfo, loadMode, title);
                 }
             }
             finally
@@ -492,7 +497,7 @@ namespace g_mpm
                 Wapi.ReleaseMutex(handlePtr._hMutex);
             }
 
-            return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD);
+            return (StructDataType.EMPTY_STRUCT, Array.Empty<byte>(), "", Command.EMPTY_COMMAND, RunStatus.EMPTY_STATUS, "", LoadMode.EMPTY_MOD, "");
         }
 
         /// <summary>

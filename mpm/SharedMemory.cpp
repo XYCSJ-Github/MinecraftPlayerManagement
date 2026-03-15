@@ -1,5 +1,6 @@
 ﻿// SharedMemory.cpp - 修改后的实现
 #include "CC.h"
+#include "func.h"
 #include "SharedMemory.h"
 #include <sstream>
 #include <string>
@@ -131,7 +132,7 @@ bool SharedMemory::WaitForCSharpReady()
 	}
 }
 
-void SharedMemory::SetInitEvent()
+void SharedMemory::SetInitEvent() const
 {
 	LOG_CREATE_MODEL_NAME("InitEvent");
 	if (handles.hInitEvent != NULL)
@@ -184,13 +185,15 @@ void SharedMemory::ProcessCommand()
 			mp.PathLoadTpye();
 			mp.LoadWorldList();
 			mp.LoadUserList();
+			mp.LoadWorldListSTL();
+
+			strcpy_s(smc->TitleName, (size_t)SHARED_MEMORY_BUF_SIZE, getLastComponent(mp.GetProcessingPath()).c_str());
 		}
 		catch (const std::exception&)
 		{
 			WriteInSMC(smc, (StructType)0, RunStatus::FAILED, "在输入路径完成后的处理过程中出错");
 			break;
 		}
-
 
 		WriteInSMC(smc);
 		if (mp.GetPathLoadType() != LoadMode::EMPTY)
@@ -204,18 +207,19 @@ void SharedMemory::ProcessCommand()
 		// 处理列出存档逻辑
 		try
 		{
-			CLW clw;
 			mp.ReloadList();
+			CLW clw;
 			clw >> mp;
-			BYTE tmp[1024];
-			memcpy_s(tmp, SHARED_MEMORY_BUF_SIZE, clw.SerializeToFixedArray(), SHARED_MEMORY_BUF_SIZE);
-			if (tmp == nullptr)
+			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
+			size_t buf_size = clw.GetWorldList().SerializeToFixedArray(buf);
+
+			if (buf_size <= sizeof(buf))
 			{
-				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE, clw.SerializeToFixedArray(), SHARED_MEMORY_BUF_SIZE);
+				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE - 1, buf, buf_size);
 			}
 			else
 			{
-				WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数据集是空的");
+				WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数组超限");
 				break;
 			}
 		}

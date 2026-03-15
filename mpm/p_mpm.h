@@ -100,7 +100,6 @@ public:
 	*/
 	int ProcessCommand(const std::string _command);
 	virtual void RunCommand() {};
-	virtual BYTE* SerializeToFixedArray() { return nullptr; }
 
 protected:
 	/*
