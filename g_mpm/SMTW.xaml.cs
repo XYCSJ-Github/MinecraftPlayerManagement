@@ -32,8 +32,6 @@ namespace g_mpm
             {
                 ["空命令"] = Command.EMPTY_COMMAND,
                 ["设置路径"] = Command.M_SET_PATH,
-                ["退出"] = Command.EXIT,
-                ["返回"] = Command.BREAK,
                 ["打开存档"] = Command.OPEN_WORLD,
                 ["打开玩家"] = Command.OPEN_PLAYER,
                 ["列出存档"] = Command.LIST_WORLD,
@@ -134,7 +132,7 @@ namespace g_mpm
                         // 自动滚动
                         if (chkAutoScroll.IsChecked == true)
                         {
-                            scrollViewer.ScrollToBottom();
+                            txtLog.ScrollToEnd();
                         }
 
                         // 同时输出到调试窗口（便于调试）

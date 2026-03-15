@@ -74,6 +74,7 @@ void COW::RunCommand()
 		}
 	}
 
+	this->SetPlayerInWorldInfoList(piwil);
 	SetShow(out);
 	return;
 }

@@ -208,12 +208,12 @@ void SharedMemory::ProcessCommand()
 		try
 		{
 			mp.ReloadList();
-			CLW clw;
-			clw >> mp;
+			CLW cl;
+			cl >> mp;
 			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
-			size_t buf_size = clw.GetWorldList().SerializeToFixedArray(buf);
+			size_t buf_size = cl.GetWorldList().SerializeToFixedArray(buf);
 
-			if (buf_size <= sizeof(buf))
+			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
 			{
 				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE - 1, buf, buf_size);
 			}
@@ -235,8 +235,188 @@ void SharedMemory::ProcessCommand()
 	case Command::LIST_PLAYER:
 		LOG_INFO("列出玩家");
 		// 处理列出玩家逻辑
+
+		try
+		{
+			mp.ReloadList();
+			CLP cl;
+			cl >> mp;
+			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
+			size_t buf_size = cl.GetWorldList().SerializeToFixedArray(buf);
+			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
+			{
+				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE - 1, buf, buf_size);
+			}
+			else
+			{
+				WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数组超限");
+				break;
+			}
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数据序列化转换时出现错误");
+			break;
+		}
+
+
 		WriteInSMC(smc, StructType::PIWIL);
 		break;
+
+	case Command::REFRESH:
+		LOG_INFO("刷新");
+
+		try
+		{
+			mp.ReloadList();
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::EMPTY_STRUCT, RunStatus::FAILED, "刷新失败");
+			break;
+		}
+
+		WriteInSMC(smc);
+		break;
+
+	case Command::OPEN_WORLD:
+		LOG_INFO("打开世界");
+
+		try
+		{
+			mp.ReloadList();
+			COW co;
+			co >> mp;
+			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
+			size_t buf_size = co.GetPlayerInWorldInfoList().SerializeToFixedArray(buf);
+			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
+			{
+				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE - 1, buf, buf_size);
+			}
+			else
+			{
+				WriteInSMC(smc, StructType::PIWIL, RunStatus::FAILED, "数组超限");
+				break;
+			}
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::PIWIL, RunStatus::FAILED, "数据序列化转换时出现错误");
+			break;
+		}
+
+		WriteInSMC(smc, StructType::PIWIL);
+		break;
+
+	case Command::OPEN_PLAYER:
+		LOG_INFO("打开玩家");
+
+		try
+		{
+			mp.ReloadList();
+			COP co;
+			co >> mp;
+			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
+			size_t buf_size = co.GetPlayerInWorldInfoList().SerializeToFixedArray(buf);
+			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
+			{
+				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE - 1, buf, buf_size);
+			}
+			else
+			{
+				WriteInSMC(smc, StructType::PIWIL, RunStatus::FAILED, "数组超限");
+				break;
+			}
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::PIWIL, RunStatus::FAILED, "数据序列化转换时出现错误");
+			break;
+		}
+
+		WriteInSMC(smc, StructType::PIWIL);
+		break;
+
+	case Command::DEL_PLAYER:
+		LOG_INFO("删除玩家");
+
+		try
+		{
+			mp.ReloadList();
+			CDP cd;
+			cd >> mp;
+			cd.SetAdditionalCommand(additional);
+			cd.RunCommand();
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::EMPTY_STRUCT, RunStatus::FAILED, "执行命令时出错");
+			break;
+		}
+
+		WriteInSMC(smc);
+		break;
+
+	case Command::DEL_WORLD:
+		LOG_INFO("删除世界");
+
+		try
+		{
+			mp.ReloadList();
+			CDW cd;
+			cd >> mp;
+			cd.SetAdditionalCommand(additional);
+			cd.RunCommand();
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::EMPTY_STRUCT, RunStatus::FAILED, "执行命令时出错");
+			break;
+		}
+
+		WriteInSMC(smc);
+		break;
+
+	case Command::DEL_PW:
+		LOG_INFO("从存档中删除玩家");
+
+		try
+		{
+			mp.ReloadList();
+			CDPW cd;
+			cd >> mp;
+			cd.SetAdditionalCommand(additional);
+			cd.RunCommand();
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::EMPTY_STRUCT, RunStatus::FAILED, "执行命令时出错");
+			break;
+		}
+
+		WriteInSMC(smc);
+		break;
+
+	case Command::DEL_JS:
+		LOG_INFO("从存档中删除玩家");
+
+		try
+		{
+			mp.ReloadList();
+			CDJS cd;
+			cd >> mp;
+			cd.SetAdditionalCommand(additional);
+			cd.RunCommand();
+		}
+		catch (const std::exception&)
+		{
+			WriteInSMC(smc, StructType::EMPTY_STRUCT, RunStatus::FAILED, "执行命令时出错");
+			break;
+		}
+
+		WriteInSMC(smc);
+		break;
+
 
 	default:
 		LOG_WARNING("未知命令: " + std::to_string(static_cast<int>(cmd)));

@@ -97,11 +97,12 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Text="命令:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox x:Name="cmbCommands" Grid.Column="1" Height="30" Margin="0,0,10,0"/>
+                    <ComboBox x:Name="cmbCommands" Grid.Column="1" Height="30" Margin="0,0,10,0" MaxWidth="200" MinWidth="190"/>
 
                     <TextBlock Grid.Column="2" Text="参数:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <TextBox x:Name="txtAdditional" Grid.Column="3" Height="30" Margin="0,0,10,0"
-                             Text=""/>
+                    <TextBox x:Name="txtAdditional" Grid.Column="3" Height="30" Margin="0,0,10,0" FontSize="15" 
+                             HorizontalContentAlignment="Center" 
+                             VerticalContentAlignment="Center" Text=""/>
                     
                     <Button Grid.Column="4" Content="..." Click="Pathchoose"/>
 
