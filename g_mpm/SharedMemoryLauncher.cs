@@ -165,15 +165,32 @@ namespace g_mpm
         {
             try
             {
-                var startInfo = new ProcessStartInfo
+                ProcessStartInfo startInfo;
+                string[] args = Environment.GetCommandLineArgs();
+                if (args[1] == "createwindow")
                 {
-                    FileName = "mpm.exe",
-                    Arguments = "bg",
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                };
+                    startInfo = new ProcessStartInfo
+                    {
+                        FileName = "mpm.exe",
+                        Arguments = "bg",
+                        UseShellExecute = false,
+                        CreateNoWindow = false,
+                        RedirectStandardOutput = false,
+                        RedirectStandardError = false,
+                    };
+                }
+                else
+                {
+                    startInfo = new ProcessStartInfo
+                    {
+                        FileName = "mpm.exe",
+                        Arguments = "bg",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                    };
+                }
 
                 _cppProcess = _func.StartProcess(ref _programStatus, startInfo);
 

@@ -77,7 +77,10 @@ namespace g_mpm
             if (args.Length > 1)
             {
                 Log($"[启动参数] {string.Join(" ", args.Skip(1))}");
-                txtAdditional.Text = string.Join(" ", args.Skip(1));
+                if (args[1] != "createwindow")
+                {
+                    txtAdditional.Text = string.Join(" ", args.Skip(1));
+                }
             }
         }
 
