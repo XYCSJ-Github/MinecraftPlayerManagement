@@ -9,8 +9,15 @@
     <PackageOutputPath>$(ProjectPath)</PackageOutputPath>
     <BaseOutputPath>D:\Visual Studio Work\MinecraftPlayerManagement\x64</BaseOutputPath>
     <UseWindowsForms>False</UseWindowsForms>
-    <ApplicationIcon>Res\MC_ICON.ico</ApplicationIcon>
+    <ApplicationIcon>MPM_ICON.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Res\**" />
+    <EmbeddedResource Remove="Res\**" />
+    <None Remove="Res\**" />
+    <Page Remove="Res\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="SDS.cs" />
@@ -18,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Res\MC_ICON.ico" />
+    <Content Include="MPM_ICON.ico" />
   </ItemGroup>
 
 </Project>

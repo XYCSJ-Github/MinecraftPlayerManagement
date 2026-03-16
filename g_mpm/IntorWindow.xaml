@@ -6,7 +6,237 @@
         xmlns:local="clr-namespace:g_mpm"
         mc:Ignorable="d"
         Title="IntorWindow" Height="500" Width="800">
+
     <Grid>
-        
+        <Canvas x:Name="Side1">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="SideTranslate1" X="0" Y="0"/>
+            </Canvas.RenderTransform>
+
+            <Rectangle Width="200" Height="400" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Left="-80" Canvas.Top="-180">
+                <Rectangle.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="0.8" Direction="51" ShadowDepth="10"/>
+                </Rectangle.Effect>
+
+                <Rectangle.RenderTransform>
+                    <RotateTransform Angle="51"/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Canvas>
+
+        <Canvas x:Name="Side2">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="SideTranslate2" X="0" Y="0"/>
+            </Canvas.RenderTransform>
+
+            <Rectangle Width="200" Height="400" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Right="-80" Canvas.Top="-180">
+                <Rectangle.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="0.8" Direction="129" ShadowDepth="10"/>
+                </Rectangle.Effect>
+
+                <Rectangle.RenderTransform>
+                    <RotateTransform Angle="-51"/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Canvas>
+
+        <Canvas x:Name="Side3">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="SideTranslate3" X="0" Y="0"/>
+            </Canvas.RenderTransform>
+
+            <Rectangle Width="200" Height="400" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Left="-80" Canvas.Bottom="-180">
+                <Rectangle.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="0.8" Direction="51" ShadowDepth="10"/>
+                </Rectangle.Effect>
+
+                <Rectangle.RenderTransform>
+                    <RotateTransform Angle="-51"/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Canvas>
+
+        <Canvas x:Name="Side4">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="SideTranslate4" X="0" Y="0"/>
+            </Canvas.RenderTransform>
+
+            <Rectangle Width="200" Height="400" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Right="-80" Canvas.Bottom="-180">
+                <Rectangle.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="0.8" Direction="129" ShadowDepth="10"/>
+                </Rectangle.Effect>
+
+                <Rectangle.RenderTransform>
+                    <RotateTransform Angle="51"/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Canvas>
+
+        <Canvas x:Name="AS">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="AbortSide" Y="0"/>
+            </Canvas.RenderTransform>
+
+            <Rectangle Width="830" Height="500" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Top="500">
+                <Rectangle.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="1" Direction="0" ShadowDepth="10"/>
+                </Rectangle.Effect>
+            </Rectangle>
+        </Canvas>
+
+        <Canvas x:Name="TAS">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="TopSide" Y="0"/>
+            </Canvas.RenderTransform>
+
+            <Rectangle Width="830" Height="100" Fill="CadetBlue" RenderTransformOrigin="0.5,0.5" Canvas.Bottom="500">
+                <Rectangle.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="1" Direction="180" ShadowDepth="10"/>
+                </Rectangle.Effect>
+            </Rectangle>
+        </Canvas>
+
+        <!--主按钮-->
+        <Button Width="160" Height="160" Margin="0,0,0,90" BorderBrush="Transparent" Background="Transparent" Foreground="Turquoise">
+
+            <Image Source="{DynamicResource Icon}"  Width="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+
+                <Image.RenderTransform>
+                    <ScaleTransform x:Name="IconScale" ScaleX="1" ScaleY="1"/>
+                </Image.RenderTransform>
+
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Mouse.MouseDown">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation 
+                                    Storyboard.TargetName="IconScale"
+                                    Storyboard.TargetProperty="ScaleX"
+                                    To="0.9" Duration="0:0:0.1"
+                                    AutoReverse="True">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+
+                                <DoubleAnimation 
+                                    Storyboard.TargetName="IconScale"
+                                    Storyboard.TargetProperty="ScaleY"
+                                    To="0.9" Duration="0:0:0.1"
+                                    AutoReverse="True">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+
+
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="Button.Click">
+                    <BeginStoryboard>
+                        <Storyboard DesiredFrameRate="60">
+                            <!-- 使用PowerEase模拟三阶贝塞尔 -->
+                            <DoubleAnimation 
+                                Storyboard.TargetName="SideTranslate1"
+                                Storyboard.TargetProperty="X"
+                                To="-100" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation 
+                                 Storyboard.TargetName="SideTranslate1"
+                                 Storyboard.TargetProperty="Y"
+                                 To="-160" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation 
+                                Storyboard.TargetName="SideTranslate2"
+                                Storyboard.TargetProperty="X"
+                                To="100" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation 
+                                 Storyboard.TargetName="SideTranslate2"
+                                 Storyboard.TargetProperty="Y"
+                                 To="-160" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation 
+                                Storyboard.TargetName="SideTranslate3"
+                                Storyboard.TargetProperty="X"
+                                To="-160" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation 
+                                 Storyboard.TargetName="SideTranslate3"
+                                 Storyboard.TargetProperty="Y"
+                                 To="100" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation 
+                                Storyboard.TargetName="SideTranslate4"
+                                Storyboard.TargetProperty="X"
+                                To="160" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation 
+                                 Storyboard.TargetName="SideTranslate4"
+                                 Storyboard.TargetProperty="Y"
+                                 To="100" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation
+                                Storyboard.TargetName="AbortSide"
+                                Storyboard.TargetProperty="Y"
+                                BeginTime="0:0:0.5"
+                                To="-440" Duration="0:0:0.7">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation
+                                Storyboard.TargetName="TopSide"
+                                Storyboard.TargetProperty="Y"
+                                BeginTime="0:0:0.3"
+                                To="90" Duration="0:0:0.7">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Button.Triggers>
+
+        </Button>
+
     </Grid>
 </Window>

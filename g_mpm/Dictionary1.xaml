@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ImageSource x:Key="Icon">D:\Adobe Programs\Adobe Work\MPM\MC_ICON.png</ImageSource>
+    <ImageSource x:Key="Side">D:\Adobe Programs\Adobe Work\MPM\Side1.png</ImageSource>
+    
+</ResourceDictionary>
