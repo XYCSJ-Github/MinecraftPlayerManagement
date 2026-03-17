@@ -371,6 +371,7 @@
                     <BeginStoryboard Storyboard="{StaticResource AbortIntor}"/>
                 </EventTrigger>
             </Button.Triggers>
+        </Button>
 
             <Button.Style>
                 <Style TargetType="Button">
