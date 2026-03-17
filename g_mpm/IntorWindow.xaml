@@ -96,6 +96,14 @@
             </Rectangle>
         </Canvas>
 
+        <Canvas x:Name="BI" RenderTransformOrigin="0.5,0.5">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="ButtonIcon" Y="0"/>
+            </Canvas.RenderTransform>
+
+            <Image x:Name="BII" Source="{StaticResource Icon}" Width="150" Canvas.Left="325" Canvas.Top="122"/>
+        </Canvas>
+
         <!--主按钮-->
         <Button Width="160" Height="160" Margin="0,0,0,90" BorderBrush="Transparent" Background="Transparent" Foreground="Turquoise">
 
@@ -139,7 +147,6 @@
                 <EventTrigger RoutedEvent="Button.Click">
                     <BeginStoryboard>
                         <Storyboard DesiredFrameRate="60">
-                            <!-- 使用PowerEase模拟三阶贝塞尔 -->
                             <DoubleAnimation 
                                 Storyboard.TargetName="SideTranslate1"
                                 Storyboard.TargetProperty="X"
@@ -216,7 +223,7 @@
                                 Storyboard.TargetName="AbortSide"
                                 Storyboard.TargetProperty="Y"
                                 BeginTime="0:0:0.5"
-                                To="-440" Duration="0:0:0.7">
+                                To="-460" Duration="0:0:0.7">
                                 <DoubleAnimation.EasingFunction>
                                     <PowerEase Power="3" EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
@@ -227,6 +234,26 @@
                                 Storyboard.TargetProperty="Y"
                                 BeginTime="0:0:0.3"
                                 To="90" Duration="0:0:0.7">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+
+                            <DoubleAnimation
+                                Storyboard.TargetName="BII"
+                                Storyboard.TargetProperty="Width"
+                                BeginTime="0:0:0.2"
+                                To="100" Duration="0:0:0.3">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="3" EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            
+                            <DoubleAnimation
+                                Storyboard.TargetName="ButtonIcon"
+                                Storyboard.TargetProperty="Y"
+                                BeginTime="0:0:0.2"
+                                To="-100" Duration="0:0:0.5">
                                 <DoubleAnimation.EasingFunction>
                                     <PowerEase Power="3" EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
