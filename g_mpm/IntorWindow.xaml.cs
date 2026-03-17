@@ -14,5 +14,17 @@ namespace g_mpm
         {
             InitializeComponent();
         }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            button.IsEnabled = false;
+            Back.IsEnabled = true;
+        }
+
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            Back.IsEnabled = false;
+            button.IsEnabled = true;
+        }
     }
 }

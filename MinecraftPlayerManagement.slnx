@@ -1,6 +1,8 @@
 <Solution>
   <Configurations>
     <Platform Name="Any CPU" />
+    <Platform Name="ARM" />
+    <Platform Name="ARM64" />
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
@@ -10,5 +12,8 @@
   <Project Path="g_mpm/g_mpm.csproj" Id="31539634-a855-42ac-aef8-83260e9497c8">
     <BuildDependency Project="mpm/mpm.vcxproj" />
   </Project>
-  <Project Path="mpm/mpm.vcxproj" Id="d718aff1-aca0-4785-ae20-0146fef38281" />
+  <Project Path="mpm/mpm.vcxproj" Id="d718aff1-aca0-4785-ae20-0146fef38281">
+    <Platform Solution="*|ARM" Project="x64" />
+    <Platform Solution="*|ARM64" Project="x64" />
+  </Project>
 </Solution>
