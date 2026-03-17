@@ -7,55 +7,7 @@
         mc:Ignorable="d"
         Title="IntorWindow" Height="500" Width="800">
     <Window.Resources>
-        <Storyboard x:Key="AbortIntor" x:Name="BSAI">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle" Storyboard.TargetProperty="(Canvas.Left)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-80">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="-350">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle1" Storyboard.TargetProperty="(Canvas.Left)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="680">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="950">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle2" Storyboard.TargetProperty="(Canvas.Left)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-80">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="-350">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle3" Storyboard.TargetProperty="(Canvas.Left)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="677">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="950">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
+        <Storyboard x:Key="AbortIntor">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle4" Storyboard.TargetProperty="(Canvas.Top)">
                 <SplineDoubleKeyFrame KeyTime="00:00:00.7000000" Value="500">
                     <SplineDoubleKeyFrame.KeySpline>
@@ -108,92 +60,381 @@
                     </EasingThicknessKeyFrame.EasingFunction>
                 </EasingThicknessKeyFrame>
             </ThicknessAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(FrameworkElement.Height)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.3000000" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="40">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="3"/>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="-214">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="158">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="-284">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="-186">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="254">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="-122">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide3" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="314">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide3" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="188">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="8"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.4000000" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.4000000" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.4000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="AbortIntorB">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle4" Storyboard.TargetProperty="(Canvas.Top)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="25">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="500">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle5" Storyboard.TargetProperty="(Canvas.Top)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-25"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="-25">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="-120">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Width)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="65"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.6500000" Value="65">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="160">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="65"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.6500000" Value="65">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="160">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,0,0,390"/>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.5000000" Value="0,0,0,390">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:01" Value="0,0,0,90">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-230"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-304">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.3000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-192"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-168">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.3000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-266"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-272">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.3500000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="178"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="176">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.3500000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="340"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="290">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9500000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-148"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-160">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9500000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide3" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="306"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="210">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.2000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide3" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="294"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="284">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.2000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
 
-    <Grid>
-        <Canvas x:Name="Side1">
-            <Canvas.RenderTransform>
-                <TranslateTransform x:Name="SideTranslate1" X="0" Y="0"/>
-            </Canvas.RenderTransform>
+    <Grid Background="YellowGreen" d:IsLocked="True">
 
-            <Rectangle x:Name="rectangle" Width="200" Height="400" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Left="-80" Canvas.Top="-180">
-                <Rectangle.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="0.8" Direction="51" ShadowDepth="10"/>
-                </Rectangle.Effect>
-
-                <Rectangle.RenderTransform>
-                    <RotateTransform Angle="51"/>
-                </Rectangle.RenderTransform>
-            </Rectangle>
+        <Canvas x:Name="Side1" Grid.RowSpan="2" d:IsLocked="True">
+            <Image x:Name="GroundSide" Source="{StaticResource GroundSide}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Canvas.Top="-70.724" Height="209" Canvas.Left="-119.687" d:IsLocked="True">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-21.753"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
+                </Image.Effect>
+            </Image>
+            <Image x:Name="GroundSide1" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="-60.724" Height="209" Canvas.Left="514.313" HorizontalAlignment="Left" VerticalAlignment="Center" d:IsLocked="True">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="60.41"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
+                </Image.Effect>
+            </Image>
+            <Image x:Name="GroundSide2" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="365.276" Height="209" Canvas.Left="-161.687" HorizontalAlignment="Left" VerticalAlignment="Top" d:IsLocked="True">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-108.595"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
+                </Image.Effect>
+            </Image>
+            <Image x:Name="GroundSide3" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="347.276" Height="209" Canvas.Left="490.313" HorizontalAlignment="Left" VerticalAlignment="Top" d:IsLocked="True">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-18.724"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
+                </Image.Effect>
+            </Image>
         </Canvas>
 
-        <Canvas x:Name="Side2">
-            <Canvas.RenderTransform>
-                <TranslateTransform x:Name="SideTranslate2" X="0" Y="0"/>
-            </Canvas.RenderTransform>
-
-            <Rectangle x:Name="rectangle1" Width="200" Height="400" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Right="-80" Canvas.Top="-180" Canvas.Left="680">
-                <Rectangle.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="0.8" Direction="129" ShadowDepth="10"/>
-                </Rectangle.Effect>
-
-                <Rectangle.RenderTransform>
-                    <RotateTransform Angle="-51"/>
-                </Rectangle.RenderTransform>
-            </Rectangle>
-        </Canvas>
-
-        <Canvas x:Name="Side3">
-            <Canvas.RenderTransform>
-                <TranslateTransform x:Name="SideTranslate3" X="0" Y="0"/>
-            </Canvas.RenderTransform>
-
-            <Rectangle x:Name="rectangle2" Width="200" Height="400" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Left="-80" Canvas.Bottom="-180" Canvas.Top="280">
-                <Rectangle.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="0.8" Direction="51" ShadowDepth="10"/>
-                </Rectangle.Effect>
-
-                <Rectangle.RenderTransform>
-                    <RotateTransform Angle="-51"/>
-                </Rectangle.RenderTransform>
-            </Rectangle>
-        </Canvas>
-
-        <Canvas x:Name="Side4">
-            <Canvas.RenderTransform>
-                <TranslateTransform x:Name="SideTranslate4" X="0" Y="0"/>
-            </Canvas.RenderTransform>
-
-            <Rectangle x:Name="rectangle3" Width="200" Height="400" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Right="-80" Canvas.Bottom="-180" Canvas.Left="677" Canvas.Top="280">
-                <Rectangle.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="70" Opacity="0.8" Direction="129" ShadowDepth="10"/>
-                </Rectangle.Effect>
-
-                <Rectangle.RenderTransform>
-                    <RotateTransform Angle="51"/>
-                </Rectangle.RenderTransform>
-            </Rectangle>
-        </Canvas>
-
-        <Canvas x:Name="AS">
+        <Canvas x:Name="AS" Grid.RowSpan="2" d:IsLocked="True">
             <Canvas.RenderTransform>
                 <TranslateTransform x:Name="AbortSide" Y="0"/>
             </Canvas.RenderTransform>
 
-            <Rectangle x:Name="rectangle4" Width="830" Height="500" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Top="500" Canvas.Left="-15">
+            <Rectangle x:Name="rectangle4" Width="830" Height="500" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Top="500" Canvas.Left="-15" Margin="0,0,0,0" d:IsLocked="True">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -208,12 +449,12 @@
             </Rectangle>
         </Canvas>
 
-        <Canvas x:Name="TAS">
+        <Canvas x:Name="TAS" Grid.RowSpan="2" d:IsLocked="True">
             <Canvas.RenderTransform>
                 <TranslateTransform x:Name="TopSide" Y="0"/>
             </Canvas.RenderTransform>
 
-            <Rectangle x:Name="rectangle5" Width="830" Height="100" Fill="#FFB2DE9A" RenderTransformOrigin="0.5,0.5" Canvas.Bottom="500" Canvas.Left="-15" Canvas.Top="-120">
+            <Rectangle x:Name="rectangle5" Width="830" Height="100" Fill="#FFB2DE9A" RenderTransformOrigin="0.5,0.5" Canvas.Bottom="500" Canvas.Left="-15" Canvas.Top="-120" d:IsLocked="True">
                 <Rectangle.Effect>
                     <DropShadowEffect Color="Black" BlurRadius="70" Opacity="1" Direction="180" ShadowDepth="10"/>
                 </Rectangle.Effect>
@@ -223,22 +464,25 @@
 
 
         <!--主按钮-->
-        <Button x:Name="button" Width="160" Height="160" BorderBrush="Transparent" Background="Transparent" Margin="0,0,0,90" Click="button_Click">
+        <Button x:Name="button" Width="160" Height="160" BorderBrush="Transparent" Background="Transparent" Margin="0,0,0,90" Click="button_Click" Grid.RowSpan="2" d:IsLocked="True">
+            <Image x:Name="image" Source="{StaticResource Icon}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" d:IsLocked="True">
 
-            <Image x:Name="image" Source="{StaticResource Icon}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="15" Opacity="0.7" Direction="270"/>
+                </Image.Effect>
 
                 <Image.RenderTransform>
                     <ScaleTransform x:Name="IconScale" ScaleX="1" ScaleY="1"/>
                 </Image.RenderTransform>
 
                 <Image.Triggers>
-                    <EventTrigger RoutedEvent="Mouse.MouseDown">
+                    <EventTrigger RoutedEvent="MouseLeftButtonDown">
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation 
                                     Storyboard.TargetName="IconScale"
                                     Storyboard.TargetProperty="ScaleX"
-                                    To="0.9" Duration="0:0:0.1">
+                                    To="0.8" Duration="0:0:0.2">
                                     <DoubleAnimation.EasingFunction>
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
@@ -247,22 +491,16 @@
                                 <DoubleAnimation 
                                     Storyboard.TargetName="IconScale"
                                     Storyboard.TargetProperty="ScaleY"
-                                    To="0.9" Duration="0:0:0.1">
+                                    To="0.8" Duration="0:0:0.2">
                                     <DoubleAnimation.EasingFunction>
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-
-                    <EventTrigger RoutedEvent="Mouse.MouseUp">
-                        <BeginStoryboard>
-                            <Storyboard>
+     
                                 <DoubleAnimation 
                                     Storyboard.TargetName="IconScale"
                                     Storyboard.TargetProperty="ScaleX"
-                                    To="1" Duration="0:0:0.1">
+                                    To="1" Duration="0:0:0.2">
                                     <DoubleAnimation.EasingFunction>
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
@@ -271,7 +509,7 @@
                                 <DoubleAnimation 
                                     Storyboard.TargetName="IconScale"
                                     Storyboard.TargetProperty="ScaleY"
-                                    To="1" Duration="0:0:0.1">
+                                    To="1" Duration="0:0:0.2">
                                     <DoubleAnimation.EasingFunction>
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
@@ -281,12 +519,6 @@
                     </EventTrigger>
                 </Image.Triggers>
             </Image>
-
-            <Button.Triggers>
-                <EventTrigger RoutedEvent="Button.Click">
-                    <BeginStoryboard Storyboard="{StaticResource AbortIntor}"/>
-                </EventTrigger>
-            </Button.Triggers>
 
             <Button.Style>
                 <Style TargetType="Button">
@@ -308,21 +540,34 @@
             </Button.Style>
         </Button>
 
-        <Button x:Name="Back" Height="40" Width="90" Opacity="0" BorderBrush="Transparent" Background="Transparent" IsEnabled="False" Click="Back_Click" Margin="-660,-390,0,0">
-            <Image x:Name="image1" Source="{StaticResource Back_Button}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Stretch="Fill" Width="90">
+        <Button x:Name="Back" Opacity="0" Click="Back_Click" Margin="25,21,658,411" BorderBrush="Transparent" Background="Transparent" RenderTransformOrigin="0.5,0.5" d:IsLocked="True">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+            <Image x:Name="BackImage" Source="{StaticResource Back_Button}" RenderTransformOrigin="0.5,0.5" d:IsLocked="True">
+
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="10" Opacity="0.5" Direction="270"/>
+                </Image.Effect>
+
 
                 <Image.RenderTransform>
                     <ScaleTransform x:Name="BackScale" ScaleX="1" ScaleY="1"/>
                 </Image.RenderTransform>
 
                 <Image.Triggers>
-                    <EventTrigger RoutedEvent="Mouse.MouseDown">
+                    <EventTrigger RoutedEvent="MouseLeftButtonDown">
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation 
                                     Storyboard.TargetName="BackScale"
                                     Storyboard.TargetProperty="ScaleX"
-                                    To="0.9" Duration="0:0:0.1">
+                                    To="0.8" Duration="0:0:0.2">
                                     <DoubleAnimation.EasingFunction>
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
@@ -331,22 +576,16 @@
                                 <DoubleAnimation 
                                     Storyboard.TargetName="BackScale"
                                     Storyboard.TargetProperty="ScaleY"
-                                    To="0.9" Duration="0:0:0.1">
+                                    To="0.8" Duration="0:0:0.2">
                                     <DoubleAnimation.EasingFunction>
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-
-                    <EventTrigger RoutedEvent="Mouse.MouseUp">
-                        <BeginStoryboard>
-                            <Storyboard>
+                                
                                 <DoubleAnimation 
                                     Storyboard.TargetName="BackScale"
                                     Storyboard.TargetProperty="ScaleX"
-                                    To="0.9" Duration="0:0:0.1">
+                                    To="1" Duration="0:0:0.2">
                                     <DoubleAnimation.EasingFunction>
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
@@ -355,7 +594,7 @@
                                 <DoubleAnimation 
                                     Storyboard.TargetName="BackScale"
                                     Storyboard.TargetProperty="ScaleY"
-                                    To="0.9" Duration="0:0:0.1">
+                                    To="1" Duration="0:0:0.2">
                                     <DoubleAnimation.EasingFunction>
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
@@ -365,12 +604,6 @@
                     </EventTrigger>
                 </Image.Triggers>
             </Image>
-
-            <Button.Triggers>
-                <EventTrigger RoutedEvent="Button.Click">
-                    <BeginStoryboard Storyboard="{StaticResource AbortIntor}"/>
-                </EventTrigger>
-            </Button.Triggers>
 
             <Button.Style>
                 <Style TargetType="Button">

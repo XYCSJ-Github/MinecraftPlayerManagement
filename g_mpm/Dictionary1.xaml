@@ -3,5 +3,6 @@
 
     <ImageSource x:Key="Icon">D:\Adobe Programs\Adobe Work\MPM\MC_ICON.png</ImageSource>
     <ImageSource x:Key="Back_Button">D:\Adobe Programs\Adobe Work\MPM\BackButton.png</ImageSource>
+    <ImageSource x:Key="GroundSide">D:\Adobe Programs\Adobe Work\MPM\GroundSide.png</ImageSource>
 
 </ResourceDictionary>

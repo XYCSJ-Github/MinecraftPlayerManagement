@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace g_mpm
 {
@@ -19,12 +21,34 @@ namespace g_mpm
         {
             button.IsEnabled = false;
             Back.IsEnabled = true;
+
+            Storyboard sb = (Storyboard)this.Resources["AbortIntor"];
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(0.1);
+            timer.Tick += (s, args) =>
+            {
+                sb.Begin(this);
+                timer.Stop();
+            };
+            timer.Start();
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             Back.IsEnabled = false;
             button.IsEnabled = true;
+
+            Storyboard sb = (Storyboard)this.Resources["AbortIntorB"];
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(0.1);
+            timer.Tick += (s, args) =>
+            {
+                sb.Begin(this);
+                timer.Stop();
+            };
+            timer.Start();
         }
     }
 }
