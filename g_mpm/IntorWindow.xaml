@@ -202,13 +202,13 @@
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle5" Storyboard.TargetProperty="(Canvas.Top)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="-25">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-25">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="-120">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-25"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="-120">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -216,12 +216,12 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Width)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="65"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6500000" Value="65">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="65">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="160">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="160">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="2"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -229,12 +229,12 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Height)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="65"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6500000" Value="65">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="65">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="160">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="160">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="2"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -242,12 +242,12 @@
             </DoubleAnimationUsingKeyFrames>
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Margin)">
                 <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,0,0,390"/>
-                <EasingThicknessKeyFrame KeyTime="00:00:00.5000000" Value="0,0,0,390">
+                <EasingThicknessKeyFrame KeyTime="00:00:00.4000000" Value="0,0,0,390">
                     <EasingThicknessKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingThicknessKeyFrame.EasingFunction>
                 </EasingThicknessKeyFrame>
-                <EasingThicknessKeyFrame KeyTime="00:00:01" Value="0,0,0,90">
+                <EasingThicknessKeyFrame KeyTime="00:00:01.1000000" Value="0,0,0,90">
                     <EasingThicknessKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingThicknessKeyFrame.EasingFunction>
@@ -359,23 +359,23 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.Opacity)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
 
-    <Grid Background="YellowGreen" d:IsLocked="True">
+    <Grid Background="YellowGreen">
 
-        <Canvas x:Name="Side1" Grid.RowSpan="2" d:IsLocked="True">
-            <Image x:Name="GroundSide" Source="{StaticResource GroundSide}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Canvas.Top="-70.724" Height="209" Canvas.Left="-119.687" d:IsLocked="True">
+        <Canvas x:Name="Side1" Grid.RowSpan="2">
+            <Image x:Name="GroundSide" Source="{StaticResource GroundSide}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Canvas.Top="-70.724" Height="209" Canvas.Left="-119.687">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -388,7 +388,7 @@
                     <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
                 </Image.Effect>
             </Image>
-            <Image x:Name="GroundSide1" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="-60.724" Height="209" Canvas.Left="514.313" HorizontalAlignment="Left" VerticalAlignment="Center" d:IsLocked="True">
+            <Image x:Name="GroundSide1" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="-60.724" Height="209" Canvas.Left="514.313" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -401,7 +401,7 @@
                     <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
                 </Image.Effect>
             </Image>
-            <Image x:Name="GroundSide2" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="365.276" Height="209" Canvas.Left="-161.687" HorizontalAlignment="Left" VerticalAlignment="Top" d:IsLocked="True">
+            <Image x:Name="GroundSide2" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="365.276" Height="209" Canvas.Left="-161.687" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -414,7 +414,7 @@
                     <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
                 </Image.Effect>
             </Image>
-            <Image x:Name="GroundSide3" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="347.276" Height="209" Canvas.Left="490.313" HorizontalAlignment="Left" VerticalAlignment="Top" d:IsLocked="True">
+            <Image x:Name="GroundSide3" Source="{StaticResource GroundSide}" RenderTransformOrigin="0.5,0.5" Canvas.Top="347.276" Height="209" Canvas.Left="490.313" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -429,12 +429,12 @@
             </Image>
         </Canvas>
 
-        <Canvas x:Name="AS" Grid.RowSpan="2" d:IsLocked="True">
+        <Canvas x:Name="AS" Grid.RowSpan="2">
             <Canvas.RenderTransform>
                 <TranslateTransform x:Name="AbortSide" Y="0"/>
             </Canvas.RenderTransform>
 
-            <Rectangle x:Name="rectangle4" Width="830" Height="500" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Top="500" Canvas.Left="-15" Margin="0,0,0,0" d:IsLocked="True">
+            <Rectangle x:Name="rectangle4" Width="830" Height="500" Fill="White" RenderTransformOrigin="0.5,0.5" Canvas.Top="500" Canvas.Left="-15" Margin="0,0,0,0">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -449,12 +449,12 @@
             </Rectangle>
         </Canvas>
 
-        <Canvas x:Name="TAS" Grid.RowSpan="2" d:IsLocked="True">
+        <Canvas x:Name="TAS" Grid.RowSpan="2">
             <Canvas.RenderTransform>
                 <TranslateTransform x:Name="TopSide" Y="0"/>
             </Canvas.RenderTransform>
 
-            <Rectangle x:Name="rectangle5" Width="830" Height="100" Fill="#FFB2DE9A" RenderTransformOrigin="0.5,0.5" Canvas.Bottom="500" Canvas.Left="-15" Canvas.Top="-120" d:IsLocked="True">
+            <Rectangle x:Name="rectangle5" Width="830" Height="100" Fill="#FFB2DE9A" RenderTransformOrigin="0.5,0.5" Canvas.Bottom="500" Canvas.Left="-15" Canvas.Top="-120">
                 <Rectangle.Effect>
                     <DropShadowEffect Color="Black" BlurRadius="70" Opacity="1" Direction="180" ShadowDepth="10"/>
                 </Rectangle.Effect>
@@ -462,10 +462,9 @@
         </Canvas>
 
 
-
         <!--主按钮-->
-        <Button x:Name="button" Width="160" Height="160" BorderBrush="Transparent" Background="Transparent" Margin="0,0,0,90" Click="button_Click" Grid.RowSpan="2" d:IsLocked="True">
-            <Image x:Name="image" Source="{StaticResource Icon}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" d:IsLocked="True">
+        <Button x:Name="button" Width="160" Height="160" BorderBrush="Transparent" Background="Transparent" Margin="0,0,0,90" Click="button_Click" Grid.RowSpan="2">
+            <Image x:Name="image" Source="{StaticResource Icon}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
 
                 <Image.Effect>
                     <DropShadowEffect Color="Black" BlurRadius="15" Opacity="0.7" Direction="270"/>
@@ -496,7 +495,7 @@
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
-     
+
                                 <DoubleAnimation 
                                     Storyboard.TargetName="IconScale"
                                     Storyboard.TargetProperty="ScaleX"
@@ -540,7 +539,7 @@
             </Button.Style>
         </Button>
 
-        <Button x:Name="Back" Opacity="0" Click="Back_Click" Margin="25,21,658,411" BorderBrush="Transparent" Background="Transparent" RenderTransformOrigin="0.5,0.5" d:IsLocked="True">
+        <Button x:Name="Back" Opacity="0" Click="Back_Click" Margin="25,21,658,411" BorderBrush="Transparent" Background="Transparent" RenderTransformOrigin="0.5,0.5">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -549,7 +548,7 @@
                     <TranslateTransform/>
                 </TransformGroup>
             </Button.RenderTransform>
-            <Image x:Name="BackImage" Source="{StaticResource Back_Button}" RenderTransformOrigin="0.5,0.5" d:IsLocked="True">
+            <Image x:Name="BackImage" Source="{StaticResource Back_Button}" RenderTransformOrigin="0.5,0.5">
 
                 <Image.Effect>
                     <DropShadowEffect Color="Black" BlurRadius="10" Opacity="0.5" Direction="270"/>
@@ -581,7 +580,7 @@
                                         <PowerEase Power="3" EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
-                                
+
                                 <DoubleAnimation 
                                     Storyboard.TargetName="BackScale"
                                     Storyboard.TargetProperty="ScaleX"
