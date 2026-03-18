@@ -233,8 +233,8 @@
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="-25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.1000000" Value="-120">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="-25"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.2000000" Value="-120">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -242,7 +242,7 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Width)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="65"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="65">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="65">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -255,7 +255,7 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Height)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="65"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="65">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="65">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -268,7 +268,7 @@
             </DoubleAnimationUsingKeyFrames>
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Margin)">
                 <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,0,0,390"/>
-                <EasingThicknessKeyFrame KeyTime="00:00:00.8000000" Value="0,0,0,390">
+                <EasingThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,0,0,390">
                     <EasingThicknessKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingThicknessKeyFrame.EasingFunction>
