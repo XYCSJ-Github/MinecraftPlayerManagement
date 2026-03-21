@@ -167,7 +167,8 @@ namespace g_mpm
             {
                 ProcessStartInfo startInfo;
                 string[] args = Environment.GetCommandLineArgs();
-                if (args[1] == "createwindow")
+                bool isCreateWindow = args.Length > 1 && args[1] == "createwindow";
+                if (isCreateWindow)
                 {
                     startInfo = new ProcessStartInfo
                     {

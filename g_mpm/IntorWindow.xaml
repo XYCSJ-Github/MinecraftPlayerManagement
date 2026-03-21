@@ -212,16 +212,64 @@
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="-120">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image1" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="OK" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,230,110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.4000000" Value="0,140,110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="Choose" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,230,-110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.4000000" Value="0,140,-110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="OK" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Choose" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="AbortIntorB">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle4" Storyboard.TargetProperty="(Canvas.Top)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="25">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.4000000" Value="500">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="25"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="25"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="500">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -233,8 +281,8 @@
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="-25"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.2000000" Value="-120">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="-25"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.3000000" Value="-120">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -242,12 +290,12 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Width)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="65"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="65">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="65">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="160">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.6000000" Value="160">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="2"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -255,12 +303,12 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Height)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="65"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="65">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="65">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="160">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.6000000" Value="160">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="2"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -268,12 +316,12 @@
             </DoubleAnimationUsingKeyFrames>
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(FrameworkElement.Margin)">
                 <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,0,0,390"/>
-                <EasingThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,0,0,390">
+                <EasingThicknessKeyFrame KeyTime="00:00:00.6000000" Value="0,0,0,390">
                     <EasingThicknessKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingThicknessKeyFrame.EasingFunction>
                 </EasingThicknessKeyFrame>
-                <EasingThicknessKeyFrame KeyTime="00:00:01.5000000" Value="0,0,0,90">
+                <EasingThicknessKeyFrame KeyTime="00:00:01.6000000" Value="0,0,0,90">
                     <EasingThicknessKeyFrame.EasingFunction>
                         <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingThicknessKeyFrame.EasingFunction>
@@ -385,15 +433,15 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.Opacity)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Back" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="textBox" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-38">
@@ -412,10 +460,253 @@
                 <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0"/>
                 <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="-120">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image1" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.2000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="OK" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:01.2000000" Value="0,140,110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:01.8000000" Value="0,230,110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="Choose" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:01.2000000" Value="0,140,-110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:01.8000000" Value="0,230,-110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="OK" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.8000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Choose" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.8000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="Intor">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-444">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-130">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-306">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="208">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="284">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-170">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide3" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="270">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide3" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="216">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="2">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="2">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image1" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="-137">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="Choose" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,126,-110,0"/>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,126,-110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.9000000" Value="0,230,-110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Choose" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="OK" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,126,110,0"/>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,126,110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.9000000" Value="0,230,110,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="OK" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.6000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
 
-    <Grid Background="YellowGreen">
+    <Grid Background="#FF87A76C">
 
         <Canvas x:Name="Side1" Grid.RowSpan="2">
             <Image x:Name="GroundSide" Source="{StaticResource GroundSide}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Canvas.Top="-70.724" Height="209" Canvas.Left="-119.687">
@@ -506,7 +797,15 @@
 
 
         <!--主按钮-->
-        <Button x:Name="button" Width="160" Height="160" BorderBrush="Transparent" Background="Transparent" Margin="0,0,0,90" Click="button_Click" Grid.RowSpan="2">
+        <Button x:Name="button" Width="160" Height="160" BorderBrush="Transparent" Background="Transparent" Margin="0,0,0,90" Click="button_Click" Grid.RowSpan="2" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
             <Image x:Name="image" Source="{StaticResource Icon}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
 
                 <Image.Effect>
@@ -668,6 +967,198 @@
 
         </Button>
 
+        <Button x:Name="OK" Opacity="100" Width="90" Click="OK_Click" Margin="0,230,110,0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+            
+            <Image x:Name="OK_Image" Source="{StaticResource OK}" RenderTransformOrigin="0.5,0.5">
+
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="10" Opacity="0.5" Direction="270"/>
+                </Image.Effect>
+
+
+                <Image.RenderTransform>
+                    <ScaleTransform x:Name="OK_Scale" ScaleX="1" ScaleY="1"/>
+                </Image.RenderTransform>
+
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="MouseLeftButtonDown">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation 
+                                     Storyboard.TargetName="OK_Scale"
+                                     Storyboard.TargetProperty="ScaleX"
+                                     To="0.8" Duration="0:0:0.2">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+
+                                <DoubleAnimation 
+                                     Storyboard.TargetName="OK_Scale"
+                                     Storyboard.TargetProperty="ScaleY"
+                                     To="0.8" Duration="0:0:0.2">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+
+                                <DoubleAnimation 
+                                     Storyboard.TargetName="OK_Scale"
+                                     Storyboard.TargetProperty="ScaleX"
+                                     To="1" Duration="0:0:0.2">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+
+                                <DoubleAnimation 
+                                     Storyboard.TargetName="OK_Scale"
+                                     Storyboard.TargetProperty="ScaleY"
+                                     To="1" Duration="0:0:0.2">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="Transparent" />
+                    <!-- 也可以移除鼠标悬停效果 -->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                     BorderBrush="{TemplateBinding BorderBrush}"
+                                     BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                     VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+
+        </Button>
+        <Button x:Name="Choose" Opacity="100" Width="90" Click="Choose_Click" Margin="0,230,-110,0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+            <Image x:Name="Choose_Image" Source="{StaticResource Choose}" RenderTransformOrigin="0.5,0.5">
+
+                <Image.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="10" Opacity="0.5" Direction="270"/>
+                </Image.Effect>
+
+
+                <Image.RenderTransform>
+                    <ScaleTransform x:Name="Choose_Scale" ScaleX="1" ScaleY="1"/>
+                </Image.RenderTransform>
+
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="MouseLeftButtonDown">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation 
+                             Storyboard.TargetName="Choose_Scale"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="0.8" Duration="0:0:0.1">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+
+                                <DoubleAnimation 
+                             Storyboard.TargetName="Choose_Scale"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="0.8" Duration="0:0:0.1">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+
+                                <DoubleAnimation 
+                             Storyboard.TargetName="Choose_Scale"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="1" Duration="0:0:0.1">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+
+                                <DoubleAnimation 
+                             Storyboard.TargetName="Choose_Scale"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="1" Duration="0:0:0.1">
+                                    <DoubleAnimation.EasingFunction>
+                                        <PowerEase Power="3" EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="Transparent" />
+                    <!-- 也可以移除鼠标悬停效果 -->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                     BorderBrush="{TemplateBinding BorderBrush}"
+                                     BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                     VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+
+        </Button>
+
+        <Image x:Name="image1" Source="{StaticResource Edit}" Width="268" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="0,140,0,0">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+
+            <Image.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="10" Opacity="0.5" Direction="270"/>
+            </Image.Effect>
+        </Image>
+
+        <Viewbox Width="200" Height="30" Margin="0,140,0,0" Stretch="Uniform" StretchDirection="DownOnly">
+            <TextBlock x:Name="Path" Text="" TextAlignment="Center" 
+               FontWeight="ExtraBold" FontSize="20" 
+               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Viewbox>
 
         <Grid Height="300" Width="800">
             <TextBox x:Name="textBox" Opacity="0" Width="320" Height="30" Text="关于Minecraft玩家数据文件管理程序" FontSize="18" FontWeight="ExtraBold" Background="Transparent" BorderBrush="Transparent" Margin="0,0,0,190" RenderTransformOrigin="0.5,0.5">
