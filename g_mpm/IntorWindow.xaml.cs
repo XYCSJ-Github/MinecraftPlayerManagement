@@ -2,6 +2,8 @@
 using g_mpm.Structs;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Globalization;
+using System.Security.AccessControl;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -15,6 +17,13 @@ namespace g_mpm
         private SharedMemoryLauncher _launcher;
         private DispatcherTimer _statusTimer;
 
+        public enum ButtonStatic : int
+        {
+            About = 1,
+            Level2
+        };
+
+        public ButtonStatic bs;
         public IntorWindow()
         {
             InitializeComponent();
@@ -329,6 +338,9 @@ namespace g_mpm
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Storyboard storyboard = (Storyboard)this.Resources["Closing"];
+            storyboard.Begin(this);
+
             _launcher.Dispose();
         }
 
@@ -338,8 +350,13 @@ namespace g_mpm
         {
             button.IsEnabled = false;
             Back.IsEnabled = true;
+            OK.IsEnabled = false;
+            Choose.IsEnabled = false;
 
-            Storyboard sb = (Storyboard)this.Resources["AbortIntor"];
+            Path.Text = "";
+
+            bs = ButtonStatic.About;
+            Storyboard sb = (Storyboard)this.Resources["AboutIntor"];
 
             DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(0.1);
@@ -353,24 +370,61 @@ namespace g_mpm
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            Back.IsEnabled = false;
-            button.IsEnabled = true;
-
-            Storyboard sb = (Storyboard)this.Resources["AbortIntorB"];
-
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(0.1);
-            timer.Tick += (s, args) =>
+            switch(bs)
             {
-                sb.Begin(this);
-                timer.Stop();
-            };
-            timer.Start();
+                case ButtonStatic.About:
+                    {
+                        Back.IsEnabled = false;
+                        button.IsEnabled = true;
+                        OK.IsEnabled = true;
+                        Choose.IsEnabled = true;
+
+                        Storyboard sb = (Storyboard)this.Resources["AboutIntorB"];
+
+                        DispatcherTimer timer = new DispatcherTimer();
+                        timer.Interval = TimeSpan.FromSeconds(0.1);
+                        timer.Tick += (s, args) =>
+                        {
+                            sb.Begin(this);
+                            timer.Stop();
+                        };
+                        timer.Start();
+                        break;
+                    }
+                case ButtonStatic.Level2:
+                    {
+                        Back.IsEnabled = false;
+                        button.IsEnabled= true;
+                        OK.IsEnabled = true; ;
+                        Choose.IsEnabled = true;
+
+                        Storyboard sb = (Storyboard)this.Resources["Level2IntorB"];
+                        sb.Begin();
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+            
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             SendCommand(Command.M_SET_PATH, Path.Text.ToString());
+
+            if (Path.Text.Length > 0)
+            {
+                bs = ButtonStatic.Level2;
+
+                Back.IsEnabled = true;
+                OK.IsEnabled = false;
+                Choose.IsEnabled = false;
+                button.IsEnabled = true;
+
+                Storyboard sb = (Storyboard)this.Resources["Level2Intor"];
+                sb.Begin(this);
+            }
         }
 
         private void Choose_Click(object sender, RoutedEventArgs e)
