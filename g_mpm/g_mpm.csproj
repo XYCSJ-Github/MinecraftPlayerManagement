@@ -28,4 +28,13 @@
     <Content Include="MPM_ICON.ico" />
   </ItemGroup>
 
+	<Target Name="CopyOtherProjectFilesForPublish" BeforeTargets="Publish">
+		<ItemGroup>
+			<_PublishFiles Include="..\x64\Release\net10.0-windows\mpm.exe" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_PublishFiles)"
+			  DestinationFolder="$(PublishDir)\%(RecursiveDir)"
+			  SkipUnchangedFiles="true" />
+	</Target>
+
 </Project>
