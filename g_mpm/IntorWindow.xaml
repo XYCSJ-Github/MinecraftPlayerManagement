@@ -972,24 +972,24 @@
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Player" Storyboard.TargetProperty="(Canvas.Top)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="800">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut" Exponent="4"/>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
                 <EasingDoubleKeyFrame KeyTime="00:00:01.7000000" Value="320">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut" Exponent="2"/>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="World" Storyboard.TargetProperty="(Canvas.Top)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="800">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut" Exponent="4"/>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
                 <EasingDoubleKeyFrame KeyTime="00:00:01.6000000" Value="320">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut" Exponent="2"/>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
@@ -1289,6 +1289,7 @@
                 <EasingColorKeyFrame KeyTime="00:00:00.9000000" Value="sc#1, 1, 1, 1"/>
             </ColorAnimationUsingKeyFrames>
         </Storyboard>
+        <Storyboard x:Key="Level3Intor"/>
     </Window.Resources>
 
     <Grid x:Name="grid" Background="Black">
@@ -1810,6 +1811,16 @@
                 </TextBox.RenderTransform>
             </TextBox>
         </Grid>
+
+
+        <TextBox Opacity="0" Text="存 档" FontSize="20" Margin="0,0,0,250" VerticalAlignment="Center"  HorizontalAlignment="Center" Background="Transparent" FontWeight="Bold"/>
+        <TextBox Opacity="0" x:Name="WorldName" Text="" FontSize="30" Margin="0,0,0,180" VerticalAlignment="Center"  HorizontalAlignment="Center" Background="Transparent" FontWeight="Bold"/>
+        <TextBox Opacity="0" x:Name="WorldPath" Text="" FontSize="15" Margin="0,0,0,100" VerticalAlignment="Center"  HorizontalAlignment="Center" Background="Transparent" FontWeight="Bold"/>
+        <Line X1="10" Y1="250" X2="790" Y2="250" StrokeThickness="3" Stroke="WhiteSmoke" Opacity="0"/>
+
+        <StackPanel>
+
+        </StackPanel>
 
     </Grid>
 </Window>
