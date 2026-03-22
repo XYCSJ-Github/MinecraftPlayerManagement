@@ -1382,7 +1382,7 @@
                     <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
                 </Image.Effect>
             </Image>
-            <Image x:Name="World" Source="{StaticResource GroundSide}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Canvas.Top="800" Height="450" Canvas.Left="145">
+            <Image x:Name="World" Source="{StaticResource GroundSide}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Canvas.Top="800" Height="450" Canvas.Left="140">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -1396,6 +1396,11 @@
                     <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
                 </Image.Effect>
             </Image>
+        </Canvas>
+
+        <Canvas>
+            <Grid x:Name="WorldGrid" Width="370" Height="400" Canvas.Right="5" Canvas.Top="80"/>
+            <Grid x:Name="PlayerGrid" Width="370" Height="400" Canvas.Left="5" Canvas.Top="80"/>
         </Canvas>
 
         <Canvas x:Name="AS" Grid.RowSpan="2">
