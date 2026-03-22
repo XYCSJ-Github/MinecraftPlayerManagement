@@ -2,8 +2,10 @@
 using g_mpm.Structs;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
@@ -20,13 +22,19 @@ namespace g_mpm
 
         // 世界显示相关字段
         private List<WorldCardItem> worldCards = new List<WorldCardItem>();
-        private double worldNextY = 50;  // 下一个世界卡片的Y坐标起始位置
-        private WorldCardItem? _selectedWorldCard = null;  // 当前选中的世界卡片
+        private double worldNextY = 50;
+        private WorldCardItem? _selectedWorldCard = null;
 
         // 玩家显示相关字段
         private List<PlayerCardItem> playerCards = new List<PlayerCardItem>();
-        private double playerNextY = 50;  // 下一个玩家卡片的Y坐标起始位置
-        private PlayerCardItem? _selectedPlayerCard = null;  // 当前选中的玩家卡片
+        private double playerNextY = 50;
+        private PlayerCardItem? _selectedPlayerCard = null;
+
+        // 滚动相关字段
+        private ScrollViewer _playerScrollViewer;
+        private ScrollViewer _worldScrollViewer;
+        private Canvas _playerCanvas;
+        private Canvas _worldCanvas;
 
         public bool flish = false;
 
@@ -58,6 +66,9 @@ namespace g_mpm
             InitializePlayerGrid();
             InitializeWorldGrid();
 
+            // 初始化滚动滑块
+            InitializeScrollSliders();
+
             Storyboard sb = (Storyboard)this.Resources["Intor"];
             sb.SpeedRatio = 0.8;
             sb.Begin();
@@ -65,38 +76,29 @@ namespace g_mpm
 
         #region 世界显示初始化
 
-        /// <summary>
-        /// 初始化PlayerGrid容器（显示世界存档）
-        /// </summary>
         private void InitializePlayerGrid()
         {
-            // 设置PlayerGrid的背景为透明
             PlayerGrid.Background = Brushes.Transparent;
 
-            // 创建滚动视图包装PlayerGrid
-            ScrollViewer scrollViewer = new ScrollViewer();
-            scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;  // 隐藏水平滚动条
-            scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;    // 隐藏垂直滚动条
+            _playerScrollViewer = new ScrollViewer();
+            _playerScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+            _playerScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+            _playerScrollViewer.ScrollChanged += PlayerScrollViewer_ScrollChanged;
 
-            // 创建Canvas作为内容容器
-            Canvas worldCanvas = new Canvas();
-            worldCanvas.Width = 380;
-            worldCanvas.Height = 400;
-            worldCanvas.Background = Brushes.Transparent;  // Canvas背景透明
+            _playerCanvas = new Canvas();
+            _playerCanvas.Width = 380;
+            _playerCanvas.Height = 400;
+            _playerCanvas.Background = Brushes.Transparent;
+            _playerCanvas.PreviewMouseWheel += PlayerCanvas_PreviewMouseWheel;
 
-            scrollViewer.Content = worldCanvas;
+            _playerScrollViewer.Content = _playerCanvas;
 
-            // 清空并添加新内容
             PlayerGrid.Children.Clear();
-            PlayerGrid.Children.Add(scrollViewer);
+            PlayerGrid.Children.Add(_playerScrollViewer);
 
-            // 存储Canvas引用
-            PlayerGrid.Tag = worldCanvas;
+            PlayerGrid.Tag = _playerCanvas;
         }
 
-        /// <summary>
-        /// 获取世界显示Canvas
-        /// </summary>
         private Canvas GetWorldCanvas()
         {
             if (PlayerGrid.Tag is Canvas canvas)
@@ -110,38 +112,29 @@ namespace g_mpm
 
         #region 玩家显示初始化
 
-        /// <summary>
-        /// 初始化WorldGrid容器（显示玩家信息）
-        /// </summary>
         private void InitializeWorldGrid()
         {
-            // 设置WorldGrid的背景为透明
             WorldGrid.Background = Brushes.Transparent;
 
-            // 创建滚动视图包装WorldGrid
-            ScrollViewer scrollViewer = new ScrollViewer();
-            scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;  // 隐藏水平滚动条
-            scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;    // 隐藏垂直滚动条
+            _worldScrollViewer = new ScrollViewer();
+            _worldScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+            _worldScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+            _worldScrollViewer.ScrollChanged += WorldScrollViewer_ScrollChanged;
 
-            // 创建Canvas作为内容容器
-            Canvas playerCanvas = new Canvas();
-            playerCanvas.Width = 380;
-            playerCanvas.Height = 400;
-            playerCanvas.Background = Brushes.Transparent;  // Canvas背景透明
+            _worldCanvas = new Canvas();
+            _worldCanvas.Width = 380;
+            _worldCanvas.Height = 400;
+            _worldCanvas.Background = Brushes.Transparent;
+            _worldCanvas.PreviewMouseWheel += WorldCanvas_PreviewMouseWheel;
 
-            scrollViewer.Content = playerCanvas;
+            _worldScrollViewer.Content = _worldCanvas;
 
-            // 清空并添加新内容
             WorldGrid.Children.Clear();
-            WorldGrid.Children.Add(scrollViewer);
+            WorldGrid.Children.Add(_worldScrollViewer);
 
-            // 存储Canvas引用
-            WorldGrid.Tag = playerCanvas;
+            WorldGrid.Tag = _worldCanvas;
         }
 
-        /// <summary>
-        /// 获取玩家显示Canvas
-        /// </summary>
         private Canvas GetPlayerCanvas()
         {
             if (WorldGrid.Tag is Canvas canvas)
@@ -153,11 +146,112 @@ namespace g_mpm
 
         #endregion
 
+        #region 滚动控制
+
+        private void InitializeScrollSliders()
+        {
+            if (PlayerScrollSlider != null)
+            {
+                PlayerScrollSlider.ValueChanged += PlayerScrollSlider_ValueChanged;
+                PlayerScrollSlider.MouseEnter += (s, e) => PlayerScrollSlider.Opacity = 1;
+                PlayerScrollSlider.MouseLeave += (s, e) => PlayerScrollSlider.Opacity = 0.6;
+            }
+
+            if (WorldScrollSlider != null)
+            {
+                WorldScrollSlider.ValueChanged += WorldScrollSlider_ValueChanged;
+                WorldScrollSlider.MouseEnter += (s, e) => WorldScrollSlider.Opacity = 1;
+                WorldScrollSlider.MouseLeave += (s, e) => WorldScrollSlider.Opacity = 0.6;
+            }
+        }
+
+        private void PlayerScrollSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_playerScrollViewer != null && _playerScrollViewer.ScrollableHeight > 0)
+            {
+                double newVerticalOffset = (e.NewValue / 100) * _playerScrollViewer.ScrollableHeight;
+                _playerScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
+            }
+        }
+
+        private void WorldScrollSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_worldScrollViewer != null && _worldScrollViewer.ScrollableHeight > 0)
+            {
+                double newVerticalOffset = (e.NewValue / 100) * _worldScrollViewer.ScrollableHeight;
+                _worldScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
+            }
+        }
+
+        private void PlayerScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (PlayerScrollSlider != null && _playerScrollViewer != null && _playerScrollViewer.ScrollableHeight > 0)
+            {
+                double scrollPercent = (_playerScrollViewer.VerticalOffset / _playerScrollViewer.ScrollableHeight) * 100;
+                PlayerScrollSlider.Value = scrollPercent;
+            }
+        }
+
+        private void WorldScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (WorldScrollSlider != null && _worldScrollViewer != null && _worldScrollViewer.ScrollableHeight > 0)
+            {
+                double scrollPercent = (_worldScrollViewer.VerticalOffset / _worldScrollViewer.ScrollableHeight) * 100;
+                WorldScrollSlider.Value = scrollPercent;
+            }
+        }
+
+        private void PlayerCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (_playerScrollViewer != null)
+            {
+                double newOffset = _playerScrollViewer.VerticalOffset - e.Delta;
+                _playerScrollViewer.ScrollToVerticalOffset(newOffset);
+                e.Handled = true;
+            }
+        }
+
+        private void WorldCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (_worldScrollViewer != null)
+            {
+                double newOffset = _worldScrollViewer.VerticalOffset - e.Delta;
+                _worldScrollViewer.ScrollToVerticalOffset(newOffset);
+                e.Handled = true;
+            }
+        }
+
+        private void UpdateScrollSlidersMaxValue()
+        {
+            if (_playerScrollViewer != null && PlayerScrollSlider != null)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    PlayerScrollSlider.IsEnabled = _playerScrollViewer.ScrollableHeight > 0;
+                    if (!PlayerScrollSlider.IsEnabled)
+                    {
+                        PlayerScrollSlider.Value = 0;
+                    }
+                }), DispatcherPriority.Render);
+            }
+
+            if (_worldScrollViewer != null && WorldScrollSlider != null)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    WorldScrollSlider.IsEnabled = _worldScrollViewer.ScrollableHeight > 0;
+                    if (!WorldScrollSlider.IsEnabled)
+                    {
+                        WorldScrollSlider.Value = 0;
+                    }
+                }), DispatcherPriority.Render);
+            }
+        }
+
+        #endregion
+
         #region 世界卡片创建和管理
 
-        /// <summary>
-        /// 世界卡片项（包含Border和数据）- 改为public
-        /// </summary>
         public class WorldCardItem
         {
             public Border Border { get; set; }
@@ -165,7 +259,6 @@ namespace g_mpm
             public string Directory { get; set; }
             public bool IsSelected { get; set; }
 
-            // 用于高亮显示的背景颜色
             private SolidColorBrush NormalBackground { get; set; } = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             private SolidColorBrush SelectedBackground { get; set; } = new SolidColorBrush(Color.FromRgb(200, 230, 255));
 
@@ -189,48 +282,34 @@ namespace g_mpm
             }
         }
 
-        /// <summary>
-        /// 加载世界数据
-        /// </summary>
         private void LoadWorldData(WorldDirectoriesNameList data)
         {
-            // 清除现有项
             ClearAllWorlds();
 
-            // 确保两个列表长度一致
             int count = Math.Min(data.world_directory_list.Count, data.world_name_list.Count);
-
-            worldNextY = 50; // 重置Y坐标起始位置
+            worldNextY = 50;
 
             for (int i = 0; i < count; i++)
             {
-                // 创建UI元素
                 CreateWorldCard(data.world_name_list[i], data.world_directory_list[i]);
             }
+
+            UpdateScrollSlidersMaxValue();
         }
 
-        /// <summary>
-        /// 创建世界卡片
-        /// </summary>
         private void CreateWorldCard(string name, string directory)
         {
             Canvas worldCanvas = GetWorldCanvas();
             if (worldCanvas == null) return;
 
-            // 创建主容器Border（实现圆角矩形效果）
             Border border = new Border();
             border.Width = 350;
             border.Height = 80;
             border.CornerRadius = new CornerRadius(12);
-
-            // 设置纯色背景
             border.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-
-            // 添加边框
             border.BorderBrush = new SolidColorBrush(Colors.Transparent);
             border.BorderThickness = new Thickness(1.5);
 
-            // 添加阴影效果
             DropShadowEffect shadow = new DropShadowEffect();
             shadow.BlurRadius = 6;
             shadow.ShadowDepth = 2;
@@ -238,12 +317,10 @@ namespace g_mpm
             shadow.Opacity = 0.3;
             border.Effect = shadow;
 
-            // 创建内容容器
             StackPanel stackPanel = new StackPanel();
             stackPanel.Margin = new Thickness(8);
             stackPanel.VerticalAlignment = VerticalAlignment.Center;
 
-            // 世界名称
             TextBlock nameText = new TextBlock();
             nameText.Text = name;
             nameText.FontSize = 14;
@@ -253,7 +330,6 @@ namespace g_mpm
             nameText.TextAlignment = TextAlignment.Center;
             nameText.Margin = new Thickness(0, 0, 0, 5);
 
-            // 路径显示（缩短过长路径）
             TextBlock dirText = new TextBlock();
             string displayPath = directory;
             if (displayPath.Length > 64)
@@ -266,54 +342,107 @@ namespace g_mpm
             dirText.TextWrapping = TextWrapping.Wrap;
             dirText.TextAlignment = TextAlignment.Center;
 
-            // 组装内容
             stackPanel.Children.Add(nameText);
             stackPanel.Children.Add(dirText);
 
             border.Child = stackPanel;
 
-            // 设置位置（垂直排列，X坐标固定为10）
             Canvas.SetLeft(border, 10);
             Canvas.SetTop(border, worldNextY);
 
-            // 添加到画布
             worldCanvas.Children.Add(border);
 
-            // 创建卡片项并保存
             var cardItem = new WorldCardItem(border, name, directory);
             worldCards.Add(cardItem);
 
-            // 添加选中事件
             border.MouseLeftButtonDown += (s, e) => OnWorldCardSelected(cardItem);
+            border.MouseRightButtonDown += (s, e) => OnWorldCardRightClick(cardItem, e);
+            border.MouseEnter += Border_MouseEnter;
+            border.MouseLeave += Border_MouseLeave;
 
-            // 播放入场动画（从下向上飞入）
             PlayEntranceAnimation(border);
 
-            // 递增Y坐标（卡片高度80 + 间距10）
             worldNextY += 90;
         }
 
-        /// <summary>
-        /// 世界卡片选中事件处理
-        /// </summary>
         private void OnWorldCardSelected(WorldCardItem selectedCard)
         {
-            // 清除之前的选中状态
             if (_selectedWorldCard != null && _selectedWorldCard != selectedCard)
             {
                 _selectedWorldCard.SetSelected(false);
             }
 
-            // 切换当前卡片的选中状态
             selectedCard.ToggleSelected();
             _selectedWorldCard = selectedCard.IsSelected ? selectedCard : null;
 
             Debug.WriteLine($"选中世界: {(selectedCard.IsSelected ? selectedCard.WorldName : "无")}");
         }
 
-        /// <summary>
-        /// 清空所有世界卡片
-        /// </summary>
+        private void OnWorldCardRightClick(WorldCardItem cardItem, MouseButtonEventArgs e)
+        {
+            OnWorldCardSelected(cardItem);
+            ShowWorldContextMenu(cardItem, e.GetPosition(this));
+            e.Handled = true;
+        }
+
+        private void ShowWorldContextMenu(WorldCardItem cardItem, Point position)
+        {
+            ContextMenu contextMenu = new ContextMenu();
+
+            MenuItem enterWorldItem = new MenuItem { Header = "查看存档" };
+            enterWorldItem.Click += (s, e) => OnEnterWorld(cardItem);
+
+            MenuItem copyNameItem = new MenuItem { Header = "复制世界名称" };
+            copyNameItem.Click += (s, e) => CopyToClipboard(cardItem.WorldName);
+
+            MenuItem copyPathItem = new MenuItem { Header = "复制世界路径" };
+            copyPathItem.Click += (s, e) => CopyToClipboard(cardItem.Directory);
+
+            MenuItem openPathItem = new MenuItem { Header = "打开世界文件夹" };
+            openPathItem.Click += (s, e) => OpenFolder(cardItem.Directory);
+
+            MenuItem deleteWorldItem = new MenuItem { Header = "删除世界中的数据" };
+            deleteWorldItem.Foreground = Brushes.Red;
+            deleteWorldItem.Click += async (s, e) => await OnDeleteWorld(cardItem);
+
+            contextMenu.Items.Add(enterWorldItem);
+            contextMenu.Items.Add(new Separator());
+            contextMenu.Items.Add(copyNameItem);
+            contextMenu.Items.Add(copyPathItem);
+            contextMenu.Items.Add(openPathItem);
+            contextMenu.Items.Add(new Separator());
+            contextMenu.Items.Add(deleteWorldItem);
+
+            contextMenu.IsOpen = true;
+        }
+
+        private void OnEnterWorld(WorldCardItem cardItem)
+        {
+            Debug.WriteLine($"进入世界: {cardItem.WorldName}");
+            MessageBox.Show($"正在进入世界: {cardItem.WorldName}", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private async Task OnDeleteWorld(WorldCardItem cardItem)
+        {
+            var result = MessageBox.Show(
+                $"确定要删除世界 \"{cardItem.WorldName}\" 中所有玩家数据吗？\n此操作可以撤销！",
+                "确认删除",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                Debug.WriteLine($"删除世界: {cardItem.WorldName}");
+
+                bool success = await SendCommandAndWaitAsync(Command.DEL_WORLD, cardItem.Directory);
+                if (success)
+                {
+                    SendCommand(Command.LIST_WORLD);
+                }
+                MessageBox.Show($"世界 \"{cardItem.WorldName}\" 已删除", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
         private void ClearAllWorlds()
         {
             Canvas worldCanvas = GetWorldCanvas();
@@ -329,9 +458,6 @@ namespace g_mpm
             worldNextY = 50;
         }
 
-        /// <summary>
-        /// 获取当前选中的世界
-        /// </summary>
         public WorldCardItem? GetSelectedWorld()
         {
             return _selectedWorldCard;
@@ -341,16 +467,12 @@ namespace g_mpm
 
         #region 玩家卡片创建和管理
 
-        /// <summary>
-        /// 玩家卡片项（包含Border和数据）- 改为public
-        /// </summary>
         public class PlayerCardItem
         {
             public Border Border { get; set; }
             public UserInfo UserInfo { get; set; }
             public bool IsSelected { get; set; }
 
-            // 用于高亮显示的背景颜色
             private SolidColorBrush NormalBackground { get; set; } = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             private SolidColorBrush SelectedBackground { get; set; } = new SolidColorBrush(Color.FromRgb(200, 230, 255));
 
@@ -373,45 +495,33 @@ namespace g_mpm
             }
         }
 
-        /// <summary>
-        /// 加载玩家数据
-        /// </summary>
         private void LoadPlayerData(List<UserInfo> players)
         {
-            // 清除现有项
             ClearAllPlayers();
 
-            playerNextY = 50; // 重置Y坐标起始位置
+            playerNextY = 50;
 
             for (int i = 0; i < players.Count; i++)
             {
-                // 创建UI元素
                 CreatePlayerCard(players[i]);
             }
+
+            UpdateScrollSlidersMaxValue();
         }
 
-        /// <summary>
-        /// 创建玩家卡片
-        /// </summary>
         private void CreatePlayerCard(UserInfo player)
         {
             Canvas playerCanvas = GetPlayerCanvas();
             if (playerCanvas == null) return;
 
-            // 创建主容器Border（实现圆角矩形效果）
             Border border = new Border();
             border.Width = 350;
             border.Height = 80;
             border.CornerRadius = new CornerRadius(12);
-
-            // 设置纯色背景（白色）
             border.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-
-            // 添加边框
             border.BorderBrush = new SolidColorBrush(Colors.White);
             border.BorderThickness = new Thickness(1.5);
 
-            // 添加阴影效果
             DropShadowEffect shadow = new DropShadowEffect();
             shadow.BlurRadius = 6;
             shadow.ShadowDepth = 2;
@@ -419,12 +529,10 @@ namespace g_mpm
             shadow.Opacity = 0.3;
             border.Effect = shadow;
 
-            // 创建内容容器
             StackPanel stackPanel = new StackPanel();
             stackPanel.Margin = new Thickness(8);
             stackPanel.VerticalAlignment = VerticalAlignment.Center;
 
-            // 玩家昵称
             TextBlock nameText = new TextBlock();
             nameText.Text = player.user_name;
             nameText.FontSize = 14;
@@ -434,7 +542,6 @@ namespace g_mpm
             nameText.TextAlignment = TextAlignment.Center;
             nameText.Margin = new Thickness(0, 0, 0, 5);
 
-            // UUID显示 - 修改为64字符
             TextBlock uuidText = new TextBlock();
             string displayUuid = player.uuid;
             if (displayUuid.Length > 64)
@@ -448,12 +555,11 @@ namespace g_mpm
             uuidText.TextAlignment = TextAlignment.Center;
             uuidText.Margin = new Thickness(0, 0, 0, 3);
 
-            // 过期时间显示
             TextBlock expireText = new TextBlock();
             string displayExpire = player.expiresOn;
-            if (displayExpire.Length > 18)
+            if (displayExpire.Length > 32)
             {
-                displayExpire = displayExpire.Substring(0, 15) + "...";
+                displayExpire = displayExpire.Substring(0, 29) + "...";
             }
             expireText.Text = $"过期: {displayExpire}";
             expireText.FontSize = 9;
@@ -461,55 +567,148 @@ namespace g_mpm
             expireText.TextWrapping = TextWrapping.Wrap;
             expireText.TextAlignment = TextAlignment.Center;
 
-            // 组装内容
             stackPanel.Children.Add(nameText);
             stackPanel.Children.Add(uuidText);
             stackPanel.Children.Add(expireText);
 
             border.Child = stackPanel;
 
-            // 设置位置（垂直排列，X坐标固定为10）
             Canvas.SetLeft(border, 10);
             Canvas.SetTop(border, playerNextY);
 
-            // 添加到画布
             playerCanvas.Children.Add(border);
 
-            // 创建卡片项并保存
             var cardItem = new PlayerCardItem(border, player);
             playerCards.Add(cardItem);
 
-            // 添加选中事件
             border.MouseLeftButtonDown += (s, e) => OnPlayerCardSelected(cardItem);
+            border.MouseRightButtonDown += (s, e) => OnPlayerCardRightClick(cardItem, e);
+            border.MouseEnter += Border_MouseEnter;
+            border.MouseLeave += Border_MouseLeave;
 
-            // 播放入场动画（从下向上飞入）
             PlayEntranceAnimation(border);
 
-            // 递增Y坐标（卡片高度80 + 间距10）
             playerNextY += 90;
         }
 
-        /// <summary>
-        /// 玩家卡片选中事件处理
-        /// </summary>
         private void OnPlayerCardSelected(PlayerCardItem selectedCard)
         {
-            // 清除之前的选中状态
             if (_selectedPlayerCard != null && _selectedPlayerCard != selectedCard)
             {
                 _selectedPlayerCard.SetSelected(false);
             }
 
-            // 切换当前卡片的选中状态
             selectedCard.ToggleSelected();
             _selectedPlayerCard = selectedCard.IsSelected ? selectedCard : null;
 
             Debug.WriteLine($"选中玩家: {(selectedCard.IsSelected ? selectedCard.UserInfo.user_name : "无")}");
         }
 
-        /// <summary>
-        /// 清空所有玩家卡片
-        /// </summary>
+        private void OnPlayerCardRightClick(PlayerCardItem cardItem, MouseButtonEventArgs e)
+        {
+            OnPlayerCardSelected(cardItem);
+            ShowPlayerContextMenu(cardItem, e.GetPosition(this));
+            e.Handled = true;
+        }
+
+        private void ShowPlayerContextMenu(PlayerCardItem cardItem, Point position)
+        {
+            ContextMenu contextMenu = new ContextMenu();
+
+            MenuItem copyNameItem = new MenuItem { Header = "复制玩家名称" };
+            copyNameItem.Click += (s, e) => CopyToClipboard(cardItem.UserInfo.user_name);
+
+            MenuItem copyUuidItem = new MenuItem { Header = "复制UUID" };
+            copyUuidItem.Click += (s, e) => CopyToClipboard(cardItem.UserInfo.uuid);
+
+            MenuItem viewInfoItem = new MenuItem { Header = "查看详细信息" };
+            viewInfoItem.Click += (s, e) => ShowPlayerDetails(cardItem);
+
+            MenuItem kickPlayerItem = new MenuItem { Header = "删除玩家数据" };
+            kickPlayerItem.Foreground = Brushes.Red;
+            kickPlayerItem.Click += async (s, e) => await OnKickPlayer(cardItem);
+
+            contextMenu.Items.Add(copyNameItem);
+            contextMenu.Items.Add(copyUuidItem);
+            contextMenu.Items.Add(new Separator());
+            contextMenu.Items.Add(viewInfoItem);
+            contextMenu.Items.Add(new Separator());
+            contextMenu.Items.Add(kickPlayerItem);
+
+            contextMenu.IsOpen = true;
+        }
+
+        private void ShowPlayerDetails(PlayerCardItem cardItem)
+        {
+            Debug.WriteLine($"查看玩家详情: {cardItem.UserInfo.user_name}");
+            MessageBox.Show(
+                $"玩家名称: {cardItem.UserInfo.user_name}\n" +
+                $"UUID: {cardItem.UserInfo.uuid}\n" +
+                $"过期时间: {cardItem.UserInfo.expiresOn}",
+                "玩家详细信息",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        private async Task OnKickPlayer(PlayerCardItem cardItem)
+        {
+            var result = MessageBox.Show(
+                $"确定要删除玩家 \"{cardItem.UserInfo.user_name}\" 的全部数据吗？",
+                "确认删除",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                Debug.WriteLine($"删除玩家: {cardItem.UserInfo.user_name}");
+                bool success = await SendCommandAndWaitAsync(Command.DEL_PLAYER, cardItem.UserInfo.user_name);
+                if (success)
+                {
+                    MessageBox.Show($"玩家 \"{cardItem.UserInfo.user_name}\" 已删除", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"玩家 \"{cardItem.UserInfo.user_name}\" 已删除", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+        }
+
+        private void CopyToClipboard(string text)
+        {
+            try
+            {
+                Clipboard.SetText(text);
+                Debug.WriteLine($"已复制到剪贴板: {text}");
+                MessageBox.Show("已复制到剪贴板", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"复制失败: {ex.Message}");
+                MessageBox.Show($"复制失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void OpenFolder(string path)
+        {
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    Process.Start("explorer.exe", path);
+                }
+                else
+                {
+                    Debug.WriteLine($"路径不存在: {path}");
+                    MessageBox.Show($"路径不存在: {path}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"打开文件夹失败: {ex.Message}");
+                MessageBox.Show($"打开文件夹失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void ClearAllPlayers()
         {
             Canvas playerCanvas = GetPlayerCanvas();
@@ -525,9 +724,6 @@ namespace g_mpm
             playerNextY = 50;
         }
 
-        /// <summary>
-        /// 获取当前选中的玩家
-        /// </summary>
         public PlayerCardItem? GetSelectedPlayer()
         {
             return _selectedPlayerCard;
@@ -537,20 +733,13 @@ namespace g_mpm
 
         #region 动画效果
 
-        /// <summary>
-        /// 入场动画 - 从下向上飞入
-        /// </summary>
         private void PlayEntranceAnimation(FrameworkElement element)
         {
-            // 设置初始位置（在下方）
             TranslateTransform translateTransform = new TranslateTransform(0, 30);
             element.RenderTransform = translateTransform;
             element.RenderTransformOrigin = new Point(0.5, 0.5);
-
-            // 初始透明度为0
             element.Opacity = 0;
 
-            // 向上移动动画
             DoubleAnimation translateYAnimation = new DoubleAnimation
             {
                 From = 100,
@@ -559,7 +748,6 @@ namespace g_mpm
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
 
-            // 透明度淡入动画
             DoubleAnimation opacityAnimation = new DoubleAnimation
             {
                 From = 0,
@@ -579,17 +767,12 @@ namespace g_mpm
             timer.Start();
         }
 
-        /// <summary>
-        /// 退出动画 - 从上至下飞出
-        /// </summary>
         private void PlayExitAnimation(FrameworkElement element)
         {
-            // 创建平移动画
             TranslateTransform translateTransform = new TranslateTransform(0, 0);
             element.RenderTransform = translateTransform;
             element.RenderTransformOrigin = new Point(0.5, 0.5);
 
-            // 向下移动动画
             DoubleAnimation translateYAnimation = new DoubleAnimation
             {
                 From = 0,
@@ -598,7 +781,6 @@ namespace g_mpm
                 EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
             };
 
-            // 透明度淡出动画
             DoubleAnimation opacityAnimation = new DoubleAnimation
             {
                 From = 1,
@@ -606,7 +788,6 @@ namespace g_mpm
                 Duration = TimeSpan.FromMilliseconds(200)
             };
 
-            // 动画完成后移除元素
             translateYAnimation.Completed += (s, e) =>
             {
                 Canvas worldCanvas = GetWorldCanvas();
@@ -615,13 +796,9 @@ namespace g_mpm
 
             translateTransform.BeginAnimation(TranslateTransform.YProperty, translateYAnimation);
             element.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
-
         }
 
-        /// <summary>
-        /// 悬停放大动画
-        /// </summary>
-        private void Border_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Border_MouseEnter(object sender, MouseEventArgs e)
         {
             if (sender is Border border)
             {
@@ -639,7 +816,6 @@ namespace g_mpm
                 scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation);
                 scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
 
-                // 阴影加强
                 if (border.Effect is DropShadowEffect shadow)
                 {
                     DoubleAnimation blurAnimation = new DoubleAnimation
@@ -652,7 +828,7 @@ namespace g_mpm
             }
         }
 
-        private void Border_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Border_MouseLeave(object sender, MouseEventArgs e)
         {
             if (sender is Border border)
             {
@@ -683,7 +859,6 @@ namespace g_mpm
 
             _launcher = new SharedMemoryLauncher(config);
 
-            // 订阅所有事件
             _launcher.ReplyReceived += OnReplyReceived;
             _launcher.ErrorOccurred += OnErrorOccurred;
             _launcher.OutputReceived += OnOutputReceived;
@@ -713,9 +888,7 @@ namespace g_mpm
             if (success)
             {
                 Debug.WriteLine("共享内存初始化成功");
-                // 发送列出世界命令
                 SendCommand(Command.LIST_WORLD);
-                // 发送获取玩家信息命令
                 SendCommand(Command.LIST_PLAYER);
             }
             else
@@ -737,7 +910,6 @@ namespace g_mpm
         {
             Dispatcher.Invoke(() =>
             {
-                // 处理回复数据
                 if (e.Title != "")
                 {
                     Path.Text = e.Title;
@@ -748,20 +920,10 @@ namespace g_mpm
                     case StructDataType.WDNL:
                         if (e.Data != null)
                         {
-                            // 反序列化世界数据
                             WorldDirectoriesNameList wdnl = WorldDirectoriesNameList.FromBytes(e.Data);
-
                             Debug.WriteLine($"收到世界数据: 共 {wdnl.world_name_list.Count} 个世界");
-
-                            // 加载并显示世界数据
                             LoadWorldData(wdnl);
-
-                            // 为所有新创建的卡片添加鼠标事件
-                            AddMouseEventsToWorldCards();
-
                             flish = true;
-
-                            // 完成世界列表等待任务
                             _listWorldCompletionSource?.TrySetResult(true);
                         }
                         break;
@@ -769,20 +931,10 @@ namespace g_mpm
                     case StructDataType.UI:
                         if (e.Data != null)
                         {
-                            // 反序列化玩家数据
                             List<UserInfo> users = UserInfoListSerializer.FromBytes(e.Data);
-
                             Debug.WriteLine($"收到玩家数据: 共 {users.Count} 个玩家");
-
-                            // 加载并显示玩家数据
                             LoadPlayerData(users);
-
-                            // 为所有新创建的卡片添加鼠标事件
-                            AddMouseEventsToPlayerCards();
-
                             flish = true;
-
-                            // 完成玩家列表等待任务
                             _listPlayerCompletionSource?.TrySetResult(true);
                         }
                         break;
@@ -796,30 +948,6 @@ namespace g_mpm
                         break;
                 }
             });
-        }
-
-        /// <summary>
-        /// 为所有世界卡片添加鼠标事件
-        /// </summary>
-        private void AddMouseEventsToWorldCards()
-        {
-            foreach (var cardItem in worldCards)
-            {
-                cardItem.Border.MouseEnter += Border_MouseEnter;
-                cardItem.Border.MouseLeave += Border_MouseLeave;
-            }
-        }
-
-        /// <summary>
-        /// 为所有玩家卡片添加鼠标事件
-        /// </summary>
-        private void AddMouseEventsToPlayerCards()
-        {
-            foreach (var cardItem in playerCards)
-            {
-                cardItem.Border.MouseEnter += Border_MouseEnter;
-                cardItem.Border.MouseLeave += Border_MouseLeave;
-            }
         }
 
         private void OnErrorOccurred(object? sender, ErrorEventArgs e)
@@ -929,15 +1057,12 @@ namespace g_mpm
             }
         }
 
-        /// <summary>
-        /// 发送命令并异步等待响应
-        /// </summary>
         public async System.Threading.Tasks.Task<bool> SendCommandAndWaitAsync(Command command, string additional = "", int timeoutMs = 5000)
         {
             try
             {
                 var result = await _launcher.SendCommandAndWaitAsync(command, additional, timeoutMs);
-                return result.Success;  // 注意：这里是 Success（大写S）
+                return result.Success;
             }
             catch (Exception ex)
             {
@@ -981,13 +1106,17 @@ namespace g_mpm
         {
             Storyboard storyboard = (Storyboard)this.Resources["Closing"];
             storyboard.Begin(this);
-
             _launcher?.Dispose();
         }
 
         #endregion
 
         #region 按钮事件
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
@@ -1069,17 +1198,12 @@ namespace g_mpm
                 sb.Begin(this);
             }
 
-            // 创建等待任务
             _listWorldCompletionSource = new TaskCompletionSource<bool>();
             _listPlayerCompletionSource = new TaskCompletionSource<bool>();
 
-            // 发送第一个命令
             SendCommand(Command.LIST_WORLD);
-
-            // 等待第一个命令完成
             await _listWorldCompletionSource.Task;
 
-            // 第一个完成后发送第二个命令
             SendCommand(Command.LIST_PLAYER);
         }
 

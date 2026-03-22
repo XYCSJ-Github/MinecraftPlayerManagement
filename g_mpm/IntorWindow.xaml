@@ -972,24 +972,24 @@
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Player" Storyboard.TargetProperty="(Canvas.Top)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="800">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut" Exponent="4"/>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
                 <EasingDoubleKeyFrame KeyTime="00:00:01.7000000" Value="320">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut" Exponent="2"/>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="World" Storyboard.TargetProperty="(Canvas.Top)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="800">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut" Exponent="4"/>
+                        <PowerEase EasingMode="EaseInOut" Power="4"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
                 <EasingDoubleKeyFrame KeyTime="00:00:01.6000000" Value="320">
                     <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut" Exponent="2"/>
+                        <PowerEase EasingMode="EaseInOut" Power="2"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
@@ -997,6 +997,14 @@
                 <EasingColorKeyFrame KeyTime="00:00:00.9000000" Value="White"/>
                 <EasingColorKeyFrame KeyTime="00:00:01.4000000" Value="sc#1, 0.651405632, 0.7991027, 0.309468955"/>
             </ColorAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldScrollSlider" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.7000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:02" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PlayerScrollSlider" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.7000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:02" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="Level2IntorB">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
@@ -1289,6 +1297,7 @@
                 <EasingColorKeyFrame KeyTime="00:00:00.9000000" Value="sc#1, 1, 1, 1"/>
             </ColorAnimationUsingKeyFrames>
         </Storyboard>
+        <Storyboard x:Key="Level3Intor"/>
     </Window.Resources>
 
     <Grid x:Name="grid" Background="Black">
@@ -1798,6 +1807,41 @@
             <TextBlock x:Name="Path" Text="" TextAlignment="Center"  FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Viewbox>
 
+
+        <Slider x:Name="PlayerScrollSlider" Opacity="0"
+        Width="20" 
+        Height="300"
+        Orientation="Vertical"
+        Minimum="0" 
+        Maximum="1" 
+        Value="1"
+        TickFrequency="0.1"
+        IsSnapToTickEnabled="True"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        Margin="370,120,0,0">
+            <Slider.LayoutTransform>
+                <RotateTransform Angle="0"/>
+            </Slider.LayoutTransform>
+        </Slider>
+
+        <Slider x:Name="WorldScrollSlider" Opacity="0"
+        Width="20" 
+        Height="300"
+        Orientation="Vertical"
+        Minimum="0" 
+        Maximum="1" 
+        Value="1"
+        TickFrequency="0.1"
+        IsSnapToTickEnabled="True"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        Margin="410,120,0,0">
+            <Slider.LayoutTransform>
+                <RotateTransform Angle="0"/>
+            </Slider.LayoutTransform>
+        </Slider>
+
         <Grid Height="300" Width="800">
             <TextBox x:Name="textBox" Opacity="0" Width="320" Height="30" Text="关于Minecraft玩家数据文件管理程序" FontSize="18" FontWeight="ExtraBold" Background="Transparent" BorderBrush="Transparent" Margin="0,0,0,190" RenderTransformOrigin="0.5,0.5">
                 <TextBox.RenderTransform>
@@ -1810,6 +1854,16 @@
                 </TextBox.RenderTransform>
             </TextBox>
         </Grid>
+
+
+        <TextBox Opacity="0" Text="存 档" FontSize="20" Margin="0,0,0,250" VerticalAlignment="Center"  HorizontalAlignment="Center" Background="Transparent" FontWeight="Bold"/>
+        <TextBox Opacity="0" x:Name="WorldName" Text="" FontSize="30" Margin="0,0,0,180" VerticalAlignment="Center"  HorizontalAlignment="Center" Background="Transparent" FontWeight="Bold"/>
+        <TextBox Opacity="0" x:Name="WorldPath" Text="" FontSize="15" Margin="0,0,0,100" VerticalAlignment="Center"  HorizontalAlignment="Center" Background="Transparent" FontWeight="Bold"/>
+        <Line X1="10" Y1="250" X2="790" Y2="250" StrokeThickness="3" Stroke="WhiteSmoke" Opacity="0"/>
+
+        <StackPanel>
+
+        </StackPanel>
 
     </Grid>
 </Window>
