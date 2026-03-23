@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:g_mpm"
         mc:Ignorable="d"
-        Title="IntorWindow" Height="500" Width="800">
+        Title="IntorWindow" Height="500" Width="800" ResizeMode="NoResize">
     <Window.Resources>
         <Storyboard x:Key="AboutIntor">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle4" Storyboard.TargetProperty="(Canvas.Top)">
