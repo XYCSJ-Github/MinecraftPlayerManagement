@@ -31,8 +31,15 @@
     <None Remove="Resource\Edit.png" />
     <None Remove="Resource\GroundSide.png" />
     <None Remove="Resource\MC_ICON.png" />
+    <None Remove="Resource\mpm.exe" />
     <None Remove="Resource\OK_Button.png" />
     <None Remove="Resource\Server_tag.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="mpm.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
