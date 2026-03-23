@@ -115,7 +115,9 @@ namespace g_mpm
                 return canvas;
 
             InitializeWorldGrid();
+#pragma warning disable CS8603 // 可能返回 null 引用。
             return WorldGrid.Tag as Canvas;
+#pragma warning restore CS8603 // 可能返回 null 引用。
         }
 
         #endregion
@@ -164,7 +166,9 @@ namespace g_mpm
                 return canvas;
 
             InitializePlayerGrid();
+#pragma warning disable CS8603 // 可能返回 null 引用。
             return PlayerGrid.Tag as Canvas;
+#pragma warning restore CS8603 // 可能返回 null 引用。
         }
 
         #endregion
