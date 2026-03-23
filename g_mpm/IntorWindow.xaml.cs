@@ -66,9 +66,6 @@ namespace g_mpm
             InitializePlayerGrid();
             InitializeWorldGrid();
 
-            // 初始化滚动滑块
-            InitializeScrollSliders();
-
             Storyboard sb = (Storyboard)this.Resources["Intor"];
             sb.SpeedRatio = 0.8;
             sb.Begin();
@@ -138,110 +135,6 @@ namespace g_mpm
 
             InitializeWorldGrid();
             return WorldGrid.Tag as Canvas;
-        }
-
-        #endregion
-
-        #region 滚动控制
-
-        private void InitializeScrollSliders()
-        {
-            if (PlayerScrollSlider != null)
-            {
-                PlayerScrollSlider.ValueChanged += PlayerScrollSlider_ValueChanged;
-                PlayerScrollSlider.MouseEnter += (s, e) => PlayerScrollSlider.Opacity = 1;
-                PlayerScrollSlider.MouseLeave += (s, e) => PlayerScrollSlider.Opacity = 0.6;
-            }
-
-            if (WorldScrollSlider != null)
-            {
-                WorldScrollSlider.ValueChanged += WorldScrollSlider_ValueChanged;
-                WorldScrollSlider.MouseEnter += (s, e) => WorldScrollSlider.Opacity = 1;
-                WorldScrollSlider.MouseLeave += (s, e) => WorldScrollSlider.Opacity = 0.6;
-            }
-        }
-
-        private void PlayerScrollSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (_playerScrollViewer != null && _playerScrollViewer.ScrollableHeight > 0)
-            {
-                double newVerticalOffset = (e.NewValue / 100) * _playerScrollViewer.ScrollableHeight;
-                _playerScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
-            }
-        }
-
-        private void WorldScrollSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (_worldScrollViewer != null && _worldScrollViewer.ScrollableHeight > 0)
-            {
-                double newVerticalOffset = (e.NewValue / 100) * _worldScrollViewer.ScrollableHeight;
-                _worldScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
-            }
-        }
-
-        private void PlayerScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (PlayerScrollSlider != null && _playerScrollViewer != null && _playerScrollViewer.ScrollableHeight > 0)
-            {
-                double scrollPercent = (_playerScrollViewer.VerticalOffset / _playerScrollViewer.ScrollableHeight) * 100;
-                PlayerScrollSlider.Value = scrollPercent;
-            }
-        }
-
-        private void WorldScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (WorldScrollSlider != null && _worldScrollViewer != null && _worldScrollViewer.ScrollableHeight > 0)
-            {
-                double scrollPercent = (_worldScrollViewer.VerticalOffset / _worldScrollViewer.ScrollableHeight) * 100;
-                WorldScrollSlider.Value = scrollPercent;
-            }
-        }
-
-        private void PlayerCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (_playerScrollViewer != null)
-            {
-                double newOffset = _playerScrollViewer.VerticalOffset - e.Delta;
-                _playerScrollViewer.ScrollToVerticalOffset(newOffset);
-                e.Handled = true;
-            }
-        }
-
-        private void WorldCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (_worldScrollViewer != null)
-            {
-                double newOffset = _worldScrollViewer.VerticalOffset - e.Delta;
-                _worldScrollViewer.ScrollToVerticalOffset(newOffset);
-                e.Handled = true;
-            }
-        }
-
-        private void UpdateScrollSlidersMaxValue()
-        {
-            if (_playerScrollViewer != null && PlayerScrollSlider != null)
-            {
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    PlayerScrollSlider.IsEnabled = _playerScrollViewer.ScrollableHeight > 0;
-                    if (!PlayerScrollSlider.IsEnabled)
-                    {
-                        PlayerScrollSlider.Value = 0;
-                    }
-                }), DispatcherPriority.Render);
-            }
-
-            if (_worldScrollViewer != null && WorldScrollSlider != null)
-            {
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    WorldScrollSlider.IsEnabled = _worldScrollViewer.ScrollableHeight > 0;
-                    if (!WorldScrollSlider.IsEnabled)
-                    {
-                        WorldScrollSlider.Value = 0;
-                    }
-                }), DispatcherPriority.Render);
-            }
         }
 
         #endregion
@@ -596,52 +489,6 @@ namespace g_mpm
             _selectedPlayerCard = selectedCard.IsSelected ? selectedCard : null;
 
             Debug.WriteLine($"选中玩家: {(selectedCard.IsSelected ? selectedCard.UserInfo.user_name : "无")}");
-        }
-
-        private void OnPlayerCardRightClick(PlayerCardItem cardItem, MouseButtonEventArgs e)
-        {
-            OnPlayerCardSelected(cardItem);
-            ShowPlayerContextMenu(cardItem, e.GetPosition(this));
-            e.Handled = true;
-        }
-
-        private void ShowPlayerContextMenu(PlayerCardItem cardItem, Point position)
-        {
-            ContextMenu contextMenu = new ContextMenu();
-
-            MenuItem copyNameItem = new MenuItem { Header = "复制玩家名称" };
-            copyNameItem.Click += (s, e) => CopyToClipboard(cardItem.UserInfo.user_name);
-
-            MenuItem copyUuidItem = new MenuItem { Header = "复制UUID" };
-            copyUuidItem.Click += (s, e) => CopyToClipboard(cardItem.UserInfo.uuid);
-
-            MenuItem viewInfoItem = new MenuItem { Header = "查看详细信息" };
-            viewInfoItem.Click += (s, e) => ShowPlayerDetails(cardItem);
-
-            MenuItem kickPlayerItem = new MenuItem { Header = "删除玩家数据" };
-            kickPlayerItem.Foreground = Brushes.Red;
-            kickPlayerItem.Click += async (s, e) => await OnKickPlayer(cardItem);
-
-            contextMenu.Items.Add(copyNameItem);
-            contextMenu.Items.Add(copyUuidItem);
-            contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(viewInfoItem);
-            contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(kickPlayerItem);
-
-            contextMenu.IsOpen = true;
-        }
-
-        private void ShowPlayerDetails(PlayerCardItem cardItem)
-        {
-            Debug.WriteLine($"查看玩家详情: {cardItem.UserInfo.user_name}");
-            MessageBox.Show(
-                $"玩家名称: {cardItem.UserInfo.user_name}\n" +
-                $"UUID: {cardItem.UserInfo.uuid}\n" +
-                $"过期时间: {cardItem.UserInfo.expiresOn}",
-                "玩家详细信息",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
         }
 
         private void OnPlayerCardRightClick(PlayerCardItem cardItem, MouseButtonEventArgs e)
