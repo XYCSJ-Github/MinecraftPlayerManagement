@@ -75,26 +75,90 @@ namespace g_mpm
 
         private void InitializePlayerGrid()
         {
+            // 设置PlayerGrid的Background
             PlayerGrid.Background = Brushes.Transparent;
 
+            // 清除现有子元素
+            PlayerGrid.Children.Clear();
+
+            // 创建ScrollViewer
             _playerScrollViewer = new ScrollViewer();
             _playerScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
-            _playerScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+            _playerScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            _playerScrollViewer.ScrollChanged += PlayerScrollViewer_ScrollChanged;
+            _playerScrollViewer.Padding = new Thickness(0, 0, 10, 0);
 
+            // 设置ScrollViewer的样式，使其背景透明
+            _playerScrollViewer.Background = Brushes.Transparent;
+            _playerScrollViewer.BorderThickness = new Thickness(0);
+
+            // 创建Canvas作为内容容器
             _playerCanvas = new Canvas();
-            _playerCanvas.Width = 380;
-            _playerCanvas.Height = 400;
+            _playerCanvas.Width = 340;
             _playerCanvas.Background = Brushes.Transparent;
+            _playerCanvas.PreviewMouseWheel += PlayerCanvas_PreviewMouseWheel;
+
+            // 设置初始高度
+            _playerCanvas.Height = 400;
 
             _playerScrollViewer.Content = _playerCanvas;
-
-            PlayerGrid.Children.Clear();
             PlayerGrid.Children.Add(_playerScrollViewer);
 
+            // 存储Canvas引用
             PlayerGrid.Tag = _playerCanvas;
         }
 
+        // 获取世界列表的Canvas（右侧）
         private Canvas GetWorldCanvas()
+        {
+            if (WorldGrid.Tag is Canvas canvas)
+                return canvas;
+
+            InitializeWorldGrid();
+            return WorldGrid.Tag as Canvas;
+        }
+
+        #endregion
+
+        #region 玩家显示初始化
+
+        private void InitializeWorldGrid()
+        {
+            // 设置WorldGrid的Background
+            WorldGrid.Background = Brushes.Transparent;
+
+            // 清除现有子元素
+            WorldGrid.Children.Clear();
+
+            // 创建ScrollViewer
+            _worldScrollViewer = new ScrollViewer();
+            _worldScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+            _worldScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+            _worldScrollViewer.ScrollChanged += WorldScrollViewer_ScrollChanged;
+            _worldScrollViewer.Padding = new Thickness(0, 0, 10, 0);
+
+            // 设置ScrollViewer的样式，使其背景透明
+            _worldScrollViewer.Background = Brushes.Transparent;
+            _worldScrollViewer.BorderThickness = new Thickness(0);
+
+            // 创建Canvas作为内容容器
+            _worldCanvas = new Canvas();
+            _worldCanvas.Width = 340;
+            _worldCanvas.Background = Brushes.Transparent;
+            _worldCanvas.PreviewMouseWheel += WorldCanvas_PreviewMouseWheel;
+
+            // 设置初始高度
+            _worldCanvas.Height = 400;
+
+            _worldScrollViewer.Content = _worldCanvas;
+            WorldGrid.Children.Add(_worldScrollViewer);
+
+            // 存储Canvas引用
+            WorldGrid.Tag = _worldCanvas;
+        }
+
+        // 获取玩家列表的Canvas（左侧）
+        private Canvas GetPlayerCanvas()
         {
             if (PlayerGrid.Tag is Canvas canvas)
                 return canvas;
@@ -105,36 +169,87 @@ namespace g_mpm
 
         #endregion
 
-        #region 玩家显示初始化
+        #region 滚动控制
 
-        private void InitializeWorldGrid()
+        private void PlayerScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            WorldGrid.Background = Brushes.Transparent;
-
-            _worldScrollViewer = new ScrollViewer();
-            _worldScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
-            _worldScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
-
-            _worldCanvas = new Canvas();
-            _worldCanvas.Width = 380;
-            _worldCanvas.Height = 400;
-            _worldCanvas.Background = Brushes.Transparent;
-
-            _worldScrollViewer.Content = _worldCanvas;
-
-            WorldGrid.Children.Clear();
-            WorldGrid.Children.Add(_worldScrollViewer);
-
-            WorldGrid.Tag = _worldCanvas;
+            // 可以在这里添加滑块同步逻辑（如果需要的话）
         }
 
-        private Canvas GetPlayerCanvas()
+        private void WorldScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (WorldGrid.Tag is Canvas canvas)
-                return canvas;
+            // 可以在这里添加滑块同步逻辑（如果需要的话）
+        }
 
-            InitializeWorldGrid();
-            return WorldGrid.Tag as Canvas;
+        private void PlayerCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (_playerScrollViewer != null)
+            {
+                double newOffset = _playerScrollViewer.VerticalOffset - (e.Delta / 3);
+                newOffset = Math.Max(0, Math.Min(_playerScrollViewer.ScrollableHeight, newOffset));
+                _playerScrollViewer.ScrollToVerticalOffset(newOffset);
+                e.Handled = true;
+            }
+        }
+
+        private void WorldCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (_worldScrollViewer != null)
+            {
+                double newOffset = _worldScrollViewer.VerticalOffset - (e.Delta / 3);
+                newOffset = Math.Max(0, Math.Min(_worldScrollViewer.ScrollableHeight, newOffset));
+                _worldScrollViewer.ScrollToVerticalOffset(newOffset);
+                e.Handled = true;
+            }
+        }
+
+        private void UpdateCanvasHeight()
+        {
+            // 更新Canvas高度，使其能够容纳所有卡片
+            if (_playerCanvas != null)
+            {
+                if (playerCards.Count > 0)
+                {
+                    double totalHeight = playerNextY + 80; // 最后一个卡片的位置 + 卡片高度
+                    _playerCanvas.Height = Math.Max(400, totalHeight);
+                }
+                else
+                {
+                    _playerCanvas.Height = 400;
+                }
+            }
+
+            if (_worldCanvas != null)
+            {
+                if (worldCards.Count > 0)
+                {
+                    double totalHeight = worldNextY + 80;
+                    _worldCanvas.Height = Math.Max(400, totalHeight);
+                }
+                else
+                {
+                    _worldCanvas.Height = 400;
+                }
+            }
+        }
+
+        private void RefreshScrollViewer()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (_playerScrollViewer != null)
+                {
+                    _playerScrollViewer.UpdateLayout();
+                    // 强制重新计算滚动范围
+                    _playerScrollViewer.ScrollToVerticalOffset(0);
+                }
+
+                if (_worldScrollViewer != null)
+                {
+                    _worldScrollViewer.UpdateLayout();
+                    _worldScrollViewer.ScrollToVerticalOffset(0);
+                }
+            }), DispatcherPriority.Render);
         }
 
         #endregion
@@ -183,7 +298,14 @@ namespace g_mpm
                 CreateWorldCard(data.world_name_list[i], data.world_directory_list[i]);
             }
 
+            // 更新Canvas高度（使用Dispatcher延迟执行，确保所有卡片都已添加）
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                UpdateCanvasHeight();
+                RefreshScrollViewer();
+            }), DispatcherPriority.Loaded);
         }
+
 
         private void CreateWorldCard(string name, string directory)
         {
@@ -191,12 +313,13 @@ namespace g_mpm
             if (worldCanvas == null) return;
 
             Border border = new Border();
-            border.Width = 350;
+            border.Width = 320;
             border.Height = 80;
             border.CornerRadius = new CornerRadius(12);
             border.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             border.BorderBrush = new SolidColorBrush(Colors.Transparent);
             border.BorderThickness = new Thickness(1.5);
+            Canvas.SetLeft(border, 10);
 
             DropShadowEffect shadow = new DropShadowEffect();
             shadow.BlurRadius = 6;
@@ -344,6 +467,12 @@ namespace g_mpm
             worldCards.Clear();
             _selectedWorldCard = null;
             worldNextY = 50;
+
+            // 重置Canvas高度
+            if (_worldCanvas != null)
+            {
+                _worldCanvas.Height = 400;
+            }
         }
 
         public WorldCardItem? GetSelectedWorld()
@@ -394,6 +523,12 @@ namespace g_mpm
                 CreatePlayerCard(players[i]);
             }
 
+            // 更新Canvas高度
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                UpdateCanvasHeight();
+                RefreshScrollViewer();
+            }), DispatcherPriority.Loaded);
         }
 
         private void CreatePlayerCard(UserInfo player)
@@ -402,12 +537,13 @@ namespace g_mpm
             if (playerCanvas == null) return;
 
             Border border = new Border();
-            border.Width = 350;
+            border.Width = 320;
             border.Height = 80;
             border.CornerRadius = new CornerRadius(12);
             border.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             border.BorderBrush = new SolidColorBrush(Colors.White);
             border.BorderThickness = new Thickness(1.5);
+            Canvas.SetLeft(border, 10);
 
             DropShadowEffect shadow = new DropShadowEffect();
             shadow.BlurRadius = 6;
@@ -609,6 +745,12 @@ namespace g_mpm
             playerCards.Clear();
             _selectedPlayerCard = null;
             playerNextY = 50;
+
+            // 重置Canvas高度
+            if (_playerCanvas != null)
+            {
+                _playerCanvas.Height = 400;
+            }
         }
 
         public PlayerCardItem? GetSelectedPlayer()

@@ -969,34 +969,27 @@
                 <EasingDoubleKeyFrame KeyTime="00:00:01.3000000" Value="0"/>
                 <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="1"/>
             </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Player" Storyboard.TargetProperty="(Canvas.Top)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="800">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="4"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.7000000" Value="320">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="2"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="World" Storyboard.TargetProperty="(Canvas.Top)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.8000000" Value="800">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="4"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.6000000" Value="320">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <PowerEase EasingMode="EaseInOut" Power="2"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetName="grid" Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
                 <EasingColorKeyFrame KeyTime="00:00:00.9000000" Value="White"/>
                 <EasingColorKeyFrame KeyTime="00:00:01.4000000" Value="sc#1, 0.651405632, 0.7991027, 0.309468955"/>
             </ColorAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="GridList" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,530,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="00:00:01.1000000" Value="0,530,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:01.7000000" Value="0,100,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GridList" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.5000000" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01.7000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="Level2IntorB">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GroundSide" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
@@ -1260,34 +1253,26 @@
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Player" Storyboard.TargetProperty="(Canvas.Top)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="320">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.9000000" Value="800">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="World" Storyboard.TargetProperty="(Canvas.Top)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="320">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="800">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetName="grid" Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
                 <EasingColorKeyFrame KeyTime="00:00:00" Value="sc#1, 0.651405632, 0.7991027, 0.309468955"/>
                 <EasingColorKeyFrame KeyTime="00:00:00.9000000" Value="sc#1, 1, 1, 1"/>
             </ColorAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="GridList" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="0,100,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.7000000" Value="0,530,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <PowerEase EasingMode="EaseInOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GridList" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="Level3Intor"/>
     </Window.Resources>
@@ -1369,40 +1354,43 @@
             </Image>
         </Canvas>
 
-        <Canvas x:Name="List">
-            <Image x:Name="Player" Source="{StaticResource GroundSide}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Canvas.Top="800" Height="450" Canvas.Left="-280">
-                <Image.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="90"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Image.RenderTransform>
-                <Image.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
-                </Image.Effect>
-            </Image>
-            <Image x:Name="World" Source="{StaticResource GroundSide}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Canvas.Top="800" Height="450" Canvas.Left="140">
-                <Image.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="90
-"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Image.RenderTransform>
-                <Image.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="38" Opacity="0.9" Direction="-64"/>
-                </Image.Effect>
-            </Image>
-        </Canvas>
+        <!-- 列表容器 - 修复布局 -->
+        <Grid x:Name="GridList" Margin="0,100,0,0" Height="400" Opacity="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Canvas>
-            <Grid x:Name="WorldGrid" Width="370" Height="400" Canvas.Right="5" Canvas.Top="80"/>
-            <Grid x:Name="PlayerGrid" Width="370" Height="400" Canvas.Left="5" Canvas.Top="80"/>
-        </Canvas>
+            <!-- 左侧玩家列表容器 -->
+            <Border x:Name="border1" Grid.Column="0" 
+            Background="#F0F0F0" 
+            CornerRadius="10"
+            BorderBrush="#DDDDDD" 
+            BorderThickness="1"
+            Margin="10,0,5,0">
+                <Grid x:Name="PlayerGrid" Background="Transparent" Margin="0,0,0,-15">
+                    <Grid.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="15" Opacity="0.7" Direction="270"/>
+                    </Grid.Effect>
+                </Grid>
+            </Border>
+
+            <!-- 右侧世界列表容器 -->
+            <Border x:Name="border" Grid.Column="2" 
+            Background="#F0F0F0" 
+            CornerRadius="10"
+            BorderBrush="#DDDDDD" 
+            BorderThickness="1"
+            Margin="5,0,10,0">
+                <Grid x:Name="WorldGrid" Background="Transparent">
+                    <Grid.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="15" Opacity="0.7" Direction="270"/>
+                    </Grid.Effect>
+                </Grid>
+            </Border>
+        </Grid>
+
 
         <Canvas x:Name="AS" Grid.RowSpan="2">
             <Canvas.RenderTransform>
