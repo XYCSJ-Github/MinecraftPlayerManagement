@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Dictionary1.xaml"/>
+                <ResourceDictionary Source="/Resource/Dictionary1.xaml"/>
                 <ResourceDictionary Source="/Storyboard.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
