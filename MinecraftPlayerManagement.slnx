@@ -13,7 +13,7 @@
     <BuildDependency Project="mpm/mpm.vcxproj" />
   </Project>
   <Project Path="MinecraftPlayerManagent_Installer/MinecraftPlayerManagent_Installer.vdproj" Type="Installer">
-    <BuildDependency Project="mpm/mpm.vcxproj" />
+    <Build />
   </Project>
   <Project Path="mpm/mpm.vcxproj" Id="d718aff1-aca0-4785-ae20-0146fef38281">
     <Platform Solution="*|ARM" Project="x64" />
