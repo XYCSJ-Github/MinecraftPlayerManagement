@@ -136,3 +136,68 @@ enum StructType
 	*/
 	PIWIL
 };
+
+/*
+* 命令
+* @param EMPTY 空命令
+* @param EXIT 退出
+* @param BREAK 返回
+* @param OPEN_WORLD
+* @param OPEN_PLAYER
+* @param LIST_WORLD
+* @param LIST_PLAYER
+* @param DEL_PLAYER
+* @param DEL_WORLD
+* @param DEL_PW
+* @param DEL_JS
+* @param NULL_BACK
+* @param REFRESH
+*/
+enum Command
+{
+	//空命令
+	EMPTY_COMMAND,
+	//设置路径
+	M_SET_PATH,
+	//退出
+	EXIT,
+	//返回
+	BREAK,
+	//open world
+	OPEN_WORLD,
+	//open player
+	OPEN_PLAYER,
+	//list world
+	LIST_WORLD,
+	//list player
+	LIST_PLAYER,
+	//del player
+	DEL_PLAYER,
+	//del world
+	DEL_WORLD,
+	//del pw
+	DEL_PW,
+	//del js
+	DEL_JS,
+	//unknown command
+	NULL_BACK,
+	//refresh
+	REFRESH
+};
+
+/*
+* 加载模式
+* @param CLIENT 客户端模式
+* @param SERVER 服务器模式
+*/
+enum LoadMode
+{
+	//保持
+	KEEP,
+	//无
+	EMPTY,
+	//客户端模式
+	CLIENT,
+	//服务器模式
+	SERVER
+};

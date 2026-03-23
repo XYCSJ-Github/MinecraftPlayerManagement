@@ -60,6 +60,15 @@
     <ClInclude Include="CDJS.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SharedMemory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandRunning.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundRunning.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="Enums.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -107,7 +116,13 @@
     <ClCompile Include="CC.h">
       <Filter>头文件</Filter>
     </ClCompile>
-    <ClCompile Include="old_main.cpp">
+    <ClCompile Include="SharedMemory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandRunning.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundRunning.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

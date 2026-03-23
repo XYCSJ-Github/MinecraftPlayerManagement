@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <ImageSource x:Key="Icon">/Resource/MC_ICON.png</ImageSource>
+    <ImageSource x:Key="Back_Button">/Resource/BackButton.png</ImageSource>
+    <ImageSource x:Key="GroundSide">/Resource/GroundSide.png</ImageSource>
+    <ImageSource x:Key="Edit">/Resource/Edit.png</ImageSource>
+    <ImageSource x:Key="Client_tag">/Resource/Client_tag.png</ImageSource>
+    <ImageSource x:Key="Server_tag">/Resource/Server_tag.png</ImageSource>
+    <ImageSource x:Key="OK">/Resource/OK_Button.png</ImageSource>
+    <ImageSource x:Key="Choose">/Resource/Choose.png</ImageSource>
+
+</ResourceDictionary>

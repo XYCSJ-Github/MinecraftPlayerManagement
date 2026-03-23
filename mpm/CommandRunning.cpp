@@ -92,7 +92,7 @@ int ComRun(bool StartWithArgv, p_mpm mp)
 			catch (const CommandError& e)
 			{
 				LOG_ERROR(e.what());
-				Signal = 211;
+				Signal = (int)Command::NULL_BACK;
 			}
 
 			switch (Signal)//命令处理

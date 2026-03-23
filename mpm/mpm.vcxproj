@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -78,9 +78,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\net10.0-windows\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\net10.0-windows\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -155,12 +157,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BackgroundRunning.h" />
     <ClInclude Include="CDJS.h" />
     <ClInclude Include="CDP.h" />
     <ClInclude Include="CDPW.h" />
     <ClInclude Include="CDW.h" />
     <ClInclude Include="CLP.h" />
     <ClInclude Include="CLW.h" />
+    <ClInclude Include="CommandRunning.h" />
     <ClInclude Include="COP.h" />
     <ClInclude Include="COW.h" />
     <ClInclude Include="Enums.h" />
@@ -169,10 +173,12 @@
     <ClInclude Include="Logout.h" />
     <ClInclude Include="p_mpm.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SharedMemory.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="throw_error.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BackgroundRunning.cpp" />
     <ClCompile Include="CC.h" />
     <ClCompile Include="CDJS.cpp" />
     <ClCompile Include="CDP.cpp" />
@@ -180,16 +186,15 @@
     <ClCompile Include="CDW.cpp" />
     <ClCompile Include="CLP.cpp" />
     <ClCompile Include="CLW.cpp" />
+    <ClCompile Include="CommandRunning.cpp" />
     <ClCompile Include="COP.cpp" />
     <ClCompile Include="COW.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="Logout.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="old_main.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="piwbd.cpp" />
     <ClCompile Include="p_mpm.cpp" />
+    <ClCompile Include="SharedMemory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mpm.rc" />

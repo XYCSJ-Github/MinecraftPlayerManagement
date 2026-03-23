@@ -110,6 +110,7 @@ void COP::RunCommand()
 		out += "|进度：" + piwil.playerinworldinfo_list[x].adv_path + "|数据：" + piwil.playerinworldinfo_list[x].pd_path + piwil.playerinworldinfo_list[x].pd_old_path + piwil.playerinworldinfo_list[x].cosarmor_path + "|统计：" + piwil.playerinworldinfo_list[x].st_path + "\n";
 	}
 
+	this->SetPlayerInWorldInfoList(piwil);
 	SetShow(out);
 	return;
 }

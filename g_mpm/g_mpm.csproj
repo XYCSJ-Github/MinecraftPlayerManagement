@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <PackageOutputPath>$(ProjectPath)</PackageOutputPath>
+    <BaseOutputPath>D:\Visual Studio Work\MinecraftPlayerManagement\x64</BaseOutputPath>
+    <UseWindowsForms>False</UseWindowsForms>
+    <ApplicationIcon>MPM_ICON.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Res\**" />
+    <EmbeddedResource Remove="Res\**" />
+    <None Remove="Res\**" />
+    <Page Remove="Res\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="SDS.cs" />
+    <Compile Remove="SMC.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resource\BackButton.png" />
+    <None Remove="Resource\Choose.png" />
+    <None Remove="Resource\Client_tag.png" />
+    <None Remove="Resource\Edit.png" />
+    <None Remove="Resource\GroundSide.png" />
+    <None Remove="Resource\MC_ICON.png" />
+    <None Remove="Resource\mpm.exe" />
+    <None Remove="Resource\OK_Button.png" />
+    <None Remove="Resource\Server_tag.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="mpm.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MPM_ICON.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\BackButton.png" />
+    <Resource Include="Resource\Choose.png" />
+    <Resource Include="Resource\Client_tag.png" />
+    <Resource Include="Resource\Edit.png" />
+    <Resource Include="Resource\GroundSide.png" />
+    <Resource Include="Resource\MC_ICON.png" />
+    <Resource Include="Resource\OK_Button.png" />
+    <Resource Include="Resource\Server_tag.png" />
+  </ItemGroup>
+</Project>

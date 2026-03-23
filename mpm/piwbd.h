@@ -34,6 +34,9 @@ public:
 	*/
 	inline const std::string GetShow() { if (this->show.empty()) { throw NullString(); } return this->show; }
 
+	//获取PlayerInWorldInfoList
+	inline const PlayerInWorldInfoList GetPlayerInWorldInfoList() { return piwil; }
+
 	/*
 	* 加载指定世界的所有list
 	* @param world_path 存档路径
@@ -54,6 +57,9 @@ public:
 	* @param world_path 存档路径
 	*/
 	void LoadStatsList(std::string world_path);
+
+	//设置p_mpm->LastCommand
+	inline void SetAdditionalCommand(std::string command) { this->SetLastCommand(command); }
 
 private:
 	/*
@@ -90,6 +96,9 @@ protected:
 	*/
 	void DeletePlayersFiles(PlayerInWorldInfoList _piwil, std::string& _out, int x);
 
+	//设置PlayerInWorldInfoList
+	inline void SetPlayerInWorldInfoList(PlayerInWorldInfoList piwil) { this->piwil = piwil; }
+
 private:
 	//Advancements结构体STL
 	std::vector<PlayerInfo_AS> advancements_list;
@@ -101,6 +110,8 @@ private:
 	std::vector<PlayerInWorldInfo> piw_list;
 	//输出到控制台的字符串
 	std::string show;
+	//集中存储数据
+	PlayerInWorldInfoList piwil;
 
 public:
 	//重载>>运算符使两个同piwbd或p_mpm父类对象可以传递基础数据

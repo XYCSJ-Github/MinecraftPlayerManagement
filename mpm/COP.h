@@ -7,6 +7,6 @@ class COP : public piwbd
 public:
 	COP() = default;
 	~COP() = default;
-	
+
 	virtual void RunCommand() override;
-}; 
+};

@@ -236,6 +236,7 @@ void p_mpm::ReloadList(void)
 	{
 		this->LoadWorldList();
 		this->LoadUserList();
+		this->LoadWorldListSTL();
 	}
 	catch (const std::exception& e)
 	{
@@ -270,7 +271,7 @@ int p_mpm::ProcessCommand(const std::string _command)
 	{
 		try
 		{
-			l2 = _command.substr(5,5);
+			l2 = _command.substr(5, 5);
 		}
 		catch (const std::exception&)
 		{
