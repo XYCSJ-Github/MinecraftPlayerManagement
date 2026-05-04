@@ -36,21 +36,6 @@ enum WriteStatus
 };
 
 /*
-* 通信命令
-* @param EMPTY 无命令
-* @param SET_PATH 设置加载路径
-*/
-enum MemoryCommand
-{
-	//无命令
-	EMPTY_COMMAND,
-	//就绪
-	READY,
-	//设置加载路径
-	SET_PATH
-};
-
-/*
 * 执行状态
 * @param EMPTY_STATUS 无状态
 * @param SUCCESSFUL 成功
