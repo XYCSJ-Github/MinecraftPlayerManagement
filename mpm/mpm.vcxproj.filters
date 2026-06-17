@@ -18,9 +18,6 @@
     <ClInclude Include="func.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Logout.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -75,9 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Logout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="p_mpm.cpp">
