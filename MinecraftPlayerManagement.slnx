@@ -10,6 +10,7 @@
     <File Path=".editorconfig" />
   </Folder>
   <Project Path="../Logc/Logc.vcxitems" Id="a5131db1-b423-4bf7-b1ab-63a4d3dc7016" />
+  <Project Path="../nlohmann-json/nlohmann-json.vcxitems" Id="62d37b9e-69f7-4bf8-9683-a6bbf2577287" />
   <Project Path="g_mpm/g_mpm.csproj" Id="31539634-a855-42ac-aef8-83260e9497c8">
     <BuildDependency Project="mpm/mpm.vcxproj" />
   </Project>

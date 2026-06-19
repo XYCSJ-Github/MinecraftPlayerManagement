@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Enums.h"
-#include "include/nlohmann/json.hpp"
+#include "json.hpp"
 #include "Logout.h"
 #include "Struct.h"
 #include "throw_error.h"
