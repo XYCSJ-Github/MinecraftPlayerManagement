@@ -1,7 +1,7 @@
 ﻿//main.cpp 人口点文件
 #include "CC.h"
 #include "Enums.h"
-#include "Logout.h"
+#include "Logout/Logout.h"
 #include "CommandRunning.h"
 #include "BackgroundRunning.h"
 

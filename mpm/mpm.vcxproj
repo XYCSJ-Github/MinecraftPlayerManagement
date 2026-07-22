@@ -55,10 +55,6 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared">
-    <Import Project="..\..\Logc\Logc.vcxitems" Label="Shared" />
-    <Import Project="..\..\nlohmann-json\nlohmann-json.vcxitems" Label="Shared" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -79,11 +75,11 @@
     <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>D:\Projects\Visual Studio Projects\MinecraftPlayerManagement\mpm\nlohmann-json;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\net10.0-windows\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\Visual Studio Work\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Projects\Visual Studio Projects\MinecraftPlayerManagement\mpm\nlohmann-json;D:\Projects\Visual Studio Projects\MinecraftPlayerManagement\mpm\Logout;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\net10.0-windows\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -170,6 +166,7 @@
     <ClInclude Include="COP.h" />
     <ClInclude Include="COW.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="Logout\Logout.h" />
     <ClInclude Include="piwbd.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="p_mpm.h" />
@@ -191,6 +188,7 @@
     <ClCompile Include="COP.cpp" />
     <ClCompile Include="COW.cpp" />
     <ClCompile Include="func.cpp" />
+    <ClCompile Include="Logout\Logout.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="piwbd.cpp" />
     <ClCompile Include="p_mpm.cpp" />

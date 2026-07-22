@@ -2,6 +2,6 @@
 #pragma once
 
 #include "CC.h"
-#include "Logout.h"
+#include "Logout/Logout.h"
 
 int ComRun(bool StartWithArgv, p_mpm mp);

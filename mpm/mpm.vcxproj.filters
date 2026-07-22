@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Logout">
+      <UniqueIdentifier>{caeba5d0-f3c9-45d4-bbea-821e09a83e8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="func.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="Enums.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Logout\Logout.h">
+      <Filter>Logout</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
@@ -118,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="BackgroundRunning.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Logout\Logout.cpp">
+      <Filter>Logout</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Enums.h"
-#include "Logout.h"
+#include "Logout/Logout.h"
 #include "p_mpm.h"
 #include "Struct.h"
 #include <chrono>

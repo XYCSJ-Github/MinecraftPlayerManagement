@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CC.h"
-#include "Logout.h"
+#include "Logout/Logout.h"
 #include "SharedMemory.h"
 
 int BgRun();

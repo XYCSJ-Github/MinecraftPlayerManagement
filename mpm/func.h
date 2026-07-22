@@ -3,7 +3,7 @@
 
 #include "Enums.h"
 #include "json.hpp"
-#include "Logout.h"
+#include "Logout/Logout.h"
 #include "Struct.h"
 #include "throw_error.h"
 #include <filesystem>
