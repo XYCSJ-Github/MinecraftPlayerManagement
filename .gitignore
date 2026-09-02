@@ -362,3 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 *.exe
+
+# AllinOne 启动器：构建时自动生成的资源脚本（含本机绝对路径）
+MinecraftPlayerManagement/EmbeddedResources.rc
+
