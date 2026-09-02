@@ -10,4 +10,5 @@
     <Platform Solution="*|ARM" Project="x64" />
     <Platform Solution="*|ARM64" Project="x64" />
   </Project>
+  <Project Path="mpm_GUI/mpm_GUI.csproj" Id="146c2f85-d75c-4f2f-9fb5-366704cccdac" />
 </Solution>
