@@ -15,8 +15,8 @@ public enum EngineState
 }
 
 /// <summary>
-/// 管理 mpm.exe(bg) 引擎生命周期并通过共享内存收发命令。
-/// 服务端创建内核对象，拉起 C++ 引擎，串行执行命令队列。
+/// 管理 mpm.exe(bg) mpm生命周期并通过共享内存收发命令。
+/// 服务端创建内核对象，拉起 C++ mpm，串行执行命令队列。
 /// </summary>
 public sealed class MpmEngineService : IDisposable
 {
@@ -73,12 +73,12 @@ public sealed class MpmEngineService : IDisposable
     {
         _enginePath = mpmPath;
         SetState(EngineState.Connecting);
-        Log($"准备启动引擎: {mpmPath}");
+        Log($"准备启动mpm: {mpmPath}");
 
         if (!File.Exists(mpmPath))
         {
             SetState(EngineState.Error);
-            Log("未找到 mpm.exe，请检查引擎路径");
+            Log("未找到 mpm.exe，请检查mpm路径");
             return false;
         }
 
@@ -121,7 +121,7 @@ public sealed class MpmEngineService : IDisposable
 
             Log("共享内存与同步对象创建完成");
 
-            // 3. 拉起 C++ 引擎(bg)
+            // 3. 拉起 C++ mpm(bg)
             var psi = new ProcessStartInfo
             {
                 FileName = mpmPath,
@@ -141,18 +141,18 @@ public sealed class MpmEngineService : IDisposable
             }
             catch (Exception ex)
             {
-                Log($"启动引擎失败: {ex.Message}");
+                Log($"启动mpm失败: {ex.Message}");
                 SetState(EngineState.Error);
                 return false;
             }
 
-            Log($"引擎已启动 (PID {_proc.Id})，等待握手...");
+            Log($"mpm已启动 (PID {_proc.Id})，等待握手...");
 
             // 4. 握手：等待 C++ 设置初始化事件
             bool ready = WaitForHandshake();
             if (!ready)
             {
-                Log("握手超时或引擎提前退出");
+                Log("握手超时或mpm提前退出");
                 SetState(EngineState.Error);
                 return false;
             }
@@ -163,7 +163,7 @@ public sealed class MpmEngineService : IDisposable
             _worker.Start();
 
             SetState(EngineState.Ready);
-            Log("引擎就绪");
+            Log("mpm就绪");
             return true;
         }
         catch (Exception ex)
@@ -182,7 +182,7 @@ public sealed class MpmEngineService : IDisposable
         {
             if (_proc != null && _proc.HasExited)
             {
-                Log($"引擎提前退出，退出码 {(_proc.ExitCode.ToString() ?? "?")}");
+                Log($"mpm提前退出，退出码 {(_proc.ExitCode.ToString() ?? "?")}");
                 return false;
             }
             if (sw.ElapsedMilliseconds - lastLog > 5000)
@@ -204,7 +204,7 @@ public sealed class MpmEngineService : IDisposable
     private void OnEngineExited(object? sender, EventArgs e)
     {
         if (_workerStop) return;
-        Log($"引擎进程已退出 (退出码 {(_proc?.ExitCode.ToString() ?? "?")})");
+        Log($"mpm进程已退出 (退出码 {(_proc?.ExitCode.ToString() ?? "?")})");
         _workerStop = true;
         try { _queue?.CompleteAdding(); } catch { /* ignore */ }
         SetState(EngineState.Stopped);
@@ -215,7 +215,7 @@ public sealed class MpmEngineService : IDisposable
         await Task.Run(() => StopSync()).ConfigureAwait(false);
     }
 
-    /// <summary>同步停止引擎（用于退出路径，避免依赖 UI 调度器续体）。</summary>
+    /// <summary>同步停止mpm（用于退出路径，避免依赖 UI 调度器续体）。</summary>
     public void StopSync()
     {
         try
@@ -229,7 +229,7 @@ public sealed class MpmEngineService : IDisposable
             SendExitCommand();
             WaitForProcessExit();
             CleanupCore();
-            Log("引擎已停止");
+            Log("mpm已停止");
         }
         catch
         {
@@ -353,16 +353,16 @@ public sealed class MpmEngineService : IDisposable
         uint result;
         do
         {
-            if (_workerStop) throw new MpmException("引擎已停止");
+            if (_workerStop) throw new MpmException("mpm已停止");
             result = NativeMethods.WaitForSingleObject(_hRecv, 200);
             if (result == NativeMethods.WaitObject0) break;
             if (_proc != null && _proc.HasExited)
-                throw new MpmException("引擎进程已退出");
+                throw new MpmException("mpm进程已退出");
         }
         while (result != NativeMethods.WaitFailed && sw.ElapsedMilliseconds < timeoutMs);
 
         if (result != NativeMethods.WaitObject0)
-            throw new MpmException("等待引擎回复超时");
+            throw new MpmException("等待mpm回复超时");
 
         // 读取回复（持有互斥锁）
         if (NativeMethods.WaitForSingleObject(_hMutex, 5000) != NativeMethods.WaitObject0)
@@ -425,7 +425,7 @@ public sealed class MpmEngineService : IDisposable
     private Task<MpmReply> EnqueueAsync(MpmCommand command, byte[] additional, int timeoutMs = DefaultTimeoutMs)
     {
         if (_queue == null || _workerStop)
-            throw new MpmException("引擎未就绪，请先启动引擎");
+            throw new MpmException("mpm未就绪，请先启动mpm");
 
         var req = new EngineRequest { Command = command, Additional = additional, TimeoutMs = timeoutMs };
         _queue.Add(req);
@@ -538,7 +538,7 @@ public sealed class MpmEngineService : IDisposable
                     if (string.IsNullOrEmpty(module)) continue;
                     if (string.Equals(Path.GetFullPath(module), full, StringComparison.OrdinalIgnoreCase))
                     {
-                        Log($"终止残留引擎进程 PID {p.Id}");
+                        Log($"终止残留mpm进程 PID {p.Id}");
                         p.Kill(true);
                     }
                 }

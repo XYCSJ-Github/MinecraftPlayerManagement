@@ -109,6 +109,13 @@ internal static class SmText
 {
     private static readonly UTF8Encoding StrictUtf8 = new(false, true);
 
+    static SmText()
+    {
+        // 注册系统代码页（GBK 等），否则 .NET 默认仅支持 UTF-8/Unicode
+        try { Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); }
+        catch { /* 旧框架无该类型时忽略 */ }
+    }
+
     private static Encoding? _acp;
     /// <summary>当前 ANSI 代码页编码，用于文件系统路径/目录名。</summary>
     private static Encoding Acp

@@ -6,7 +6,7 @@ using mpm_GUI.Services;
 
 namespace mpm_GUI.ViewModels;
 
-/// <summary>概览页：连接引擎、选择根目录、快捷统计。</summary>
+/// <summary>概览页：连接mpm、选择根目录、快捷统计。</summary>
 public partial class OverviewViewModel : PageViewModel
 {
     private readonly ShellViewModel _shell;
@@ -30,7 +30,7 @@ public partial class OverviewViewModel : PageViewModel
     private bool _isConnected;
 
     [ObservableProperty]
-    private string _connectionText = "引擎未连接";
+    private string _connectionText = "mpm未连接";
 
     [ObservableProperty]
     private string _enginePath = string.Empty;
@@ -59,10 +59,10 @@ public partial class OverviewViewModel : PageViewModel
         IsConnected = state == EngineState.Ready;
         ConnectionText = state switch
         {
-            EngineState.Ready => "引擎已就绪",
-            EngineState.Connecting => "正在连接引擎...",
-            EngineState.Error => "引擎异常",
-            _ => "引擎未连接",
+            EngineState.Ready => "mpm已就绪",
+            EngineState.Connecting => "正在连接mpm...",
+            EngineState.Error => "mpm异常",
+            _ => "mpm未连接",
         };
     }
 
@@ -112,7 +112,7 @@ public partial class OverviewViewModel : PageViewModel
         {
             if (!Engine.IsConnected)
             {
-                Notifier.Show("引擎未就绪", true);
+                Notifier.Show("mpm未就绪", true);
                 return;
             }
             await _shell.ReloadAllAsync();

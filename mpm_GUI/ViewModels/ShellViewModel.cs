@@ -5,7 +5,7 @@ using mpm_GUI.Services;
 
 namespace mpm_GUI.ViewModels;
 
-/// <summary>主窗口宿主视图模型：协调四个页签、引擎、提示栏。</summary>
+/// <summary>主窗口宿主视图模型：协调四个页签、mpm、提示栏。</summary>
 public partial class ShellViewModel : ObservableObject
 {
     private readonly MpmEngineService _engine;
@@ -61,7 +61,7 @@ public partial class ShellViewModel : ObservableObject
         Settings.LoadSettingsIntoUi();
     }
 
-    /// <summary>确保引擎处于就绪状态，必要时启动。</summary>
+    /// <summary>确保mpm处于就绪状态，必要时启动。</summary>
     public async Task<bool> EnsureEngineStartedAsync()
     {
         if (_engine.IsConnected) return true;
@@ -83,13 +83,13 @@ public partial class ShellViewModel : ObservableObject
         bool ok = await _engine.StartAsync(path);
         if (!ok)
         {
-            Notifier.Show("引擎启动失败：请检查 mpm.exe 路径与运行权限", true);
+            Notifier.Show("mpm启动失败：请检查 mpm.exe 路径与运行权限", true);
             return false;
         }
         return true;
     }
 
-    /// <summary>重启引擎（保留当前根目录状态并重新加载）。</summary>
+    /// <summary>重启mpm（保留当前根目录状态并重新加载）。</summary>
     public async Task RestartEngineAsync()
     {
         await _engine.StopAsync();

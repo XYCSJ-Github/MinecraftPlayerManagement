@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace mpm_GUI.Services;
 
 /// <summary>
-/// 端到端自检：构造一个迷你客户端根目录，验证引擎握手、
+/// 端到端自检：构造一个迷你客户端根目录，验证mpm握手、
 /// 路径识别、列表与详情命令全链路。经 `--smoke` 参数由 App 触发。
 /// </summary>
 internal static class SmokeRunner
@@ -43,17 +43,17 @@ internal static class SmokeRunner
 
             string enginePath = EngineLocator.Find(new SettingsStore())
                 ?? throw new InvalidOperationException("未找到 mpm.exe");
-            sb.AppendLine($"引擎: {enginePath}");
-            Progress($"引擎路径: {enginePath}");
+            sb.AppendLine($"mpm: {enginePath}");
+            Progress($"mpm路径: {enginePath}");
 
             root = CreateFixture(baseDir);
             sb.AppendLine($"测试目录: {root}");
             Progress($"测试目录: {root}");
 
-            Progress("启动引擎...");
+            Progress("启动mpm...");
             bool ok = await engine.StartAsync(enginePath);
             Progress($"StartAsync -> {ok}");
-            Assert(sb, "引擎握手(StartAsync)", ok);
+            Assert(sb, "mpm握手(StartAsync)", ok);
 
             Progress("设置根目录...");
             string name = await engine.OpenPathAsync(root);
@@ -101,6 +101,13 @@ internal static class SmokeRunner
             catch (MpmException) { threw = true; }
             Assert(sb, "不存在的玩家应报错", threw);
 
+            // 诊断：无效路径触发的 mpm 报错文本与原始字节
+            string? errText = null;
+            try { await engine.OpenPathAsync(Path.Combine(root, "no_such_dir")); }
+            catch (MpmException ex) { errText = ex.Message; }
+            Progress($"无效路径错误文本: {errText}");
+            Assert(sb, "无效路径应报错", errText != null, $"文本={errText}");
+
             sb.AppendLine("== PASS ==");
             Progress("== PASS ==");
         }
@@ -112,7 +119,7 @@ internal static class SmokeRunner
         }
         finally
         {
-            Progress("停止引擎...");
+            Progress("停止mpm...");
             try { await engine.StopAsync(); }
             catch (Exception ex) { Progress($"StopAsync 异常: {ex.Message}"); }
             Progress("清理目录...");
@@ -122,7 +129,7 @@ internal static class SmokeRunner
             lock (recent)
             {
                 sb.AppendLine();
-                sb.AppendLine("--- 引擎日志(节选) ---");
+                sb.AppendLine("--- mpm日志(节选) ---");
                 foreach (var line in recent) sb.AppendLine(line);
             }
             Progress("完成");

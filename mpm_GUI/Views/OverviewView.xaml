@@ -61,7 +61,7 @@
                                 Command="{Binding BrowseFolderCommand}" Margin="0,0,10,0"/>
                         <Button Content="刷新数据" Style="{StaticResource FlatButton}"
                                 Command="{Binding RefreshCommand}" Margin="0,0,10,0"/>
-                        <Button Content="重启引擎" Style="{StaticResource FlatButton}"
+                        <Button Content="重启mpm" Style="{StaticResource FlatButton}"
                                 Command="{Binding RestartEngineCommand}" Margin="0,0,10,0"/>
                         <Button Style="{StaticResource IconButton}" ToolTip="在资源管理器中打开当前目录"
                                 Command="{Binding OpenRootFolderCommand}">
@@ -75,7 +75,7 @@
                 </Grid>
             </Border>
 
-            <!-- 统计与引擎状态 -->
+            <!-- 统计与mpm状态 -->
             <Grid Margin="0,14,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.4*"/>
@@ -85,7 +85,7 @@
 
                 <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="20,18" Margin="0,0,14,0">
                     <StackPanel>
-                        <TextBlock Text="引擎状态" FontSize="13" FontWeight="SemiBold"
+                        <TextBlock Text="mpm状态" FontSize="13" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextSecondaryBrush}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                             <Ellipse Margin="0,0,8,0">

@@ -7,7 +7,7 @@ using mpm_GUI.Services;
 
 namespace mpm_GUI.ViewModels;
 
-/// <summary>设置页：引擎路径、状态与运行日志。</summary>
+/// <summary>设置页：mpm路径、状态与运行日志。</summary>
 public partial class SettingsViewModel : PageViewModel
 {
     [ObservableProperty]

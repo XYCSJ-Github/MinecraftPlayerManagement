@@ -1,4 +1,4 @@
-﻿<Window x:Class="mpm_GUI.MainWindow"
+<Window x:Class="mpm_GUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -39,7 +39,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- 引擎状态 -->
+                <!-- mpm状态 -->
                 <Border Grid.Column="1" Padding="12,5" CornerRadius="14"
                         VerticalAlignment="Center"
                         Background="#F8F9FA" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
@@ -154,7 +154,7 @@
                            Text="{Binding Settings.EnginePath}"
                            TextTrimming="CharacterEllipsis"/>
                 <TextBlock Grid.Column="1" Foreground="{StaticResource TextMutedBrush}" FontSize="11"
-                           Text="由 C++ mpm 引擎驱动 · 删除的数据会移入回收站"/>
+                           Text="基于 mpm 共享内存通信 · 删除的数据会移入回收站"/>
             </Grid>
         </Border>
     </Grid>

@@ -7,10 +7,10 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4">
         <StackPanel Margin="6,10,6,16">
-            <!-- 引擎配置 -->
+            <!-- mpm配置 -->
             <Border Style="{StaticResource CardBorder}" Padding="24,20">
                 <StackPanel>
-                    <TextBlock Text="引擎配置" FontSize="16" FontWeight="SemiBold"
+                    <TextBlock Text="mpm配置" FontSize="16" FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimaryBrush}"/>
                     <TextBlock Text="应用会以「后台模式」启动 mpm.exe 并通过共享内存通信。" FontSize="12"
                                Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,14"/>
@@ -32,7 +32,7 @@
                     </Grid>
 
                     <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
-                        <TextBlock Text="引擎状态" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}"
+                        <TextBlock Text="mpm状态" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}"
                                    VerticalAlignment="Center"/>
                         <Ellipse Margin="12,0,6,0">
                             <Ellipse.Style>
@@ -49,15 +49,15 @@
                         <TextBlock Text="{Binding EngineStatus}" FontSize="13" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
 
-                        <Button Content="启动引擎" Style="{StaticResource FlatButton}" Margin="24,0,8,0"
+                        <Button Content="启动mpm" Style="{StaticResource FlatButton}" Margin="24,0,8,0"
                                 Command="{Binding StartEngineCommand}"/>
-                        <Button Content="重启引擎" Style="{StaticResource FlatButton}" Margin="0,0,8,0"
+                        <Button Content="重启mpm" Style="{StaticResource FlatButton}" Margin="0,0,8,0"
                                 Command="{Binding RestartEngineCommand}"/>
-                        <Button Content="停止引擎" Style="{StaticResource DangerButton}"
+                        <Button Content="停止mpm" Style="{StaticResource DangerButton}"
                                 Command="{Binding StopEngineCommand}"/>
                         <Button Style="{StaticResource IconButton}" Margin="8,0,0,0" Content="&#xE838;"
                                 Command="{Binding OpenEngineFolderCommand}"
-                                ToolTip="打开引擎所在目录" FontFamily="Segoe MDL2 Assets"/>
+                                ToolTip="打开mpm所在目录" FontFamily="Segoe MDL2 Assets"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

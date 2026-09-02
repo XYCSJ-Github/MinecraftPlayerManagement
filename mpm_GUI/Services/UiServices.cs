@@ -48,8 +48,8 @@ public sealed class DialogService
     {
         var dialog = new Microsoft.Win32.OpenFileDialog
         {
-            Title = "选择 mpm.exe 引擎",
-            Filter = "mpm 引擎|mpm.exe",
+            Title = "选择 mpm.exe 程序",
+            Filter = "mpm 程序|mpm.exe",
             CheckFileExists = true,
         };
         return dialog.ShowDialog() == true ? dialog.FileName : null;
