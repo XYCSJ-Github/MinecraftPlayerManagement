@@ -35,4 +35,10 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="..\mc_icon.ico">
+      <Link>mc_icon.ico</Link>
+    </Resource>
+  </ItemGroup>
+
 </Project>

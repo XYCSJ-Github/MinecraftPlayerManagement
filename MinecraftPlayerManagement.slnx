@@ -9,6 +9,7 @@
   <Project Path="MinecraftPlayerManagement/MinecraftPlayerManagement.vcxproj" Id="1fecc8dc-f9a0-43e3-b986-46c596ab48b6">
     <Platform Solution="*|ARM" Project="x64" />
     <Platform Solution="*|ARM64" Project="x64" />
+    <BuildDependency Project="mpm_GUI/mpm_GUI.csproj" />
   </Project>
   <Project Path="mpm/mpm.vcxproj" Id="d718aff1-aca0-4785-ae20-0146fef38281">
     <Platform Solution="*|ARM" Project="x64" />

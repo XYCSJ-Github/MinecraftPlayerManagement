@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:mpm_GUI.Views"
         mc:Ignorable="d"
-        Title="mpm 玩家档案管理" Height="760" Width="1180"
+        Title="mpm 玩家档案管理" Icon="/mc_icon.ico" Height="760" Width="1180"
         MinHeight="620" MinWidth="1000"
         Background="{StaticResource WindowBgBrush}"
         FontFamily="Segoe UI" FontSize="13"

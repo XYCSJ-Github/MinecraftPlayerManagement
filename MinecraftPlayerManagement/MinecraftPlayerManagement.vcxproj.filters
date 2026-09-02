@@ -4,6 +4,9 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ResourceCompile Include="AppIcon.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
     <ResourceCompile Include="EmbeddedResources.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>

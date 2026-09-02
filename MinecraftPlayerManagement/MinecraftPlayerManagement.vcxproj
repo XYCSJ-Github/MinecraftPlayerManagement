@@ -156,6 +156,7 @@
 
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ResourceCompile Include="AppIcon.rc" />
     <ResourceCompile Include="EmbeddedResources.rc" />
   </ItemGroup>
 
