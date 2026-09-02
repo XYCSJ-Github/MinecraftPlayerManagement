@@ -36,6 +36,7 @@ internal static class SmokeRunner
         };
 
         string root = string.Empty;
+        string srvRoot = string.Empty;
         try
         {
             sb.AppendLine("== mpm GUI 自检开始 ==");
@@ -101,6 +102,17 @@ internal static class SmokeRunner
             catch (MpmException) { threw = true; }
             Assert(sb, "不存在的玩家应报错", threw);
 
+            // 服务端形态目录（无 usercache.json、含世界子目录）也应能正常打开
+            srvRoot = CreateServerFixture(baseDir);
+            Progress($"服务端测试目录: {srvRoot}");
+            string srvName = await engine.OpenPathAsync(srvRoot);
+            Assert(sb, "打开无缓存的服务端目录", srvName.Length > 0 && engine.CurrentMode == LoadMode.SERVER,
+                $"标题={srvName}, 模式={engine.CurrentMode}");
+            var sworlds = await engine.ListWorldsAsync();
+            Assert(sb, "服务端列出世界", sworlds.Any(w => w.Name == "Alpha"), $"世界={string.Join(",", sworlds.Select(w => w.Name))}");
+            var splayers = await engine.ListPlayersAsync();
+            Assert(sb, "服务端玩家为空(无缓存)", splayers.Count == 0, $"数量={splayers.Count}");
+
             // 诊断：无效路径触发的 mpm 报错文本与原始字节
             string? errText = null;
             try { await engine.OpenPathAsync(Path.Combine(root, "no_such_dir")); }
@@ -123,8 +135,11 @@ internal static class SmokeRunner
             try { await engine.StopAsync(); }
             catch (Exception ex) { Progress($"StopAsync 异常: {ex.Message}"); }
             Progress("清理目录...");
-            try { if (Directory.Exists(root)) Directory.Delete(root, true); }
-            catch { }
+            foreach (var d in new[] { root, srvRoot })
+            {
+                try { if (Directory.Exists(d)) Directory.Delete(d, true); }
+                catch { }
+            }
 
             lock (recent)
             {
@@ -166,6 +181,14 @@ internal static class SmokeRunner
         File.WriteAllText(Path.Combine(world, "stats", Uuid + ".json"), "{}");
 
         Directory.CreateDirectory(Path.Combine(saves, "EmptyWorld"));
+        return root;
+    }
+
+    private static string CreateServerFixture(string baseDir)
+    {
+        // 模拟服务端根目录：无 usercache.json，直接以子目录作为世界
+        string root = Path.Combine(baseDir, "mpm_fixture_server");
+        Directory.CreateDirectory(Path.Combine(root, "Alpha"));
         return root;
     }
 }
