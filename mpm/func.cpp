@@ -2,6 +2,7 @@
 
 #pragma warning(disable : 4996)
 #include "func.h"
+#include <map>
 
 /*
 * 获取存档路径列表
@@ -238,49 +239,55 @@ std::vector<PlayerInfo_Data> GetWorldPlayerData(const std::string base_path)
 		throw UnknownPath();
 	}
 
-	PlayerInfo_Data playerdata_list;
+	// 按 UUID 聚合 playerdata 目录下的三类文件：<uuid>.dat / <uuid>_old.dat / <uuid>.cosa
+	std::map<std::string, PlayerInfo_Data> rows;
 
-	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(playerdata_path))//遍历变量并判断结构体是否填满，存储进容器并清空进行下一个
+	for (const std::filesystem::directory_entry d : std::filesystem::directory_iterator(playerdata_path))
 	{
-		std::string datorold = d.path().string();
-		datorold.erase(0, d.path().string().length() - 4);
-		if (datorold.find(".dat") != std::string::npos)
+		if (!fs::is_regular_file(d.path())) continue;
+
+		const std::string path = d.path().string();
+		const std::string name = d.path().filename().string();
+		LOG_DEBUG("发现玩家数据文件：" + name);
+
+		PlayerInfo_Data* row = nullptr;
+		std::string key;
+
+		if (name.size() > 4 && name.substr(name.size() - 4) == ".dat")
 		{
-			playerdata_list.dat_path = d.path().string();
-			std::string uuid = d.path().string();
-			playerdata_list.uuid = uuid.substr(playerdata_path.length() + 1);
-			playerdata_list.uuid.erase(playerdata_list.uuid.length() - 4, 4);
-			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_path + "\nuuid：" + playerdata_list.uuid);
-		}
-		if (datorold.find("_old") != std::string::npos)
-		{
-			playerdata_list.dat_old_path = d.path().string();
-			std::string uuid = d.path().string();
-			playerdata_list.old_uuid = uuid.substr(playerdata_path.length() + 1);
-			playerdata_list.old_uuid.erase(playerdata_list.old_uuid.length() - 8, 8);
-			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.dat_old_path + "\nuuid：" + playerdata_list.old_uuid);
-		}
-		if (d.path().string().find(".cosa") != std::string::npos)
-		{
-			playerdata_list.cosarmor_path = d.path().string();
-			std::string uuid = d.path().string();
-			playerdata_list.cosarmor_uuid = uuid.substr(playerdata_path.length() + 1);
-			playerdata_list.cosarmor_uuid.erase(playerdata_list.cosarmor_uuid.length() - 9, 9);
-			LOG_DEBUG("发现玩家数据文件：\n路径：" + playerdata_list.cosarmor_path + "\nuuid：" + playerdata_list.cosarmor_uuid);
-		}
-		if (!playerdata_list.dat_path.empty() && !playerdata_list.dat_old_path.empty() && !playerdata_list.cosarmor_path.empty())
-		{
-			if (playerdata_list.uuid == playerdata_list.old_uuid && playerdata_list.uuid == playerdata_list.cosarmor_uuid)
+			std::string stem = name.substr(0, name.size() - 4);
+			if (stem.size() > 4 && stem.substr(stem.size() - 4) == "_old")
 			{
-				pd_list.push_back(playerdata_list);
+				key = stem.substr(0, stem.size() - 4);
+				row = &rows[key];
+				row->dat_old_path = path;
+				row->old_uuid = key;
 			}
-			playerdata_list.cosarmor_path = {};
-			playerdata_list.cosarmor_uuid = {};
-			playerdata_list.dat_old_path = {};
-			playerdata_list.old_uuid = {};
-			playerdata_list.dat_path = {};
-			playerdata_list.uuid = {};
+			else
+			{
+				key = stem;
+				row = &rows[key];
+				row->dat_path = path;
+				row->uuid = key;
+			}
 		}
+		else if (name.size() > 5 && name.substr(name.size() - 5) == ".cosa")
+		{
+			key = name.substr(0, name.size() - 5);
+			row = &rows[key];
+			row->cosarmor_path = path;
+			row->cosarmor_uuid = key;
+		}
+
+		if (row != nullptr)
+		{
+			LOG_DEBUG("已匹配玩家数据 UUID：" + key + "，路径：" + path);
+		}
+	}
+
+	for (auto& kv : rows)
+	{
+		pd_list.push_back(kv.second);
 	}
 
 	return pd_list;

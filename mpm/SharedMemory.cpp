@@ -287,6 +287,8 @@ void SharedMemory::ProcessCommand()
 			mp.ReloadList();
 			COW co;
 			co >> mp;
+			co.SetAdditionalCommand(additional);
+			co.RunCommand();
 			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
 			size_t buf_size = co.GetPlayerInWorldInfoList().SerializeToFixedArray(buf);
 			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
@@ -316,6 +318,8 @@ void SharedMemory::ProcessCommand()
 			mp.ReloadList();
 			COP co;
 			co >> mp;
+			co.SetAdditionalCommand(additional);
+			co.RunCommand();
 			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
 			size_t buf_size = co.GetPlayerInWorldInfoList().SerializeToFixedArray(buf);
 			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)

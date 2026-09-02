@@ -3,10 +3,159 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:mpm_GUI"
+        xmlns:views="clr-namespace:mpm_GUI.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="mpm 玩家档案管理" Height="760" Width="1180"
+        MinHeight="620" MinWidth="1000"
+        Background="{StaticResource WindowBgBrush}"
+        FontFamily="Segoe UI" FontSize="13"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 顶部标题栏 -->
+        <Border Grid.Row="0" Background="{StaticResource CardBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+            <Grid Margin="20,12,20,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="34" Height="34" CornerRadius="8" Background="{StaticResource AccentBrush}">
+                        <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="18"
+                                   Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="mpm 玩家档案管理" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                        <TextBlock Text="通过共享内存管理 Minecraft 存档与玩家数据"
+                                   FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- 引擎状态 -->
+                <Border Grid.Column="1" Padding="12,5" CornerRadius="14"
+                        VerticalAlignment="Center"
+                        Background="#F8F9FA" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Margin="0,0,7,0">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse" BasedOn="{StaticResource StatusDot}">
+                                    <Setter Property="Fill" Value="{StaticResource TextMutedBrush}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Overview.IsConnected}" Value="True">
+                                            <Setter Property="Fill" Value="{StaticResource OkBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock Text="{Binding Overview.ConnectionText}"
+                                   Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- 页签内容 -->
+        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0"
+                    Margin="16,10,16,0"
+                    ItemContainerStyle="{StaticResource TabItemStyle}">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="概览"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:OverviewView DataContext="{Binding Overview}"/>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="存档"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:WorldsView DataContext="{Binding Worlds}"/>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE716;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="玩家"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:PlayersView DataContext="{Binding Players}"/>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="设置"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:SettingsView DataContext="{Binding Settings}"/>
+            </TabItem>
+        </TabControl>
+
+        <!-- 提示条 -->
+        <Border Grid.Row="1" Panel.ZIndex="50" VerticalAlignment="Top" HorizontalAlignment="Center"
+                Margin="0,6,0,0" Padding="16,9" CornerRadius="8" Visibility="{Binding NoticeVisible, Converter={StaticResource BoolToVis}}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="#E8F5E9"/>
+                    <Setter Property="BorderBrush" Value="#A5D6A7"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding NoticeIsError}" Value="True">
+                            <Setter Property="Background" Value="#FFEBEE"/>
+                            <Setter Property="BorderBrush" Value="#EF9A9A"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,8,0"
+                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="&#xE73E;"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NoticeIsError}" Value="True">
+                                    <Setter Property="Text" Value="&#xE7BA;"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Text="{Binding NoticeText}" Foreground="{StaticResource TextPrimaryBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 底部状态栏 -->
+        <Border Grid.Row="2" Background="{StaticResource CardBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0">
+            <Grid Margin="20,8,20,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Foreground="{StaticResource TextMutedBrush}" FontSize="11"
+                           Text="{Binding Settings.EnginePath}"
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="1" Foreground="{StaticResource TextMutedBrush}" FontSize="11"
+                           Text="由 C++ mpm 引擎驱动 · 删除的数据会移入回收站"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
