@@ -1,0 +1,134 @@
+<UserControl x:Class="mpm_GUI.Views.OverviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="700">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4">
+        <StackPanel Margin="6,10,6,16">
+            <!-- 主操作卡片 -->
+            <Border Style="{StaticResource CardBorder}" Padding="26,22">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="开始管理" FontSize="20" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Border Style="{StaticResource BadgeText}" Background="{StaticResource ClientLightBrush}"
+                                    Visibility="{Binding IsClient, Converter={StaticResource BoolToVis}}"
+                                    Margin="0,0,8,0">
+                                <TextBlock Text="客户端 · .minecraft" FontSize="12" Foreground="{StaticResource ClientBrush}"/>
+                            </Border>
+                            <Border Style="{StaticResource BadgeText}" Background="{StaticResource ServerLightBrush}"
+                                    Visibility="{Binding IsServer, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Text="服务端" FontSize="12" Foreground="{StaticResource ServerBrush}"/>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Row="1" Margin="0,16,0,0" Padding="14,12" CornerRadius="8"
+                            Background="#F8F9FA" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="{Binding RootName}" FontSize="15" FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding RootPath}" FontSize="12" Margin="0,4,0,0"
+                                           Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="22" Foreground="{StaticResource TextMutedBrush}"
+                                       VerticalAlignment="Center" Margin="12,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,18,0,0">
+                        <Button Content="选择并打开文件夹" Style="{StaticResource PrimaryButton}"
+                                Command="{Binding BrowseFolderCommand}" Margin="0,0,10,0"/>
+                        <Button Content="刷新数据" Style="{StaticResource FlatButton}"
+                                Command="{Binding RefreshCommand}" Margin="0,0,10,0"/>
+                        <Button Content="重启mpm" Style="{StaticResource FlatButton}"
+                                Command="{Binding RestartEngineCommand}" Margin="0,0,10,0"/>
+                        <Button Style="{StaticResource IconButton}" ToolTip="在资源管理器中打开当前目录"
+                                Command="{Binding OpenRootFolderCommand}">
+                            <TextBlock Text="&#xE838;" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
+                        </Button>
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="3" Margin="0,14,0,0" FontSize="12"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               Text="提示：选择 .minecraft 客户端根目录（含 saves 文件夹）或服务端根目录，应用将自动识别加载模式并读取 usercache 中的玩家列表。"/>
+                </Grid>
+            </Border>
+
+            <!-- 统计与mpm状态 -->
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.4*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="20,18" Margin="0,0,14,0">
+                    <StackPanel>
+                        <TextBlock Text="mpm状态" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <Ellipse Margin="0,0,8,0">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse" BasedOn="{StaticResource StatusDot}">
+                                        <Setter Property="Fill" Value="{StaticResource TextMutedBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                                <Setter Property="Fill" Value="{StaticResource OkBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock Text="{Binding ConnectionText}" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding EnginePath}" FontSize="11" Margin="0,8,0,0"
+                                   Foreground="{StaticResource TextMutedBrush}" TextTrimming="CharacterEllipsis"
+                                   ToolTip="{Binding EnginePath}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorder}" Padding="20,18" Margin="0,0,14,0">
+                    <StackPanel>
+                        <TextBlock Text="存档数量" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding WorldCount}" FontSize="30" FontWeight="Bold" Margin="0,6,0,0"
+                                   Foreground="{StaticResource AccentDarkBrush}"/>
+                        <TextBlock Text="当前目录下的世界" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="20,18">
+                    <StackPanel>
+                        <TextBlock Text="玩家数量" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding PlayerCount}" FontSize="30" FontWeight="Bold" Margin="0,6,0,0"
+                                   Foreground="{StaticResource AccentDarkBrush}"/>
+                        <TextBlock Text="usercache 中的玩家" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

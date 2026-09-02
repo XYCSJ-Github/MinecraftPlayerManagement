@@ -1,80 +1,94 @@
-﻿//COW.cpp 实现COW
+﻿//COW.cpp 实现COW（打开存档：列出该存档内玩家的数据存在情况）
 #include "COW.h"
 
 void COW::RunCommand()
 {
-	int x = 0;
+	const std::string target_world = GetLastCommand();
+	if (target_world.empty())
+	{
+		throw CommandError();
+	}
+
+	// 世界列表
+	WorldDirectoriesNameList wl;
+	try { wl = GetWorldList(); }
+	catch (const std::exception&) { wl = {}; }
+
+	// 找到目标存档
+	const size_t n = wl.world_directory_list.size() < wl.world_name_list.size()
+		? wl.world_directory_list.size() : wl.world_name_list.size();
+	size_t world_index = n;
+	for (size_t i = 0; i < n; i++)
+	{
+		if (wl.world_name_list[i] == target_world)
+		{
+			world_index = i;
+			break;
+		}
+	}
+	if (world_index == n)
+	{
+		throw CommandError();
+	}
+
+	// 目标存档的文件
+	std::vector<PlayerInfo_AS> adv, st;
+	std::vector<PlayerInfo_Data> pd;
+	try { adv = GetWorldPlayerAdvancements(wl.world_directory_list[world_index]); }
+	catch (const std::exception&) { adv.clear(); }
+	try { pd = GetWorldPlayerData(wl.world_directory_list[world_index]); }
+	catch (const std::exception&) { pd.clear(); }
+	try { st = GetWorldPlayerStats(wl.world_directory_list[world_index]); }
+	catch (const std::exception&) { st.clear(); }
+
+	// 玩家列表
+	std::vector<UserInfo> users;
+	try { users = GetUserInfoList(); }
+	catch (const std::exception&) { users.clear(); }
+
+	std::vector<PlayerInWorldInfo> rows;
+	std::string out;
+	out = "\n存档：" + wl.world_name_list[world_index] + "|路径：" + wl.world_directory_list[world_index];
+
+	for (const auto& u : users)
+	{
+		PlayerInWorldInfo row;
+		row.world_dir_name.world_directory = wl.world_directory_list[world_index];
+		row.world_dir_name.world_name = wl.world_name_list[world_index];
+		row.player = u;
+
+		for (const auto& a : adv)
+		{
+			if (a.uuid == u.uuid && !a.path.empty()) { row.adv_path = "有"; break; }
+		}
+		for (const auto& d : pd)
+		{
+			if (d.uuid == u.uuid)
+			{
+				if (!d.dat_path.empty()) row.pd_path = "有";
+				if (!d.dat_old_path.empty()) row.pd_old_path = "有";
+				if (!d.cosarmor_path.empty()) row.cosarmor_path = "有";
+			}
+		}
+		for (const auto& s : st)
+		{
+			if (s.uuid == u.uuid && !s.path.empty()) { row.st_path = "有"; break; }
+		}
+
+		if (!row.adv_path.empty() || !row.pd_path.empty() || !row.pd_old_path.empty()
+			|| !row.cosarmor_path.empty() || !row.st_path.empty())
+		{
+			rows.push_back(row);
+			out += "\n玩家：" + u.user_name + "|UUID：" + u.uuid
+				+ "|进度：" + row.adv_path + "|数据：" + row.pd_path + "|旧数据：" + row.pd_old_path
+				+ "|盔甲：" + row.cosarmor_path + "|统计：" + row.st_path;
+		}
+	}
+
 	PlayerInWorldInfoList piwil;
-	piwil.playerinworldinfo_list.resize(GetWorldList().world_name_list.size());
-
-	for (int i = 0; i < GetWorldList().world_name_list.size(); i++)
-	{
-		if (GetLastCommand() == GetWorldList().world_name_list[i])
-		{
-			piwil.playerinworldinfo_list[x].world_dir_name.world_name = GetWorldList().world_name_list[i];
-			piwil.playerinworldinfo_list[x].world_dir_name.world_directory = GetWorldList().world_directory_list[i];
-
-			try
-			{
-				LoadAllPlayerdata(piwil.playerinworldinfo_list[x].world_dir_name.world_directory);
-				piwil.advancements_list = GetAdvancementsList();
-				piwil.playerdata_list = GetPlayerdataList();
-				piwil.stats_list = GetStatsList();
-			}
-			catch (const std::exception& e)
-			{
-				throw e;
-			}
-		}
-	}
-
-	std::string out = "\n存档：" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "\n路径：" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
-
-	for (int i = 0; i < GetUserInfoList().size(); i++)
-	{
-		piwil.playerinworldinfo_list[x] = {};
-
-		piwil.playerinworldinfo_list[x].player.user_name = GetUserInfoList()[i].user_name;
-		piwil.playerinworldinfo_list[x].player.uuid = GetUserInfoList()[i].uuid;
-
-		for (int j = 0; j < piwil.advancements_list.size(); j++)
-		{
-			if (GetUserInfoList()[i].uuid == piwil.advancements_list[j].uuid)
-			{
-				piwil.playerinworldinfo_list[x].adv_path = piwil.advancements_list[j].path;
-			}
-		}
-
-		for (int j = 0; j < piwil.playerdata_list.size(); j++)
-		{
-			if (GetUserInfoList()[i].uuid == piwil.playerdata_list[j].uuid)
-			{
-				piwil.playerinworldinfo_list[x].pd_path = piwil.playerdata_list[j].dat_path;
-				piwil.playerinworldinfo_list[x].pd_old_path = piwil.playerdata_list[j].dat_old_path;
-				piwil.playerinworldinfo_list[x].cosarmor_path = piwil.playerdata_list[j].cosarmor_path;
-			}
-		}
-
-		for (int j = 0; j < piwil.stats_list.size(); j++)
-		{
-			if (GetUserInfoList()[i].uuid == piwil.stats_list[j].uuid)
-			{
-				piwil.playerinworldinfo_list[x].st_path = piwil.stats_list[j].path;
-			}
-		}
-
-		if (piwil.playerinworldinfo_list[x].adv_path.length() != 0 || piwil.playerinworldinfo_list[x].pd_path.length() != 0 || piwil.playerinworldinfo_list[x].st_path.length() != 0 || piwil.playerinworldinfo_list[x].pd_old_path.length() != 0)
-		{
-			out += "\n玩家：" + piwil.playerinworldinfo_list[x].player.user_name + "|UUID：" + piwil.playerinworldinfo_list[x].player.uuid + "\n进度：" + piwil.playerinworldinfo_list[x].adv_path + "\n玩家数据：" + piwil.playerinworldinfo_list[x].pd_path + "\n旧玩家数据：" + piwil.playerinworldinfo_list[x].pd_old_path;
-			if (piwil.playerinworldinfo_list[x].cosarmor_path.length() != 0)
-			{
-				out += "\n装饰盔甲数据：" + piwil.playerinworldinfo_list[x].cosarmor_path;
-			}
-			out += "\n统计数据：" + piwil.playerinworldinfo_list[x].st_path + "\n";
-		}
-	}
+	piwil.playerinworldinfo_list = rows;
 
 	this->SetPlayerInWorldInfoList(piwil);
-	SetShow(out);
+	SetShow(out.empty() ? "无数据" : out);
 	return;
 }

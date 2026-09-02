@@ -171,11 +171,11 @@ void SharedMemory::ProcessCommand()
 
 	case Command::M_SET_PATH:
 		LOG_INFO("设置路径: " + additional);
-		// 处理设置路径逻辑
 
 		if (!fs::exists(smc->AdditionaCommand))
 		{
 			WriteInSMC(smc, (StructType)0, RunStatus::FAILED, "路径错误，无法识别");
+			break;
 		}
 
 		try
@@ -183,17 +183,22 @@ void SharedMemory::ProcessCommand()
 			mp.SetInputPath(smc->AdditionaCommand);
 			mp.ProcessingPath();
 			mp.PathLoadTpye();
-			mp.LoadWorldList();
-			mp.LoadUserList();
-			mp.LoadWorldListSTL();
-
-			strcpy_s(smc->TitleName, (size_t)SHARED_MEMORY_BUF_SIZE, getLastComponent(mp.GetProcessingPath()).c_str());
 		}
-		catch (const std::exception&)
+		catch (const std::exception& e)
 		{
-			WriteInSMC(smc, (StructType)0, RunStatus::FAILED, "在输入路径完成后的处理过程中出错");
+			WriteInSMC(smc, (StructType)0, RunStatus::FAILED, e.what());
 			break;
 		}
+
+		// 世界/玩家列表加载为“软失败”：缺 usercache.json 或目录为空不应阻断打开路径
+		try { mp.LoadWorldList(); }
+		catch (const std::exception&) { /* 暂以空列表继续 */ }
+		try { mp.LoadWorldListSTL(); }
+		catch (const std::exception&) { /* 暂以空列表继续 */ }
+		try { mp.LoadUserList(); }
+		catch (const std::exception&) { /* 暂以空列表继续 */ }
+
+		strcpy_s(smc->TitleName, (size_t)SHARED_MEMORY_BUF_SIZE, getLastComponent(mp.GetProcessingPath()).c_str());
 
 		WriteInSMC(smc);
 		if (mp.GetPathLoadType() != LoadMode::EMPTY)
@@ -204,15 +209,14 @@ void SharedMemory::ProcessCommand()
 
 	case Command::LIST_WORLD:
 		LOG_INFO("列出存档");
-		// 处理列出存档逻辑
 		try
 		{
-			mp.ReloadList();
-			CLW cl;
-			cl >> mp;
-			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
-			size_t buf_size = cl.GetWorldList().SerializeToFixedArray(buf);
+			mp.LoadWorldList();
+			mp.LoadWorldListSTL();
+			WorldDirectoriesNameList wl = mp.GetWorldList();
 
+			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
+			size_t buf_size = wl.SerializeToFixedArray(buf);
 			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
 			{
 				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE - 1, buf, buf_size);
@@ -225,7 +229,9 @@ void SharedMemory::ProcessCommand()
 		}
 		catch (const std::exception&)
 		{
-			WriteInSMC(smc, StructType::WDNL, RunStatus::FAILED, "数据序列化转换时出现错误");
+			// 无存档/无可加载数据时按“空列表”成功返回
+			memset(smc->StructData, 0, SHARED_MEMORY_BUF_SIZE);
+			WriteInSMC(smc, StructType::WDNL, RunStatus::SUCCESSFUL, "");
 			break;
 		}
 
@@ -234,15 +240,21 @@ void SharedMemory::ProcessCommand()
 
 	case Command::LIST_PLAYER:
 		LOG_INFO("列出玩家");
-		// 处理列出玩家逻辑
 
 		try
 		{
-			mp.ReloadList();
-			CLP cl;
-			cl >> mp;
+			mp.LoadUserList();
+			std::vector<UserInfo> users = mp.GetUserInfoList();
+
+			if (users.empty())
+			{
+				memset(smc->StructData, 0, SHARED_MEMORY_BUF_SIZE);
+				WriteInSMC(smc, StructType::UI, RunStatus::SUCCESSFUL, "");
+				break;
+			}
+
 			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
-			size_t buf_size = cl.GetUserInfoList()[0].SerializeVector(cl.GetUserInfoList(), buf);
+			size_t buf_size = users[0].SerializeVector(users, buf);
 			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
 			{
 				memcpy_s(smc->StructData, SHARED_MEMORY_BUF_SIZE - 1, buf, buf_size);
@@ -255,10 +267,11 @@ void SharedMemory::ProcessCommand()
 		}
 		catch (const std::exception&)
 		{
-			WriteInSMC(smc, StructType::UI, RunStatus::FAILED, "数据序列化转换时出现错误");
+			// 无玩家缓存(usercache 缺失/为空)时按“空列表”成功返回
+			memset(smc->StructData, 0, SHARED_MEMORY_BUF_SIZE);
+			WriteInSMC(smc, StructType::UI, RunStatus::SUCCESSFUL, "");
 			break;
 		}
-
 
 		WriteInSMC(smc, StructType::UI);
 		break;
@@ -284,9 +297,12 @@ void SharedMemory::ProcessCommand()
 
 		try
 		{
-			mp.ReloadList();
+			try { mp.LoadWorldList(); mp.LoadWorldListSTL(); } catch (const std::exception&) { }
+			try { mp.LoadUserList(); } catch (const std::exception&) { }
 			COW co;
 			co >> mp;
+			co.SetAdditionalCommand(additional);
+			co.RunCommand();
 			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
 			size_t buf_size = co.GetPlayerInWorldInfoList().SerializeToFixedArray(buf);
 			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)
@@ -313,9 +329,12 @@ void SharedMemory::ProcessCommand()
 
 		try
 		{
-			mp.ReloadList();
+			try { mp.LoadWorldList(); mp.LoadWorldListSTL(); } catch (const std::exception&) { }
+			try { mp.LoadUserList(); } catch (const std::exception&) { }
 			COP co;
 			co >> mp;
+			co.SetAdditionalCommand(additional);
+			co.RunCommand();
 			BYTE buf[SHARED_MEMORY_BUF_SIZE - 1];
 			size_t buf_size = co.GetPlayerInWorldInfoList().SerializeToFixedArray(buf);
 			if (buf_size <= sizeof(buf) && buf_size != (size_t)0)

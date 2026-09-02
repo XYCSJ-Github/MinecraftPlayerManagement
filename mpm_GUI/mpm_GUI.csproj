@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CmdPlatform Condition="'$(Platform)' == 'AnyCPU' or '$(Platform)' == 'Any CPU' or '$(Platform)' == ''">x64</CmdPlatform>
+    <CmdPlatform Condition="'$(CmdPlatform)' == ''">$(Platform)</CmdPlatform>
+  </PropertyGroup>
+
+  <Target Name="CopyCmdExecutable" AfterTargets="Build">
+    <MSBuild Projects="..\mpm\mpm.vcxproj" Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration);Platform=$(CmdPlatform);SolutionDir=$(MSBuildThisFileDirectory)..\">
+      <Output TaskParameter="TargetOutputs" ItemName="_CmdExecutable" />
+    </MSBuild>
+    <Copy SourceFiles="@(_CmdExecutable)" DestinationFolder="$(OutDir)"
+          Condition="'@(_CmdExecutable)' != '' and Exists('@(_CmdExecutable)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyCmdToPublish" AfterTargets="Publish">
+    <MSBuild Projects="..\mpm\mpm.vcxproj" Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration);Platform=$(CmdPlatform);SolutionDir=$(MSBuildThisFileDirectory)..\">
+      <Output TaskParameter="TargetOutputs" ItemName="_CmdForPublish" />
+    </MSBuild>
+    <Copy SourceFiles="@(_CmdForPublish)" DestinationFolder="$(PublishDir)"
+          Condition="'@(_CmdForPublish)' != '' and Exists('@(_CmdForPublish)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\mc_icon.ico">
+      <Link>mc_icon.ico</Link>
+    </Resource>
+  </ItemGroup>
+
+</Project>

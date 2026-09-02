@@ -1,0 +1,206 @@
+<UserControl x:Class="mpm_GUI.Views.WorldsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="clr-namespace:mpm_GUI.Converters"
+             mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="700">
+
+    <UserControl.Resources>
+        <conv:HasItemsConverter x:Key="HasItemsConverter"/>
+        <!-- 布尔存在性图标 -->
+        <Style x:Key="PresenceGlyph" TargetType="TextBlock">
+            <Setter Property="Text" Value="&#xE73E;"/>
+            <Setter Property="Foreground" Value="{StaticResource OkBrush}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Text" Value="&#x2014;"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="6,10,6,16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左：存档列表 -->
+        <Grid Grid.Column="0" Margin="0,0,14,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="存档列表" FontSize="15" FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Style="{StaticResource IconButton}" Margin="0,0,6,0"
+                            ToolTip="刷新存档列表" Command="{Binding ReloadCommand}">
+                        <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
+                    </Button>
+                    <TextBlock Text="{Binding Items.Count, StringFormat=共 {0} 个}" FontSize="12"
+                               Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ListBox ItemsSource="{Binding Items}" Style="{x:Null}"
+                         Background="Transparent" BorderThickness="0"
+                         ItemContainerStyle="{StaticResource ListItem}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Directory}" FontSize="11" Margin="0,2,0,0"
+                                               Foreground="{StaticResource TextMutedBrush}"
+                                               TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Style="{StaticResource FlatButton}" Padding="10,4"
+                                        Margin="10,0,6,0" VerticalAlignment="Center" Content="查看"
+                                        Command="{Binding DataContext.ShowDetailCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"/>
+                                <Button Grid.Column="2" Style="{StaticResource IconButton}" Padding="8,4"
+                                        VerticalAlignment="Center" ToolTip="打开目录"
+                                        Command="{Binding DataContext.OpenFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}">
+                                    <TextBlock Text="&#xE838;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- 右：存档详情 -->
+        <Border Grid.Column="1" Style="{StaticResource CardBorder}" Padding="22,18">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- 头部 -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="{Binding DetailTitle}" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding DetailSummary}" FontSize="12" Margin="0,4,0,0"
+                                   Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="清除本存档全部玩家数据"
+                            Style="{StaticResource DangerButton}" VerticalAlignment="Center"
+                            Visibility="{Binding HasDetail, Converter={StaticResource BoolToVis}}"
+                            Command="{Binding DeleteAllInWorldCommand}"
+                            IsEnabled="{Binding Rows.Count, Converter={StaticResource HasItemsConverter}}"/>
+                </Grid>
+
+                <!-- 空态 -->
+                <StackPanel Grid.Row="1" Margin="0,24,0,0" HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding HasDetail, Converter={StaticResource InvBoolToVis}}">
+                    <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="40"
+                               Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="选择左侧存档以查看其中的玩家数据"
+                               Margin="0,8,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+
+                <!-- 列头 -->
+                <Grid Grid.Row="1" Margin="0,8,0,4"
+                      Visibility="{Binding HasDetail, Converter={StaticResource BoolToVis}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="52"/>
+                        <ColumnDefinition Width="52"/>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="52"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="玩家" Foreground="{StaticResource TextMutedBrush}" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="进度" Foreground="{StaticResource TextMutedBrush}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" Text="数据" Foreground="{StaticResource TextMutedBrush}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" Text="旧数据" Foreground="{StaticResource TextMutedBrush}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="4" Text="盔甲架" Foreground="{StaticResource TextMutedBrush}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Text="统计" Foreground="{StaticResource TextMutedBrush}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- 行 -->
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Rows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="8" Background="#F8F9FA"
+                                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                        Margin="0,2,0,6" Padding="12,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="52"/>
+                                            <ColumnDefinition Width="52"/>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="52"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding PlayerName}" FontSize="13" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding PlayerUuid}" FontSize="10"
+                                                       Foreground="{StaticResource TextMutedBrush}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="1" Style="{StaticResource PresenceGlyph}"
+                                                   IsEnabled="{Binding HasAdvancement}"/>
+                                        <TextBlock Grid.Column="2" Style="{StaticResource PresenceGlyph}"
+                                                   IsEnabled="{Binding HasPlayerData}"/>
+                                        <TextBlock Grid.Column="3" Style="{StaticResource PresenceGlyph}"
+                                                   IsEnabled="{Binding HasOldPlayerData}"/>
+                                        <TextBlock Grid.Column="4" Style="{StaticResource PresenceGlyph}"
+                                                   IsEnabled="{Binding HasCosArmor}"/>
+                                        <TextBlock Grid.Column="5" Style="{StaticResource PresenceGlyph}"
+                                                   IsEnabled="{Binding HasStats}"/>
+
+                                        <Button Grid.Column="6" Content="删除" Style="{StaticResource DangerButton}"
+                                                Padding="8,3" FontSize="12" VerticalAlignment="Center"
+                                                ToolTip="仅从该存档删除此玩家数据"
+                                                Command="{Binding DataContext.DeletePlayerInWorldCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

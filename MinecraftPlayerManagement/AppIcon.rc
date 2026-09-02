@@ -1,0 +1,6 @@
+// MinecraftPlayerManagement.exe 主程序图标
+#include "winres.h"
+
+#define IDI_MC_APP 101
+
+IDI_MC_APP ICON "..\\mc_icon.ico"

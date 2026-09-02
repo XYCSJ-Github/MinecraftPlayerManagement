@@ -114,24 +114,16 @@ private:
 	PlayerInWorldInfoList piwil;
 
 public:
-	//重载>>运算符使两个同piwbd或p_mpm父类对象可以传递基础数据
+	//重载>>运算符使两个同piwbd或p_mpm父类对象可以传递基础数据（逐项容错，空数据不阻断后续命令）
 	piwbd& operator>>(p_mpm& p)
 	{
-		try
-		{
-			this->SetInputPath(p.GetInputPath());
-			this->SetProcessingPath(p.GetProcessingPath());
-			this->SetWorldList(p.GetWorldList());
-			this->SetSTLWorldList(p.GetSTLWorldList());
-			this->SetUserInfoList(p.GetUserInfoList());
-			this->SetPathLoadType(p.GetPathLoadType());
-			this->SetLastCommand(p.GetLastCommand());
-		}
-		catch (const std::exception& e)
-		{
-			throw e;
-		}
-
+		try { this->SetInputPath(p.GetInputPath()); } catch (...) { }
+		try { this->SetProcessingPath(p.GetProcessingPath()); } catch (...) { }
+		try { this->SetWorldList(p.GetWorldList()); } catch (...) { }
+		try { this->SetSTLWorldList(p.GetSTLWorldList()); } catch (...) { }
+		try { this->SetUserInfoList(p.GetUserInfoList()); } catch (...) { }
+		try { this->SetPathLoadType(p.GetPathLoadType()); } catch (...) { }
+		try { this->SetLastCommand(p.GetLastCommand()); } catch (...) { }
 		return *this;
 	}
 };
