@@ -61,10 +61,19 @@ public partial class PlayersViewModel : PageViewModel
         }
     }
 
+    /// <summary>列表刷新入口（命令/外部调用共用，带忙碌守卫）。</summary>
     public async Task ReloadAsync()
     {
         if (IsBusy) return;
         IsBusy = true;
+        try { await ReloadCoreAsync(); }
+        catch (Exception ex) { Notifier.Show(ex.Message, true); }
+        finally { IsBusy = false; }
+    }
+
+    /// <summary>无守卫的列表刷新：重建列表并对账详情，供删除/清缓存等忙碌操作内部调用。</summary>
+    private async Task ReloadCoreAsync()
+    {
         try
         {
             var list = await Engine.ListPlayersAsync();
@@ -72,19 +81,46 @@ public partial class PlayersViewModel : PageViewModel
             _all.AddRange(list);
             TotalCount = _all.Count;
             ApplyFilter();
-            if (_all.Count == 0) HasDetail = false;
+            await ReconcileDetailAsync();
         }
-        catch (Exception ex)
+        catch
         {
             _all.Clear();
             Items.Clear();
             TotalCount = 0;
+            ResetDetail();
+            throw;
+        }
+    }
+
+    /// <summary>列表变化后对账详情：选中玩家已消失则清空面板，仍在则刷新其行数据。</summary>
+    private async Task ReconcileDetailAsync()
+    {
+        if (Selected == null || !HasDetail) return;
+
+        if (_all.Count == 0 || !_all.Contains(Selected))
+        {
+            ResetDetail();
+            return;
+        }
+        try
+        {
+            await ShowDetailCoreAsync(Selected);
+        }
+        catch (Exception ex)
+        {
+            // 详情刷新失败不应清空刚加载好的列表，仅提示并保留现有面板状态
             Notifier.Show(ex.Message, true);
         }
-        finally
-        {
-            IsBusy = false;
-        }
+    }
+
+    private void ResetDetail()
+    {
+        Selected = null;
+        Rows.Clear();
+        HasDetail = false;
+        DetailTitle = "选择一名玩家查看跨存档情况";
+        DetailSummary = string.Empty;
     }
 
     [RelayCommand]
@@ -96,16 +132,21 @@ public partial class PlayersViewModel : PageViewModel
         await RunBusyAsync(async () =>
         {
             if (player == null) return;
-            Selected = player;
-            DetailTitle = $"「{player.Name}」在存档中的足迹";
-            var rows = await Engine.OpenPlayerAsync(player.Name);
-            Rows.Clear();
-            foreach (var r in rows) Rows.Add(r);
-            HasDetail = true;
-            DetailSummary = rows.Count == 0
-                ? $"「{player.Name}」在各存档中未发现任何进度/数据/统计文件。"
-                : $"{player.Name} 共在 {rows.Count} 个存档中留有数据。删除操作会将文件移入回收站。";
+            await ShowDetailCoreAsync(player);
         });
+    }
+
+    private async Task ShowDetailCoreAsync(PlayerEntry player)
+    {
+        Selected = player;
+        DetailTitle = $"「{player.Name}」在存档中的足迹";
+        var rows = await Engine.OpenPlayerAsync(player.Name);
+        Rows.Clear();
+        foreach (var r in rows) Rows.Add(r);
+        HasDetail = true;
+        DetailSummary = rows.Count == 0
+            ? $"「{player.Name}」在各存档中未发现任何进度/数据/统计文件。"
+            : $"{player.Name} 共在 {rows.Count} 个存档中留有数据。删除操作会将文件移入回收站。";
     }
 
     [RelayCommand]
@@ -136,8 +177,7 @@ public partial class PlayersViewModel : PageViewModel
         {
             await Engine.DeletePlayerAsync(player.Name);
             Notifier.Show($"已彻底删除「{player.Name}」");
-            await ReloadAsync();
-            if (player.Equals(Selected)) { Rows.Clear(); HasDetail = false; }
+            await ReloadCoreAsync();
         });
     }
 
@@ -155,7 +195,7 @@ public partial class PlayersViewModel : PageViewModel
         {
             await Engine.DeletePlayerFromWorldAsync(row.PlayerName, row.WorldName);
             Notifier.Show($"已从「{row.WorldName}」删除「{row.PlayerName}」");
-            await ShowDetailAsync(Selected!);
+            if (Selected != null) await ShowDetailCoreAsync(Selected);
         });
     }
 
@@ -173,7 +213,7 @@ public partial class PlayersViewModel : PageViewModel
         {
             await Engine.ClearJsonCacheAsync(player.Name);
             Notifier.Show($"已移除「{player.Name}」的缓存记录");
-            await ReloadAsync();
+            await ReloadCoreAsync();
         });
     }
 
@@ -190,7 +230,7 @@ public partial class PlayersViewModel : PageViewModel
         {
             await Engine.ClearJsonCacheAsync(null);
             Notifier.Show("已清空全部玩家名称缓存");
-            await ReloadAsync();
+            await ReloadCoreAsync();
         });
     }
 }

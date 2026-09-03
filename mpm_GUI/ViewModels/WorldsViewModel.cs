@@ -31,25 +31,62 @@ public partial class WorldsViewModel : PageViewModel
     {
     }
 
+    /// <summary>列表刷新入口（命令/外部调用共用，带忙碌守卫）。</summary>
     public async Task ReloadAsync()
     {
         if (IsBusy) return;
         IsBusy = true;
+        try { await ReloadCoreAsync(); }
+        catch (Exception ex) { Notifier.Show(ex.Message, true); }
+        finally { IsBusy = false; }
+    }
+
+    /// <summary>无守卫的列表刷新：重建列表并对账详情，供忙碌操作内部调用。</summary>
+    private async Task ReloadCoreAsync()
+    {
         try
         {
             var list = await Engine.ListWorldsAsync();
             Items.Clear();
             foreach (var item in list) Items.Add(item);
+            await ReconcileDetailAsync();
+        }
+        catch
+        {
+            Items.Clear();
+            ResetDetail();
+            throw;
+        }
+    }
+
+    /// <summary>列表变化后对账详情：选中存档已消失则清空面板，仍在则刷新其行数据。</summary>
+    private async Task ReconcileDetailAsync()
+    {
+        if (Selected == null || !HasDetail) return;
+
+        if (Items.Count == 0 || !Items.Contains(Selected))
+        {
+            ResetDetail();
+            return;
+        }
+        try
+        {
+            await ShowDetailCoreAsync(Selected);
         }
         catch (Exception ex)
         {
-            Items.Clear();
+            // 详情刷新失败不应清空刚加载好的列表，仅提示并保留现有面板状态
             Notifier.Show(ex.Message, true);
         }
-        finally
-        {
-            IsBusy = false;
-        }
+    }
+
+    private void ResetDetail()
+    {
+        Selected = null;
+        Rows.Clear();
+        HasDetail = false;
+        DetailTitle = "请选择一个存档查看详情";
+        DetailSummary = string.Empty;
     }
 
     [RelayCommand]
@@ -61,16 +98,21 @@ public partial class WorldsViewModel : PageViewModel
         await RunBusyAsync(async () =>
         {
             if (world == null) return;
-            Selected = world;
-            DetailTitle = $"「{world.Name}」中的玩家";
-            var rows = await Engine.OpenWorldAsync(world.Name);
-            Rows.Clear();
-            foreach (var r in rows) Rows.Add(r);
-            HasDetail = true;
-            DetailSummary = rows.Count == 0
-                ? "未在该存档中发现可管理的玩家数据（玩家须存在于 usercache 且拥有进度/数据/统计文件）。"
-                : $"共发现 {rows.Count} 名玩家数据。删除操作会将文件移入回收站。";
+            await ShowDetailCoreAsync(world);
         });
+    }
+
+    private async Task ShowDetailCoreAsync(WorldEntry world)
+    {
+        Selected = world;
+        DetailTitle = $"「{world.Name}」中的玩家";
+        var rows = await Engine.OpenWorldAsync(world.Name);
+        Rows.Clear();
+        foreach (var r in rows) Rows.Add(r);
+        HasDetail = true;
+        DetailSummary = rows.Count == 0
+            ? "未在该存档中发现可管理的玩家数据（玩家须存在于 usercache 且拥有进度/数据/统计文件）。"
+            : $"共发现 {rows.Count} 名玩家数据。删除操作会将文件移入回收站。";
     }
 
     [RelayCommand]
@@ -98,7 +140,7 @@ public partial class WorldsViewModel : PageViewModel
         {
             await Engine.DeletePlayerFromWorldAsync(row.PlayerName, Selected.Name);
             Notifier.Show($"已从「{Selected.Name}」删除「{row.PlayerName}」");
-            await ShowDetailAsync(Selected);
+            await ShowDetailCoreAsync(Selected);
         });
     }
 
@@ -144,7 +186,7 @@ public partial class WorldsViewModel : PageViewModel
             else
                 Notifier.Show($"部分完成：成功 {success} 项。{errors.FirstOrDefault()}", true);
 
-            await ShowDetailAsync(Selected);
+            await ShowDetailCoreAsync(Selected);
         });
     }
 }

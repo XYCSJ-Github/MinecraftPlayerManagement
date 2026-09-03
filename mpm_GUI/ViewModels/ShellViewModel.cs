@@ -153,7 +153,7 @@ public partial class ShellViewModel : ObservableObject
     {
         await Worlds.ReloadAsync();
         await Players.ReloadAsync();
-        Overview.SetCounts(Worlds.Items.Count, Players.Items.Count);
+        Overview.SetCounts(Worlds.Items.Count, Players.TotalCount);
     }
 
     private void OnNotifyMessage(string text, bool isError)

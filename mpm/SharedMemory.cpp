@@ -191,12 +191,13 @@ void SharedMemory::ProcessCommand()
 		}
 
 		// 世界/玩家列表加载为“软失败”：缺 usercache.json 或目录为空不应阻断打开路径
+		// 加载失败时清空缓存容器，避免新路径沿用上一次路径/状态的残留数据
 		try { mp.LoadWorldList(); }
-		catch (const std::exception&) { /* 暂以空列表继续 */ }
+		catch (const std::exception&) { mp.ResetWorldLists(); }
 		try { mp.LoadWorldListSTL(); }
-		catch (const std::exception&) { /* 暂以空列表继续 */ }
+		catch (const std::exception&) { mp.ResetWorldLists(); }
 		try { mp.LoadUserList(); }
-		catch (const std::exception&) { /* 暂以空列表继续 */ }
+		catch (const std::exception&) { mp.ResetUserList(); }
 
 		strcpy_s(smc->TitleName, (size_t)SHARED_MEMORY_BUF_SIZE, getLastComponent(mp.GetProcessingPath()).c_str());
 
@@ -229,7 +230,8 @@ void SharedMemory::ProcessCommand()
 		}
 		catch (const std::exception&)
 		{
-			// 无存档/无可加载数据时按“空列表”成功返回
+			// 无存档/无可加载数据时按“空列表”成功返回；同时清掉可能残留的旧列表
+			mp.ResetWorldLists();
 			memset(smc->StructData, 0, SHARED_MEMORY_BUF_SIZE);
 			WriteInSMC(smc, StructType::WDNL, RunStatus::SUCCESSFUL, "");
 			break;
@@ -267,7 +269,8 @@ void SharedMemory::ProcessCommand()
 		}
 		catch (const std::exception&)
 		{
-			// 无玩家缓存(usercache 缺失/为空)时按“空列表”成功返回
+			// 无玩家缓存(usercache 缺失/为空)时按“空列表”成功返回；同时清掉可能残留的旧玩家
+			mp.ResetUserList();
 			memset(smc->StructData, 0, SHARED_MEMORY_BUF_SIZE);
 			WriteInSMC(smc, StructType::UI, RunStatus::SUCCESSFUL, "");
 			break;
@@ -297,8 +300,10 @@ void SharedMemory::ProcessCommand()
 
 		try
 		{
-			try { mp.LoadWorldList(); mp.LoadWorldListSTL(); } catch (const std::exception&) { }
-			try { mp.LoadUserList(); } catch (const std::exception&) { }
+			try { mp.LoadWorldList(); mp.LoadWorldListSTL(); }
+			catch (const std::exception&) { mp.ResetWorldLists(); }
+			try { mp.LoadUserList(); }
+			catch (const std::exception&) { mp.ResetUserList(); }
 			COW co;
 			co >> mp;
 			co.SetAdditionalCommand(additional);
@@ -329,8 +334,10 @@ void SharedMemory::ProcessCommand()
 
 		try
 		{
-			try { mp.LoadWorldList(); mp.LoadWorldListSTL(); } catch (const std::exception&) { }
-			try { mp.LoadUserList(); } catch (const std::exception&) { }
+			try { mp.LoadWorldList(); mp.LoadWorldListSTL(); }
+			catch (const std::exception&) { mp.ResetWorldLists(); }
+			try { mp.LoadUserList(); }
+			catch (const std::exception&) { mp.ResetUserList(); }
 			COP co;
 			co >> mp;
 			co.SetAdditionalCommand(additional);

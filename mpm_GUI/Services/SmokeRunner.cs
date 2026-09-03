@@ -113,6 +113,17 @@ internal static class SmokeRunner
             var splayers = await engine.ListPlayersAsync();
             Assert(sb, "服务端玩家为空(无缓存)", splayers.Count == 0, $"数量={splayers.Count}");
 
+            // 场景：清缓存/空缓存后重开详情，不应残留上一次状态的玩家行
+            Progress("回归: 缓存清空后的残留检查...");
+            await engine.OpenPathAsync(root);
+            var warmed = await engine.OpenWorldAsync("WorldOne");
+            Assert(sb, "切回客户端目录详情预热", warmed.Count == 1, $"行数={warmed.Count}");
+            await engine.ClearJsonCacheAsync("Steve");
+            var clearedPlayers = await engine.ListPlayersAsync();
+            Assert(sb, "移除缓存后玩家列表为空", clearedPlayers.Count == 0, $"数量={clearedPlayers.Count}");
+            var clearedWorld = await engine.OpenWorldAsync("WorldOne");
+            Assert(sb, "移除缓存后存档详情无残留行", clearedWorld.Count == 0, $"行数={clearedWorld.Count}");
+
             // 诊断：无效路径触发的 mpm 报错文本与原始字节
             string? errText = null;
             try { await engine.OpenPathAsync(Path.Combine(root, "no_such_dir")); }

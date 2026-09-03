@@ -57,6 +57,15 @@ public:
 	*/
 	inline const std::string GetLastCommand() { return this->CommandStr; }
 
+	/*
+	* 清空世界相关缓存（目录为空/加载失败时置空，避免残留上一次数据）
+	*/
+	inline void ResetWorldLists() { this->uct_world_list = {}; this->world_list = {}; }
+	/*
+	* 清空玩家缓存（usercache 缺失/为空时置空，避免残留上一次数据）
+	*/
+	inline void ResetUserList() { this->user_list = {}; }
+
 	//处理输入路径
 	void ProcessingPath(void);
 	/*
