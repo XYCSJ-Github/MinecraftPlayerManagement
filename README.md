@@ -67,3 +67,5 @@
 - 删除操作会同时涉及存档文件夹内的文件与 `usercache.json` / `usernamecache.json` 缓存。
 - 若提示「mpm未就绪 / 未连接」，请到**设置**页确认 mpm.exe 路径是否正确并点击「启动mpm」。
 - 若要打开的不是 `saves` 目录本身，而是含 `saves` 的 `.minecraft` 上级目录，请选择 `.minecraft` 这一级。
+
+#Edited by DeepSeek V4-Flash 仓库由内网服务中转推送#
