@@ -61,6 +61,31 @@ public partial class ShellViewModel : ObservableObject
         Settings.LoadSettingsIntoUi();
     }
 
+    /// <summary>启动时静默定位并连接mpm（不依赖用户点击，不自动打开目录）。</summary>
+    public async Task AutoConnectAsync()
+    {
+        try
+        {
+            if (_engine.IsConnected) return;
+
+            string? path = _settings.MpmPath;
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+                path = EngineLocator.Find(_settings);
+            if (string.IsNullOrEmpty(path)) return;
+
+            _settings.MpmPath = path;
+            _settings.Save();
+            Settings.LoadSettingsIntoUi();
+
+            bool ok = await _engine.StartAsync(path);
+            if (!ok) Notifier.Show("mpm自动连接失败：请检查 mpm.exe 路径与运行权限", true);
+        }
+        catch (Exception ex)
+        {
+            Notifier.Show("mpm自动连接异常：" + ex.Message, true);
+        }
+    }
+
     /// <summary>确保mpm处于就绪状态，必要时启动。</summary>
     public async Task<bool> EnsureEngineStartedAsync()
     {

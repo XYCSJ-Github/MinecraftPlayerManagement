@@ -10,6 +10,7 @@ public partial class App : Application
 {
     private MpmEngineService? _engine;
     private SettingsStore? _settings;
+    private ShellViewModel? _shell;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -34,6 +35,7 @@ public partial class App : Application
         var dialogs = new DialogService();
         var shell = new ShellViewModel(_engine, _settings, dialogs);
 
+        _shell = shell;
         var window = new MainWindow { DataContext = shell };
         MainWindow = window;
         window.Show();
@@ -48,6 +50,10 @@ public partial class App : Application
             var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1500) };
             timer.Tick += (_, _) => { timer.Stop(); Trace("timer tick -> shutdown"); Shutdown(); };
             timer.Start();
+        }
+        else
+        {
+            _ = _shell.AutoConnectAsync();
         }
     }
 

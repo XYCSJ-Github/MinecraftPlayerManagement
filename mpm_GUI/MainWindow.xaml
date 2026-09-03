@@ -1,4 +1,4 @@
-<Window x:Class="mpm_GUI.MainWindow"
+﻿<Window x:Class="mpm_GUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -32,7 +32,7 @@
                                    Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="mpm 玩家档案管理" FontSize="16" FontWeight="SemiBold"
+                        <TextBlock Text="MC 玩家档案管理" FontSize="16" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}"/>
                         <TextBlock Text="通过共享内存管理 Minecraft 存档与玩家数据"
                                    FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
