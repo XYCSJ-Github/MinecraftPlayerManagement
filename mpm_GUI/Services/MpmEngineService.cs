@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using mpm_GUI.Models;
 
 namespace mpm_GUI.Services;
@@ -513,14 +514,18 @@ public sealed class MpmEngineService : IDisposable
     {
         var reply = await EnqueueAsync(MpmCommand.LIST_WORLD, Array.Empty<byte>());
         EnsureOk(reply, "获取存档列表失败");
-        return MpmCodec.ParseWorldDirectoriesNameList(reply.Data);
+        var worlds = MpmCodec.ParseWorldDirectoriesNameList(reply.Data);
+        Log($"解析(存档列表)={Summarize(worlds.Select(w => w.Name))}");
+        return worlds;
     }
 
     public async Task<IReadOnlyList<PlayerEntry>> ListPlayersAsync()
     {
         var reply = await EnqueueAsync(MpmCommand.LIST_PLAYER, Array.Empty<byte>());
         EnsureOk(reply, "获取玩家列表失败");
-        return MpmCodec.ParseUserInfoList(reply.Data);
+        var players = MpmCodec.ParseUserInfoList(reply.Data);
+        Log($"解析(玩家列表)={Summarize(players.Select(p => $"{p.Name} {p.Uuid}"))}");
+        return players;
     }
 
     public async Task RefreshAsync()
@@ -534,7 +539,9 @@ public sealed class MpmEngineService : IDisposable
     {
         var reply = await EnqueueAsync(MpmCommand.OPEN_WORLD, SmText.EncodePath(worldName), 30000);
         EnsureOk(reply, "打开存档失败");
-        return MpmCodec.ParsePlayerInWorldInfoList(reply.Data).Rows;
+        var rows = MpmCodec.ParsePlayerInWorldInfoList(reply.Data).Rows;
+        Log($"解析(存档「{worldName}」玩家)={Summarize(rows.Select(r => $"{r.PlayerName} [{PresenceFlags(r)}]"))}");
+        return rows;
     }
 
     /// <summary>查看某玩家在各存档中的数据存在情况。</summary>
@@ -542,7 +549,9 @@ public sealed class MpmEngineService : IDisposable
     {
         var reply = await EnqueueAsync(MpmCommand.OPEN_PLAYER, SmText.EncodeUtf8(playerName), 30000);
         EnsureOk(reply, "查看玩家失败");
-        return MpmCodec.ParsePlayerInWorldInfoList(reply.Data).Rows;
+        var rows = MpmCodec.ParsePlayerInWorldInfoList(reply.Data).Rows;
+        Log($"解析(玩家「{playerName}」足迹)={Summarize(rows.Select(r => $"{r.WorldName} [{PresenceFlags(r)}]"))}");
+        return rows;
     }
 
     /// <summary>彻底删除某玩家（所有存档数据 + usercache 缓存，进回收站）。</summary>
@@ -578,6 +587,27 @@ public sealed class MpmEngineService : IDisposable
         int off = 0;
         foreach (var p in parts) { Buffer.BlockCopy(p, 0, result, off, p.Length); off += p.Length; }
         return result;
+    }
+
+    /// <summary>将解析结果拼接为单行日志，条目过多时省略。</summary>
+    private static string Summarize(IEnumerable<string> parts, int max = 16)
+    {
+        var items = parts as IReadOnlyList<string> ?? parts.ToList();
+        if (items.Count == 0) return "(空)";
+        string head = string.Join("；", items.Take(max));
+        return items.Count > max ? $"{head} …共 {items.Count} 项" : head;
+    }
+
+    /// <summary>将某玩家在某存档的数据存在情况缩写为「进数旧甲统」标记。</summary>
+    private static string PresenceFlags(PlayerInWorldPresence r)
+    {
+        var f = new StringBuilder(5);
+        if (r.HasAdvancement) f.Append('进');
+        if (r.HasPlayerData) f.Append('数');
+        if (r.HasOldPlayerData) f.Append('旧');
+        if (r.HasCosArmor) f.Append('甲');
+        if (r.HasStats) f.Append('统');
+        return f.ToString();
     }
 
     // ---------------- 其它 ----------------
