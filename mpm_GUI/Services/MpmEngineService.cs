@@ -25,6 +25,9 @@ public sealed class MpmEngineService : IDisposable
     public event Action<EngineState>? StateChanged;
     public event Action<string>? LogLine;
 
+    /// <summary>mpm 进程自身(stdout/stderr)的输出行。</summary>
+    public event Action<string, bool>? EngineOutput;
+
     public EngineState State { get; private set; } = EngineState.Stopped;
     public bool IsConnected => State == EngineState.Ready;
     public string? CurrentRootPath { get; private set; }
@@ -138,6 +141,7 @@ public sealed class MpmEngineService : IDisposable
                 _proc = new Process { StartInfo = psi, EnableRaisingEvents = true };
                 _proc.Exited += OnEngineExited;
                 _proc.Start();
+                StartOutputReaders();
             }
             catch (Exception ex)
             {
@@ -418,6 +422,61 @@ public sealed class MpmEngineService : IDisposable
         var bytes = new byte[MpmProtocol.BufferSize];
         Marshal.Copy(IntPtr.Add(_view, offset), bytes, 0, bytes.Length);
         return SmText.Decode(bytes);
+    }
+
+    // ---------------- 进程输出捕获 ----------------
+
+    /// <summary>读取 mpm.exe 的 stdout/stderr，逐行按编码启发式解码后交给 UI 展示。</summary>
+    private void StartOutputReaders()
+    {
+        if (_proc == null) return;
+        try
+        {
+            Task.Run(() => PumpOutput(_proc.StandardOutput.BaseStream, isError: false));
+            Task.Run(() => PumpOutput(_proc.StandardError.BaseStream, isError: true));
+        }
+        catch
+        {
+            // 输出捕获失败不影响主流程
+        }
+    }
+
+    private void PumpOutput(Stream stream, bool isError)
+    {
+        try
+        {
+            var buffer = new byte[8192];
+            var pending = new List<byte>(512);
+            int n;
+            while ((n = stream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    byte b = buffer[i];
+                    if (b == (byte)'\n')
+                    {
+                        if (pending.Count > 0) EmitLine(pending, isError);
+                        pending.Clear();
+                    }
+                    else if (b != (byte)'\r')
+                    {
+                        pending.Add(b);
+                    }
+                }
+            }
+            if (pending.Count > 0) EmitLine(pending, isError);
+        }
+        catch (ObjectDisposedException) { }
+        catch (IOException) { }
+        catch { /* 流结束或已释放则忽略 */ }
+    }
+
+    private void EmitLine(List<byte> raw, bool isError)
+    {
+        byte[] bytes = raw.ToArray();
+        string line = SmText.Decode(bytes, 0, bytes.Length);
+        if (string.IsNullOrWhiteSpace(line)) return;
+        EngineOutput?.Invoke(line, isError);
     }
 
     // ---------------- 业务命令 ----------------

@@ -45,6 +45,7 @@ public partial class ShellViewModel : ObservableObject
 
         Notifier.Message += OnNotifyMessage;
         _engine.LogLine += line => Notifier.OnUi(() => Settings.AddLog(line));
+        _engine.EngineOutput += (line, isError) => Notifier.OnUi(() => Settings.AddEngineLine(line, isError));
         _engine.StateChanged += state => Notifier.OnUi(() =>
         {
             Overview.OnEngineState(state);

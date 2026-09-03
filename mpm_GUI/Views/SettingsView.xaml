@@ -77,7 +77,7 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="运行日志" FontSize="15" FontWeight="SemiBold"
                                        Foreground="{StaticResource TextPrimaryBrush}"/>
-                            <TextBlock Text="（最近 400 条）" FontSize="12" Margin="10,2,0,0"
+                            <TextBlock Text="（GUI 侧 + mpm 输出，最近 400 条）" FontSize="12" Margin="10,2,0,0"
                                        Foreground="{StaticResource TextMutedBrush}"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="清空" Style="{StaticResource FlatButton}"
@@ -89,7 +89,7 @@
                             <ItemsControl ItemsSource="{Binding Logs}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding}" Foreground="#D4D4D4"
+                                        <TextBlock Text="{Binding Text}" Foreground="{Binding Foreground}"
                                                    FontFamily="Consolas" FontSize="12"
                                                    TextWrapping="Wrap"/>
                                     </DataTemplate>

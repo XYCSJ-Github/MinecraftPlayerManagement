@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ internal static class SmokeRunner
         var sb = new StringBuilder();
         var engine = new MpmEngineService(new SettingsStore());
         var recent = new List<string>();
+        var engineLines = new List<string>();
 
         string progressPath = Path.Combine(baseDir, "mpm_smoke_progress.txt");
         void Progress(string message)
@@ -33,6 +35,15 @@ internal static class SmokeRunner
                 if (recent.Count > 40) recent.RemoveAt(0);
             }
             try { Progress(line); } catch { }
+        };
+
+        engine.EngineOutput += (line, _) =>
+        {
+            lock (engineLines)
+            {
+                engineLines.Add(line);
+                if (engineLines.Count > 500) engineLines.RemoveAt(0);
+            }
         };
 
         string root = string.Empty;
@@ -56,6 +67,21 @@ internal static class SmokeRunner
             bool ok = await engine.StartAsync(enginePath);
             Progress($"StartAsync -> {ok}");
             Assert(sb, "mpm握手(StartAsync)", ok);
+
+            Progress("等待捕获mpm进程输出...");
+            var swLog = Stopwatch.StartNew();
+            bool logSeen = false;
+            string[] sample = Array.Empty<string>();
+            while (!logSeen && swLog.ElapsedMilliseconds < 5000)
+            {
+                lock (engineLines)
+                {
+                    logSeen = engineLines.Any(l => l.Contains("[Info]", StringComparison.Ordinal));
+                    sample = engineLines.Take(3).ToArray();
+                }
+                if (!logSeen) await Task.Delay(100);
+            }
+            Assert(sb, "捕获mpm进程日志输出", logSeen, $"样本={string.Join(" | ", sample)}");
 
             Progress("设置根目录...");
             string name = await engine.OpenPathAsync(root);

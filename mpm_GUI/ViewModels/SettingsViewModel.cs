@@ -1,15 +1,43 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using mpm_GUI.Services;
 
 namespace mpm_GUI.ViewModels;
 
+/// <summary>日志级别。</summary>
+public enum LogLevel
+{
+    Info,
+    Warning,
+    Error,
+    Debug,
+}
+
+/// <summary>一条可着色的运行日志。</summary>
+public sealed record LogEntry(string Text, LogLevel Level, Brush Foreground);
+
 /// <summary>设置页：mpm路径、状态与运行日志。</summary>
 public partial class SettingsViewModel : PageViewModel
 {
+    private const int MaxLogCount = 400;
+
+    private static readonly Brush LogInfoBrush = MakeBrush("#D4D4D4");
+    private static readonly Brush LogWarningBrush = MakeBrush("#FFD54F");
+    private static readonly Brush LogErrorBrush = MakeBrush("#FF8A80");
+    private static readonly Brush LogDebugBrush = MakeBrush("#82AAFF");
+
+    private static Brush MakeBrush(string hex)
+    {
+        var color = (Color)ColorConverter.ConvertFromString(hex);
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
+    }
+
     [ObservableProperty]
     private string _enginePath = string.Empty;
 
@@ -19,7 +47,7 @@ public partial class SettingsViewModel : PageViewModel
     [ObservableProperty]
     private bool _isConnected;
 
-    public ObservableCollection<string> Logs { get; } = new();
+    public ObservableCollection<LogEntry> Logs { get; } = new();
 
     public SettingsViewModel(MpmEngineService engine, SettingsStore settings, DialogService dialogs)
         : base(engine, settings, dialogs)
@@ -50,10 +78,47 @@ public partial class SettingsViewModel : PageViewModel
         };
     }
 
+    /// <summary>追加本进程(GUI 侧)产生的日志。</summary>
     public void AddLog(string line)
     {
-        Logs.Add(line);
-        while (Logs.Count > 400) Logs.RemoveAt(0);
+        if (string.IsNullOrEmpty(line)) return;
+        LogLevel level = ContainsErrorText(line) ? LogLevel.Error : LogLevel.Info;
+        AddEntry(line, level);
+    }
+
+    /// <summary>追加 mpm.exe 自身输出的一行（stdout/stderr），按级别着色。</summary>
+    public void AddEngineLine(string line, bool isError)
+    {
+        if (string.IsNullOrEmpty(line)) return;
+        AddEntry(line, Classify(line, isError));
+    }
+
+    private static LogLevel Classify(string line, bool isError)
+    {
+        if (line.Contains("[Warning]", StringComparison.OrdinalIgnoreCase)) return LogLevel.Warning;
+        if (line.Contains("[Debug]", StringComparison.OrdinalIgnoreCase)) return LogLevel.Debug;
+        if (isError || line.Contains("[Error]", StringComparison.OrdinalIgnoreCase)) return LogLevel.Error;
+        return LogLevel.Info;
+    }
+
+    private static bool ContainsErrorText(string line)
+        => line.Contains("失败", StringComparison.Ordinal)
+            || line.Contains("异常", StringComparison.Ordinal)
+            || line.Contains("错误", StringComparison.Ordinal)
+            || line.Contains("超时", StringComparison.Ordinal)
+            || line.Contains("退出", StringComparison.Ordinal);
+
+    private void AddEntry(string line, LogLevel level)
+    {
+        Brush brush = level switch
+        {
+            LogLevel.Warning => LogWarningBrush,
+            LogLevel.Error => LogErrorBrush,
+            LogLevel.Debug => LogDebugBrush,
+            _ => LogInfoBrush,
+        };
+        Logs.Add(new LogEntry(line, level, brush));
+        while (Logs.Count > MaxLogCount) Logs.RemoveAt(0);
     }
 
     [RelayCommand]
