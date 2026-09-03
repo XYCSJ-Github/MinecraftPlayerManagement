@@ -83,7 +83,10 @@ void CDPW::RunCommand()
 
 	out += "\n玩家：" + piwil.playerinworldinfo_list[x].player.uuid + "|UUID：" + piwil.playerinworldinfo_list[x].player.uuid + "\n存档：" + piwil.playerinworldinfo_list[x].world_dir_name.world_name + "|路径：" + piwil.playerinworldinfo_list[x].world_dir_name.world_directory + "\n";
 
-	if (!piwil.playerinworldinfo_list[x].adv_path.empty() && !piwil.playerinworldinfo_list[x].cosarmor_path.empty() && !piwil.playerinworldinfo_list[x].pd_old_path.empty() && !piwil.playerinworldinfo_list[x].pd_path.empty() && !piwil.playerinworldinfo_list[x].st_path.empty())
+	// 只要存在任一类型的数据文件即执行删除，避免仅删部分类型或空文件
+	const auto& row = piwil.playerinworldinfo_list[x];
+	if (!row.adv_path.empty() || !row.cosarmor_path.empty()
+		|| !row.pd_old_path.empty() || !row.pd_path.empty() || !row.st_path.empty())
 	{
 		DeletePlayersFiles(piwil, out, x);
 	}

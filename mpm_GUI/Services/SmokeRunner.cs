@@ -37,6 +37,7 @@ internal static class SmokeRunner
 
         string root = string.Empty;
         string srvRoot = string.Empty;
+        string partialRoot = string.Empty;
         try
         {
             sb.AppendLine("== mpm GUI 自检开始 ==");
@@ -124,6 +125,18 @@ internal static class SmokeRunner
             var clearedWorld = await engine.OpenWorldAsync("WorldOne");
             Assert(sb, "移除缓存后存档详情无残留行", clearedWorld.Count == 0, $"行数={clearedWorld.Count}");
 
+            // 场景：删除存档内玩家后重开详情，不应残留该玩家行（仅部分数据类型的玩家）
+            partialRoot = CreatePartialFixture(baseDir);
+            Progress($"部分文件玩家测试目录: {partialRoot}");
+            await engine.OpenPathAsync(partialRoot);
+            var beforeDel = await engine.OpenWorldAsync("WorldOne");
+            Assert(sb, "删除前存档详情含部分文件玩家", beforeDel.Count == 2, $"行数={beforeDel.Count}");
+            await engine.DeletePlayerFromWorldAsync("Alex", "WorldOne");
+            var afterDel = await engine.OpenWorldAsync("WorldOne");
+            Assert(sb, "删除后存档详情无残留玩家行",
+                afterDel.Count == 1 && afterDel.All(w => w.PlayerName != "Alex"),
+                $"行数={afterDel.Count}, 玩家={string.Join(",", afterDel.Select(w => w.PlayerName))}");
+
             // 诊断：无效路径触发的 mpm 报错文本与原始字节
             string? errText = null;
             try { await engine.OpenPathAsync(Path.Combine(root, "no_such_dir")); }
@@ -146,7 +159,7 @@ internal static class SmokeRunner
             try { await engine.StopAsync(); }
             catch (Exception ex) { Progress($"StopAsync 异常: {ex.Message}"); }
             Progress("清理目录...");
-            foreach (var d in new[] { root, srvRoot })
+            foreach (var d in new[] { root, srvRoot, partialRoot })
             {
                 try { if (Directory.Exists(d)) Directory.Delete(d, true); }
                 catch { }
@@ -200,6 +213,35 @@ internal static class SmokeRunner
         // 模拟服务端根目录：无 usercache.json，直接以子目录作为世界
         string root = Path.Combine(baseDir, "mpm_fixture_server");
         Directory.CreateDirectory(Path.Combine(root, "Alpha"));
+        return root;
+    }
+
+    private static string CreatePartialFixture(string baseDir)
+    {
+        // 模拟仅含部分数据类型的玩家（缺 _old.dat / .cosa），验证删除不依赖五类文件齐全
+        string root = Path.Combine(baseDir, "mpm_fixture_partial");
+        string saves = Path.Combine(root, "saves");
+        Directory.CreateDirectory(saves);
+
+        string alexUuid = "22222222-2222-2222-2222-222222222222";
+        string usercache = "[{\"name\":\"Steve\",\"uuid\":\"" + Uuid + "\",\"expiresOn\":\"2030-01-01T00:00:00.000Z\"},"
+            + "{\"name\":\"Alex\",\"uuid\":\"" + alexUuid + "\",\"expiresOn\":\"2030-01-01T00:00:00.000Z\"}]";
+        File.WriteAllText(Path.Combine(root, "usercache.json"), usercache, Encoding.UTF8);
+
+        string world = Path.Combine(saves, "WorldOne");
+        Directory.CreateDirectory(Path.Combine(world, "advancements"));
+        Directory.CreateDirectory(Path.Combine(world, "playerdata"));
+        Directory.CreateDirectory(Path.Combine(world, "stats"));
+
+        // Steve：五类齐全
+        File.WriteAllText(Path.Combine(world, "advancements", Uuid + ".json"), "{}");
+        File.WriteAllText(Path.Combine(world, "playerdata", Uuid + ".dat"), "{}");
+        File.WriteAllText(Path.Combine(world, "playerdata", Uuid + "_old.dat"), "{}");
+        File.WriteAllText(Path.Combine(world, "playerdata", Uuid + ".cosa"), "{}");
+        File.WriteAllText(Path.Combine(world, "stats", Uuid + ".json"), "{}");
+
+        // Alex：仅 playerdata
+        File.WriteAllText(Path.Combine(world, "playerdata", alexUuid + ".dat"), "{}");
         return root;
     }
 }
