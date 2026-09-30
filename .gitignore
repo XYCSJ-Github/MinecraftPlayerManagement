@@ -185,6 +185,8 @@ publish/
 # Note: Comment the next line if you want to checkin your web deploy settings,
 # but database connection strings (with potential passwords) will be unencrypted
 *.pubxml
+# GUI 发布配置为固定配置，需纳入版本控制
+!mpm_GUI/Properties/PublishProfiles/*.pubxml
 *.publishproj
 
 # Microsoft Azure Web App publish settings. Comment the next line if you want to
@@ -365,4 +367,9 @@ FodyWeavers.xsd
 
 # AllinOne 启动器：构建时自动生成的资源脚本（含本机绝对路径）
 MinecraftPlayerManagement/EmbeddedResources.rc
+
+# 运行日志不追踪
+*.log
+[Ll]og/
+[Ll]ogs/
 

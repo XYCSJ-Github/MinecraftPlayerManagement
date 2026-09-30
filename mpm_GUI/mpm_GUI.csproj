@@ -6,6 +6,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+
+    <Version>1.6.5.0</Version>
+    <AssemblyVersion>1.6.5.0</AssemblyVersion>
+    <FileVersion>1.6.5.0</FileVersion>
+    <InformationalVersion>1.6.5.0</InformationalVersion>
+    <AssemblyTitle>Minecraft 用户数据管理</AssemblyTitle>
+    <Product>Minecraft 用户数据管理</Product>
+    <Description>Minecraft 玩家数据管理 GUI 客户端</Description>
+    <Company>Qing_Xiaoyu_stlr</Company>
+    <Copyright>Copyright (C) 2025 晴小雨_stlr</Copyright>
   </PropertyGroup>
 
   <PropertyGroup>
