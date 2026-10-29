@@ -160,12 +160,12 @@
     <ResourceCompile Include="EmbeddedResources.rc" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\mpm_GUI\mpm_GUI.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-    </ProjectReference>
-  </ItemGroup>
+  <!--
+    不要在这里用 ProjectReference 引用 mpm_GUI.csproj。
+    原生项目引用托管项目会让 VS 在加载浏览数据库时死锁。
+    GUI 的构建顺序由解决方案里的 BuildDependency 保证，
+    而且 EnsureGuiPublish 目标会在构建启动器时自动发布 GUI。
+  -->
 
   <PropertyGroup>
     <GuiProject>$(MSBuildProjectDirectory)\..\mpm_GUI\mpm_GUI.csproj</GuiProject>
