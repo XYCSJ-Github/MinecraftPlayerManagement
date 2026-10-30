@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="源文件">
@@ -15,6 +15,12 @@
     </Filter>
     <Filter Include="Logout">
       <UniqueIdentifier>{caeba5d0-f3c9-45d4-bbea-821e09a83e8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\CC">
+      <UniqueIdentifier>{0c321700-7fa5-41ad-ba4f-dfca808864bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\CC">
+      <UniqueIdentifier>{fce6ad8a-2311-4f14-b8e9-c519b7fddc33}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,30 +42,6 @@
     <ClInclude Include="piwbd.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="COW.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="COP.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CLW.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CLP.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CDP.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CDW.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CDPW.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CDJS.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SharedMemory.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -75,6 +57,30 @@
     <ClInclude Include="Logout\Logout.h">
       <Filter>Logout</Filter>
     </ClInclude>
+    <ClInclude Include="CC_h\CDJS.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_h\CDP.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_h\CDPW.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_h\CDW.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_h\CLP.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_h\CLW.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_h\COP.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_h\COW.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
@@ -83,31 +89,7 @@
     <ClCompile Include="p_mpm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="COW.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="piwbd.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="COP.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CLW.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CLP.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CDP.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CDW.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CDPW.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CDJS.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
@@ -127,6 +109,30 @@
     </ClCompile>
     <ClCompile Include="Logout\Logout.cpp">
       <Filter>Logout</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_cpp\CDJS.cpp">
+      <Filter>源文件\CC</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_cpp\CDP.cpp">
+      <Filter>源文件\CC</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_cpp\CDPW.cpp">
+      <Filter>源文件\CC</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_cpp\CDW.cpp">
+      <Filter>源文件\CC</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_cpp\CLP.cpp">
+      <Filter>源文件\CC</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_cpp\CLW.cpp">
+      <Filter>源文件\CC</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_cpp\COP.cpp">
+      <Filter>源文件\CC</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_cpp\COW.cpp">
+      <Filter>源文件\CC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

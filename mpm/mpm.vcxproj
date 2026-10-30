@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -69,17 +69,17 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\Projects\Visual Studio Projects\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)CC_h;$(ProjectDir);$(ProjectDir)nlohmann-json;$(ProjectDir)Logout;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\Projects\Visual Studio Projects\MinecraftPlayerManagement\mpm\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)CC_h;$(ProjectDir);$(ProjectDir)nlohmann-json;$(ProjectDir)Logout;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Projects\Visual Studio Projects\MinecraftPlayerManagement\mpm\nlohmann-json;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)CC_h;$(ProjectDir);$(ProjectDir)nlohmann-json;$(ProjectDir)Logout;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\net10.0-windows\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\Projects\Visual Studio Projects\MinecraftPlayerManagement\mpm\nlohmann-json;D:\Projects\Visual Studio Projects\MinecraftPlayerManagement\mpm\Logout;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)CC_h;$(ProjectDir);$(ProjectDir)nlohmann-json;$(ProjectDir)Logout;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\net10.0-windows\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -156,15 +156,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundRunning.h" />
-    <ClInclude Include="CDJS.h" />
-    <ClInclude Include="CDP.h" />
-    <ClInclude Include="CDPW.h" />
-    <ClInclude Include="CDW.h" />
-    <ClInclude Include="CLP.h" />
-    <ClInclude Include="CLW.h" />
+    <ClInclude Include="CC_h\CDJS.h" />
+    <ClInclude Include="CC_h\CDP.h" />
+    <ClInclude Include="CC_h\CDPW.h" />
+    <ClInclude Include="CC_h\CDW.h" />
+    <ClInclude Include="CC_h\CLP.h" />
+    <ClInclude Include="CC_h\CLW.h" />
     <ClInclude Include="CommandRunning.h" />
-    <ClInclude Include="COP.h" />
-    <ClInclude Include="COW.h" />
+    <ClInclude Include="CC_h\COP.h" />
+    <ClInclude Include="CC_h\COW.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Logout\Logout.h" />
     <ClInclude Include="piwbd.h" />
@@ -178,15 +178,15 @@
   <ItemGroup>
     <ClCompile Include="BackgroundRunning.cpp" />
     <ClCompile Include="CC.h" />
-    <ClCompile Include="CDJS.cpp" />
-    <ClCompile Include="CDP.cpp" />
-    <ClCompile Include="CDPW.cpp" />
-    <ClCompile Include="CDW.cpp" />
-    <ClCompile Include="CLP.cpp" />
-    <ClCompile Include="CLW.cpp" />
+    <ClCompile Include="CC_cpp\CDJS.cpp" />
+    <ClCompile Include="CC_cpp\CDP.cpp" />
+    <ClCompile Include="CC_cpp\CDPW.cpp" />
+    <ClCompile Include="CC_cpp\CDW.cpp" />
+    <ClCompile Include="CC_cpp\CLP.cpp" />
+    <ClCompile Include="CC_cpp\CLW.cpp" />
     <ClCompile Include="CommandRunning.cpp" />
-    <ClCompile Include="COP.cpp" />
-    <ClCompile Include="COW.cpp" />
+    <ClCompile Include="CC_cpp\COP.cpp" />
+    <ClCompile Include="CC_cpp\COW.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="Logout\Logout.cpp" />
     <ClCompile Include="main.cpp" />
