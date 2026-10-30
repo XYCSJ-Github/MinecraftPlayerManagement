@@ -1,4 +1,4 @@
-﻿//func.h 声明主要功能函数
+//func.h 声明主要功能函数
 #pragma once
 
 #include "Enums.h"
@@ -108,3 +108,14 @@ bool DeletePlayerInUserCache(std::string JSON_path, std::string playerName);
 * @return 成功与否
 */
 bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName);
+/*
+* 交换两个UUID所绑定的玩家文件
+* 若new_UUID没有绑定文件，则把old_UUID的文件改名为new_UUID
+* 涉及的文件：advancements/<uuid>.json、stats/<uuid>.json、
+* playerdata/<uuid>.dat、playerdata/<uuid>_old.dat、playerdata/<uuid>.cosa
+* @param old_UUID 玩家原来的UUID
+* @param new_UUID 玩家新的UUID
+* @param world_path 处理后的存档路径
+* @return 成功与否
+*/
+bool SwapPlayerFilesByUUID(std::string old_UUID, std::string new_UUID, std::string world_path);

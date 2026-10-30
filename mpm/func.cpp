@@ -568,3 +568,123 @@ bool DeletePlayerInUserNmaeCache(std::string JSON_path, std::string playerName)
 		return false;
 	}
 }
+
+/*
+* 交换两个UUID所绑定的玩家文件
+* @param old_UUID 玩家原来的UUID
+* @param new_UUID 玩家新的UUID
+* @param world_path 由ProcessingInputPath()处理后的存档路径
+*/
+bool SwapPlayerFilesByUUID(std::string old_UUID, std::string new_UUID, std::string world_path)
+{
+	LOG_CREATE_MODEL_NAME("SwapPlayerFilesByUUID");
+
+	if (old_UUID == new_UUID)
+	{
+		LOG_DEBUG("两个UUID相同，无需处理");
+		return true;
+	}
+
+	if (!fs::exists(world_path) || !fs::is_directory(world_path))
+	{
+		LOG_ERROR("存档路径不存在：" + world_path);
+		return false;
+	}
+
+	LOG_DEBUG("存档路径：" + world_path);
+	LOG_DEBUG("old_UUID：" + old_UUID);
+	LOG_DEBUG("new_UUID：" + new_UUID);
+
+	//UUID与文件名的绑定规则：子目录 + UUID之后的文件名部分
+	static const struct
+	{
+		const char* sub_directory;
+		const char* suffix;
+	} uuid_file_rules[] = {
+		{ "advancements", ".json"     },
+		{ "stats",        ".json"     },
+		{ "playerdata",   ".dat"      },
+		{ "playerdata",   "_old.dat"  },
+		{ "playerdata",   ".cosa"     },
+	};
+
+	bool handled = false;//是否处理过至少一个文件
+
+	for (const auto& rule : uuid_file_rules)
+	{
+		fs::path directory = fs::path(world_path) / rule.sub_directory;
+		if (!fs::exists(directory) || !fs::is_directory(directory))
+		{
+			LOG_DEBUG("目录不存在，跳过：" + directory.string());
+			continue;
+		}
+
+		const fs::path old_file = directory / (old_UUID + rule.suffix);
+		const fs::path new_file = directory / (new_UUID + rule.suffix);
+
+		if (!fs::exists(old_file))
+		{
+			//old_UUID没有绑定这类文件：既没有可交换的，也没有可改名的
+			continue;
+		}
+
+		std::error_code ec;
+
+		if (!fs::exists(new_file))
+		{
+			//new_UUID没有绑定文件：直接把old_UUID的文件改成new_UUID
+			fs::rename(old_file, new_file, ec);
+			if (ec)
+			{
+				LOG_ERROR("重命名失败：" + old_file.string() + " -> " + new_file.string() + "，原因：" + ec.message());
+				return false;
+			}
+			LOG_DEBUG("重命名：" + old_file.string() + " -> " + new_file.string());
+			handled = true;
+			continue;
+		}
+
+		//两个UUID都有这类文件：借助临时文件名完成交换
+		fs::path tmp_file = directory / (old_UUID + rule.suffix + ".swap_tmp");
+		for (int i = 1; fs::exists(tmp_file); ++i)
+		{
+			tmp_file = directory / (old_UUID + rule.suffix + ".swap_tmp" + std::to_string(i));
+		}
+
+		fs::rename(old_file, tmp_file, ec);
+		if (ec)
+		{
+			LOG_ERROR("重命名失败：" + old_file.string() + " -> " + tmp_file.string() + "，原因：" + ec.message());
+			return false;
+		}
+
+		fs::rename(new_file, old_file, ec);
+		if (ec)
+		{
+			LOG_ERROR("重命名失败：" + new_file.string() + " -> " + old_file.string() + "，原因：" + ec.message());
+			fs::rename(tmp_file, old_file, ec);//尽力回滚
+			return false;
+		}
+
+		fs::rename(tmp_file, new_file, ec);
+		if (ec)
+		{
+			LOG_ERROR("重命名失败：" + tmp_file.string() + " -> " + new_file.string() + "，原因：" + ec.message());
+			//尽力回滚：new_file的内容已移到old_file
+			fs::rename(old_file, new_file, ec);
+			fs::rename(tmp_file, old_file, ec);
+			return false;
+		}
+
+		LOG_DEBUG("交换：" + old_file.string() + " <-> " + new_file.string());
+		handled = true;
+	}
+
+	if (!handled)
+	{
+		LOG_DEBUG("没有找到与old_UUID绑定的文件：" + old_UUID);
+		return false;
+	}
+
+	return true;
+}
