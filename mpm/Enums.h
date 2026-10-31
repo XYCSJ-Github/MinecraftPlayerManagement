@@ -135,6 +135,7 @@ enum StructType
 * @param DEL_WORLD
 * @param DEL_PW
 * @param DEL_JS
+* @param RENAME
 * @param NULL_BACK
 * @param REFRESH
 */
@@ -164,6 +165,8 @@ enum Command
 	DEL_PW,
 	//del js
 	DEL_JS,
+	//RENAME
+	RENAME,
 	//unknown command
 	NULL_BACK,
 	//refresh

@@ -81,6 +81,9 @@
     <ClInclude Include="CC_h\COW.h">
       <Filter>头文件\CC</Filter>
     </ClInclude>
+    <ClInclude Include="CRP.h">
+      <Filter>头文件\CC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="func.cpp">
@@ -132,6 +135,9 @@
       <Filter>源文件\CC</Filter>
     </ClCompile>
     <ClCompile Include="CC_cpp\COW.cpp">
+      <Filter>源文件\CC</Filter>
+    </ClCompile>
+    <ClCompile Include="CRP.cpp">
       <Filter>源文件\CC</Filter>
     </ClCompile>
   </ItemGroup>

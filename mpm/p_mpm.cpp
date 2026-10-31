@@ -436,5 +436,20 @@ int p_mpm::ProcessCommand(const std::string _command)
 		}
 	}
 
+	l1 = _command.substr(0, 6);
+	if (l1 == "rename")
+	{
+		try 
+		{
+			this->SetLastCommand(_command.substr(7));
+		}
+		catch (const std::exception e)
+		{
+			throw CommandError();
+		}
+
+		return Command::RENAME;
+	}
+
 	return Command::NULL_BACK;
 }
